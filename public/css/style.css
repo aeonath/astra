@@ -78,7 +78,9 @@ a:hover { color: var(--accent-hover); }
 }
 .user-name { color: var(--text-secondary); font-size: 0.9rem; }
 
-.public-login { position: absolute; top: 1rem; right: 1.5rem; z-index: 10; }
+.public-header { position: absolute; top: 1rem; left: 1.5rem; right: 1.5rem; z-index: 10; display: flex; justify-content: space-between; align-items: center; }
+.public-brand { font-size: 1.2rem; font-weight: 700; color: var(--text-primary); letter-spacing: 0.5px; text-decoration: none; }
+.public-brand:hover { color: var(--accent); }
 
 /* === Container === */
 .container {
