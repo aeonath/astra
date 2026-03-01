@@ -288,15 +288,19 @@ input:focus, textarea:focus, select:focus {
   border-bottom: 2px solid var(--border);
 }
 .section-header h2 { font-size: 1.1rem; font-weight: 600; }
-.section-counts { font-size: 0.85rem; color: var(--text-secondary); }
-.count-open { color: var(--success); margin-right: 0.75rem; }
-.count-closed { color: var(--text-muted); }
+.section-counts { display: flex; gap: 0.25rem; }
+.count-tab {
+  font-size: 0.85rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  text-decoration: none;
+}
+.count-tab:hover { color: var(--text-primary); background: var(--bg-tertiary); }
+.count-tab-active { color: var(--text-primary); background: var(--bg-tertiary); font-weight: 500; }
 .section-todo { border-left: 3px solid var(--teal); padding-left: 1rem; }
 .section-feature { border-left: 3px solid var(--purple); padding-left: 1rem; }
 .section-bug { border-left: 3px solid var(--danger); padding-left: 1rem; }
-
-/* === View Toggle === */
-.view-toggle { margin-bottom: 1.5rem; }
 
 /* === Page Header === */
 .page-header {

@@ -16,25 +16,17 @@
   <% } %>
 </div>
 
-<div class="view-toggle">
-  <% if (showAll) { %>
-    <a href="?" class="btn btn-sm btn-ghost">Show Open Only</a>
-  <% } else { %>
-    <a href="?show=all" class="btn btn-sm btn-ghost">Show All (incl. closed)</a>
-  <% } %>
-</div>
-
 <% if (currentUser) { %>
 <div class="section-block section-todo">
   <div class="section-header">
     <h2>Todos</h2>
     <span class="section-counts">
-      <span class="count-open"><%= todoCounts.open %> open</span>
-      <span class="count-closed"><%= todoCounts.closed %> closed</span>
+      <a href="?show=open" class="count-tab<%= showStatus === 'open' ? ' count-tab-active' : '' %>"><%= todoCounts.open %> open</a>
+      <a href="?show=closed" class="count-tab<%= showStatus === 'closed' ? ' count-tab-active' : '' %>"><%= todoCounts.closed %> closed</a>
     </span>
   </div>
   <% if (todos.length === 0) { %>
-    <div class="empty-state"><p>No todos<%= showAll ? '' : ' open' %>.</p></div>
+    <div class="empty-state"><p>No <%= showStatus %> todos.</p></div>
   <% } else { %>
     <table class="table">
       <thead>
@@ -68,12 +60,12 @@
   <div class="section-header">
     <h2>Feature Requests</h2>
     <span class="section-counts">
-      <span class="count-open"><%= featureCounts.open %> open</span>
-      <span class="count-closed"><%= featureCounts.closed %> closed</span>
+      <a href="?show=open" class="count-tab<%= showStatus === 'open' ? ' count-tab-active' : '' %>"><%= featureCounts.open %> open</a>
+      <a href="?show=closed" class="count-tab<%= showStatus === 'closed' ? ' count-tab-active' : '' %>"><%= featureCounts.closed %> closed</a>
     </span>
   </div>
   <% if (features.length === 0) { %>
-    <div class="empty-state"><p>No feature requests<%= showAll ? '' : ' open' %>.</p></div>
+    <div class="empty-state"><p>No <%= showStatus %> feature requests.</p></div>
   <% } else { %>
     <table class="table">
       <thead>
@@ -106,12 +98,12 @@
   <div class="section-header">
     <h2>Bugs</h2>
     <span class="section-counts">
-      <span class="count-open"><%= bugCounts.open %> open</span>
-      <span class="count-closed"><%= bugCounts.closed %> closed</span>
+      <a href="?show=open" class="count-tab<%= showStatus === 'open' ? ' count-tab-active' : '' %>"><%= bugCounts.open %> open</a>
+      <a href="?show=closed" class="count-tab<%= showStatus === 'closed' ? ' count-tab-active' : '' %>"><%= bugCounts.closed %> closed</a>
     </span>
   </div>
   <% if (bugs.length === 0) { %>
-    <div class="empty-state"><p>No bugs<%= showAll ? '' : ' open' %>.</p></div>
+    <div class="empty-state"><p>No <%= showStatus %> bugs.</p></div>
   <% } else { %>
     <table class="table">
       <thead>

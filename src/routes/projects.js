@@ -31,8 +31,8 @@ router.get('/:slug', (req, res) => {
     return res.redirect('/projects');
   }
 
-  const showAll = req.query.show === 'all';
-  const statusFilter = showAll ? '' : "AND b.status = 'open'";
+  const showStatus = req.query.show === 'closed' ? 'closed' : 'open';
+  const statusFilter = `AND b.status = '${showStatus}'`;
 
   const itemQuery = `
     SELECT b.*,
@@ -67,7 +67,7 @@ router.get('/:slug', (req, res) => {
     todoCounts: { open: todoRaw.open_count || 0, closed: todoRaw.closed_count || 0 },
     featureCounts: { open: featureRaw.open_count || 0, closed: featureRaw.closed_count || 0 },
     bugCounts: { open: bugRaw.open_count || 0, closed: bugRaw.closed_count || 0 },
-    showAll,
+    showStatus,
   });
 });
 
