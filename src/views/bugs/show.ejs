@@ -6,6 +6,10 @@
   <span><%= displayId %></span>
 </div>
 
+<% if (bug.type === 'todo') { %>
+<h2 class="task-number-heading"><%= displayId %></h2>
+<% } %>
+
 <div class="bug-layout">
   <div class="bug-main">
     <div class="bug-title-row">

@@ -380,6 +380,7 @@ input:focus, textarea:focus, select:focus {
 .tab.active { background: var(--bg-tertiary); color: var(--text-primary); font-weight: 500; }
 
 /* === Bug Detail Layout === */
+.task-number-heading { font-size: 1.1rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 1.5rem; }
 .bug-layout { display: grid; grid-template-columns: 1fr 280px; gap: 1.5rem; }
 .bug-main { min-width: 0; }
 .bug-title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
