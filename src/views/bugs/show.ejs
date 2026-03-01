@@ -7,19 +7,42 @@
       <span>&rsaquo;</span>
       <span><%= bug.type === 'feature' ? 'Feature' : bug.type === 'todo' ? 'Todo' : 'Bug' %> #<%= bug.id %></span>
     </div>
-    <h1><span class="badge badge-type-<%= bug.type %>"><%= bug.type === 'feature' ? 'Feature' : bug.type === 'todo' ? 'Todo' : 'Bug' %></span> <%= bug.title %></h1>
+    <h1 id="bug-title-display"><span class="badge badge-type-<%= bug.type %>"><%= bug.type === 'feature' ? 'Feature' : bug.type === 'todo' ? 'Todo' : 'Bug' %></span> <%= bug.title %></h1>
   </div>
+  <button type="button" class="btn btn-sm btn-ghost" id="edit-btn">Edit</button>
 </div>
 
 <div class="bug-layout">
   <div class="bug-main">
-    <div class="bug-description card">
-      <% if (bug.description) { %>
-        <p><%= bug.description %></p>
-      <% } else { %>
-        <p class="text-muted">No description provided.</p>
-      <% } %>
+    <div id="bug-display">
+      <div class="bug-description card">
+        <% if (bug.description) { %>
+          <p id="bug-desc-text"><%= bug.description %></p>
+        <% } else { %>
+          <p id="bug-desc-text" class="text-muted">No description provided.</p>
+        <% } %>
+      </div>
     </div>
+
+    <form action="/bugs/<%= bug.id %>" method="POST" id="bug-edit-form" style="display:none;">
+      <div class="card" style="margin-bottom:1rem;">
+        <div class="form-group">
+          <label for="edit-title">Title</label>
+          <input type="text" id="edit-title" name="title" value="<%= bug.title %>" required>
+        </div>
+        <div class="form-group">
+          <label for="edit-description">Description</label>
+          <textarea id="edit-description" name="description" rows="6"><%= bug.description || '' %></textarea>
+        </div>
+        <input type="hidden" name="status" value="<%= bug.status %>">
+        <input type="hidden" name="priority" value="<%= bug.priority %>">
+        <input type="hidden" name="assignee_id" value="<%= bug.assignee_id || '' %>">
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary btn-sm">Save</button>
+          <button type="button" class="btn btn-ghost btn-sm" id="cancel-edit-btn">Cancel</button>
+        </div>
+      </div>
+    </form>
 
     <div class="comments-section">
       <h2>Comments (<%= comments.length %>)</h2>
@@ -52,16 +75,6 @@
       <h3>Details</h3>
 
       <div class="form-group">
-        <label for="title">Title</label>
-        <input type="text" id="title" name="title" value="<%= bug.title %>" required>
-      </div>
-
-      <div class="form-group">
-        <label for="description">Description</label>
-        <textarea id="description" name="description" rows="4"><%= bug.description || '' %></textarea>
-      </div>
-
-      <div class="form-group">
         <label for="status">Status</label>
         <select id="status" name="status">
           <% ['open', 'closed'].forEach(s => { %>
@@ -89,6 +102,9 @@
         </select>
       </div>
 
+      <input type="hidden" name="title" value="<%= bug.title %>">
+      <input type="hidden" name="description" value="<%= bug.description || '' %>">
+
       <button type="submit" class="btn btn-primary btn-sm btn-block">Update</button>
 
       <div class="sidebar-meta">
@@ -100,5 +116,7 @@
     </form>
   </aside>
 </div>
+
+<script src="/js/bug-edit.js"></script>
 
 <%- include('../partials/footer') %>
