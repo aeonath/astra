@@ -31,6 +31,9 @@ sudo apt install -y nginx certbot python3-certbot-nginx
 
 # Install build tools (needed for bcrypt/better-sqlite3 native modules)
 sudo apt install -y build-essential python3
+
+# Install sqlite3 CLI (needed for database backups)
+sudo apt install -y sqlite3
 ```
 
 ## 4. Deploy the app
@@ -232,3 +235,41 @@ sudo systemctl restart astra
 ```
 
 The migration runner automatically detects the old `_migrations` table and bridges it to the new `schema_migrations` system.
+
+## Database Backups
+
+A backup script is included at `astra_db_backup.sh`. It reads `DB_PATH` from the `.env` file, creates a safe SQLite backup, and gzip-compresses it to the same directory as the database with a date stamp (e.g. `astra.db-20260301.gz`).
+
+### Manual backup
+
+```bash
+sudo su - astra
+cd ~/app
+bash astra_db_backup.sh
+```
+
+### Automated daily backup via crontab
+
+```bash
+# Open crontab for the astra user
+sudo crontab -u astra -e
+```
+
+Add this line to run the backup daily at 2:00 AM:
+
+```
+0 2 * * * /home/astra/app/astra_db_backup.sh >> /var/log/astra-backup.log 2>&1
+```
+
+Make sure the script is executable:
+
+```bash
+chmod +x /home/astra/app/astra_db_backup.sh
+```
+
+Backups are written to `/var/lib/astra/` alongside the database. Old backups are **not** automatically pruned — add a cleanup line to crontab if needed:
+
+```
+# Delete backups older than 30 days
+0 3 * * * find /var/lib/astra -name "astra.db-*.gz" -mtime +30 -delete
+```
