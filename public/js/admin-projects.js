@@ -29,11 +29,11 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('public').checked = true;
   }
 
-  // Add Project button — show form below table
+  // Add Project button — show form above table
   addBtn.addEventListener('click', function () {
     resetForm();
-    formCard.style.marginTop = '1.5rem';
-    addBtn.parentNode.insertAdjacentElement('beforebegin', formCard);
+    formCard.style.marginTop = '';
+    table.insertAdjacentElement('beforebegin', formCard);
     showForm();
     addBtn.style.display = 'none';
   });
