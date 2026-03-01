@@ -1,3 +1,4 @@
+// Copyright (c) 2026 MiraNova Studios
 function init(db) {
   db.exec(`
     CREATE TABLE IF NOT EXISTS users (

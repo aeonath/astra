@@ -1,3 +1,4 @@
+// Copyright (c) 2026 MiraNova Studios
 const express = require('express');
 const bcrypt = require('bcrypt');
 const db = require('../db');

@@ -1,3 +1,4 @@
+// Copyright (c) 2026 MiraNova Studios
 const Database = require('better-sqlite3');
 const path = require('path');
 const schema = require('./schema');

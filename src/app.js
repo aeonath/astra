@@ -1,3 +1,4 @@
+// Copyright (c) 2026 MiraNova Studios
 const express = require('express');
 const path = require('path');
 const helmet = require('helmet');

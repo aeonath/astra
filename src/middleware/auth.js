@@ -1,3 +1,4 @@
+// Copyright (c) 2026 MiraNova Studios
 function requireLogin(req, res, next) {
   if (!req.session.userId) {
     req.session.flash = { type: 'error', message: 'Please log in to continue.' };

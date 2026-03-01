@@ -1,3 +1,4 @@
+// Copyright (c) 2026 MiraNova Studios
 require('dotenv').config();
 const Database = require('better-sqlite3');
 const bcrypt = require('bcrypt');

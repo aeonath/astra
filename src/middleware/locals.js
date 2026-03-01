@@ -1,3 +1,4 @@
+// Copyright (c) 2026 MiraNova Studios
 const db = require('../db');
 
 // Inject common locals into all views
