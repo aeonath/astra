@@ -2,26 +2,35 @@
 document.addEventListener('DOMContentLoaded', function () {
   var categorySelect = document.getElementById('category');
   var projectSelect = document.getElementById('project_id');
-  var allOptions = Array.from(projectSelect.querySelectorAll('option[data-category]'));
 
   categorySelect.addEventListener('change', function () {
     var catId = categorySelect.value;
 
-    // Remove all project options except the placeholder
-    allOptions.forEach(function (opt) {
-      opt.remove();
-    });
+    // Clear existing project options
+    projectSelect.innerHTML = '';
 
-    // Filter and re-add matching options
-    var filtered = catId
-      ? allOptions.filter(function (opt) { return opt.dataset.category === catId; })
-      : allOptions;
+    if (!catId) {
+      projectSelect.disabled = true;
+      projectSelect.appendChild(new Option('Select a category first', ''));
+      return;
+    }
 
-    filtered.forEach(function (opt) {
-      projectSelect.appendChild(opt);
-    });
+    projectSelect.disabled = true;
+    projectSelect.appendChild(new Option('Loading...', ''));
 
-    // Reset selection
-    projectSelect.value = '';
+    fetch('/projects/submit/projects?category_id=' + encodeURIComponent(catId))
+      .then(function (res) { return res.json(); })
+      .then(function (projects) {
+        projectSelect.innerHTML = '';
+        projectSelect.appendChild(new Option('Select a project', ''));
+        projects.forEach(function (p) {
+          projectSelect.appendChild(new Option(p.name, p.id));
+        });
+        projectSelect.disabled = false;
+      })
+      .catch(function () {
+        projectSelect.innerHTML = '';
+        projectSelect.appendChild(new Option('Failed to load projects', ''));
+      });
   });
 });
