@@ -111,7 +111,7 @@ router.post('/projects/:id/delete', (req, res) => {
 
 // --- Users Management ---
 router.get('/users', (req, res) => {
-  const users = db.prepare('SELECT id, username, display_name, email, role, active, created_at FROM users ORDER BY username').all();
+  const users = db.prepare('SELECT id, username, display_name, email, role, active, can_manage_submissions, created_at FROM users ORDER BY username').all();
   res.render('admin/users', { title: 'Manage Users', users });
 });
 
@@ -170,6 +170,17 @@ router.post('/users/:id/toggle', (req, res) => {
     db.prepare(`UPDATE users SET active = ?, updated_at = datetime('now') WHERE id = ?`).run(user.active ? 0 : 1, user.id);
     req.session.flash = { type: 'success', message: `User "${user.username}" ${user.active ? 'disabled' : 'enabled'}.` };
   }
+  res.redirect('/admin/users');
+});
+
+router.post('/users/:id/toggle-submissions', (req, res) => {
+  const user = db.prepare('SELECT * FROM users WHERE id = ?').get(req.params.id);
+  if (!user) {
+    return res.redirect('/admin/users');
+  }
+  const newVal = user.can_manage_submissions ? 0 : 1;
+  db.prepare(`UPDATE users SET can_manage_submissions = ?, updated_at = datetime('now') WHERE id = ?`).run(newVal, user.id);
+  req.session.flash = { type: 'success', message: `Submissions access ${newVal ? 'granted to' : 'revoked from'} "${user.username}".` };
   res.redirect('/admin/users');
 });
 

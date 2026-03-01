@@ -71,6 +71,9 @@
             <form action="/admin/users/<%= user.id %>/toggle" method="POST" class="inline-form">
               <button type="submit" class="btn btn-sm btn-ghost"><%= user.active ? 'Disable' : 'Enable' %></button>
             </form>
+            <form action="/admin/users/<%= user.id %>/toggle-submissions" method="POST" class="inline-form">
+              <button type="submit" class="btn btn-sm btn-ghost"><%= user.can_manage_submissions ? 'Revoke Submissions' : 'Grant Submissions' %></button>
+            </form>
             <form action="/admin/users/<%= user.id %>/reset-password" method="POST" class="inline-form reset-pw-form">
               <input type="password" name="password" placeholder="New password" required class="input-sm">
               <button type="submit" class="btn btn-sm btn-ghost">Reset PW</button>

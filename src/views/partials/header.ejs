@@ -15,6 +15,9 @@
     </div>
     <div class="nav-links">
       <a href="/projects" class="<%= currentPath.startsWith('/projects') ? 'active' : '' %>">Projects</a>
+      <% if (canManageSubmissions) { %>
+        <a href="/submissions" class="<%= currentPath.startsWith('/submissions') ? 'active' : '' %>">Submissions</a>
+      <% } %>
       <% if (isAdmin) { %>
         <a href="/admin" class="<%= currentPath.startsWith('/admin') ? 'active' : '' %>">Admin</a>
       <% } %>

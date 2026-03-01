@@ -8,10 +8,11 @@ module.exports = function locals(req, res, next) {
   res.locals.currentPath = req.path;
 
   if (req.session.userId) {
-    const user = db.prepare('SELECT id, username, display_name, role FROM users WHERE id = ?').get(req.session.userId);
+    const user = db.prepare('SELECT id, username, display_name, role, can_manage_submissions FROM users WHERE id = ?').get(req.session.userId);
     if (user) {
       res.locals.currentUser = user;
       res.locals.isAdmin = user.role === 'admin';
+      res.locals.canManageSubmissions = user.role === 'admin' || user.can_manage_submissions === 1;
     }
   }
 
