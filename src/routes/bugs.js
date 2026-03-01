@@ -34,9 +34,16 @@ router.post('/', (req, res) => {
     return res.redirect(`/bugs/new?project=${project.slug}&type=${issueType}`);
   }
 
+  // Assign next display_number for bugs and features (per project+type)
+  let displayNumber = null;
+  if (issueType !== 'todo') {
+    const max = db.prepare('SELECT MAX(display_number) as max FROM bugs WHERE project_id = ? AND type = ?').get(project_id, issueType);
+    displayNumber = (max.max || 0) + 1;
+  }
+
   const result = db.prepare(`
-    INSERT INTO bugs (project_id, reporter_id, assignee_id, title, description, priority, type)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO bugs (project_id, reporter_id, assignee_id, title, description, priority, type, display_number)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `).run(
     project_id,
     req.session.userId,
@@ -44,11 +51,14 @@ router.post('/', (req, res) => {
     title.trim(),
     description || null,
     priority || 'medium',
-    issueType
+    issueType,
+    displayNumber
   );
 
-  const labels = { bug: 'Bug', feature: 'Feature', todo: 'Todo' };
-  req.session.flash = { type: 'success', message: `${labels[issueType]} #${result.lastInsertRowid} created.` };
+  const prefixes = { bug: 'BUG', feature: 'REQ' };
+  const prefix = prefixes[issueType];
+  const displayId = prefix ? `${prefix}-${String(displayNumber).padStart(3, '0')}` : 'Todo';
+  req.session.flash = { type: 'success', message: `${displayId} created.` };
   res.redirect(`/bugs/${result.lastInsertRowid}`);
 });
 
@@ -81,9 +91,10 @@ router.get('/:id', (req, res) => {
 
   const users = db.prepare('SELECT id, display_name FROM users WHERE active = 1 ORDER BY display_name').all();
 
-  const labels = { bug: 'Bug', feature: 'Feature', todo: 'Todo' };
-  const label = labels[bug.type] || 'Bug';
-  res.render('bugs/show', { title: `${label} #${bug.id}`, bug, comments, users });
+  const prefixes = { bug: 'BUG', feature: 'REQ' };
+  const prefix = prefixes[bug.type];
+  const displayId = prefix && bug.display_number ? `${prefix}-${String(bug.display_number).padStart(3, '0')}` : (bug.type === 'todo' ? 'Todo' : `#${bug.id}`);
+  res.render('bugs/show', { title: displayId, bug, comments, users, displayId });
 });
 
 // POST /bugs/:id — update bug
@@ -110,9 +121,7 @@ router.post('/:id', (req, res) => {
     bug.id
   );
 
-  const updateLabels = { bug: 'Bug', feature: 'Feature', todo: 'Todo' };
-  const updateLabel = updateLabels[bug.type] || 'Bug';
-  req.session.flash = { type: 'success', message: `${updateLabel} updated.` };
+  req.session.flash = { type: 'success', message: 'Updated.' };
   res.redirect(`/bugs/${bug.id}`);
 });
 

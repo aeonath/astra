@@ -31,21 +31,19 @@
     <table class="table">
       <thead>
         <tr>
-          <th class="col-id">#</th>
-          <th>Title</th>
+          <% if (showStatus === 'open') { %><th class="col-id">#</th><% } %>
+          <th>Task</th>
           <th class="col-priority">Priority</th>
-          <th class="col-status">Status</th>
           <th class="col-assignee">Assignee</th>
           <th class="col-date">Created</th>
         </tr>
       </thead>
       <tbody>
-        <% todos.forEach(item => { %>
+        <% todos.forEach((item, idx) => { %>
           <tr>
-            <td class="col-id"><%= item.id %></td>
+            <% if (showStatus === 'open') { %><td class="col-id"><%= idx + 1 %></td><% } %>
             <td><a href="/bugs/<%= item.id %>"><%= item.title %></a></td>
             <td class="col-priority"><span class="badge badge-<%= item.priority %>"><%= item.priority %></span></td>
-            <td class="col-status"><span class="badge badge-status-<%= item.status %>"><%= item.status %></span></td>
             <td class="col-assignee"><%= item.assignee_name || '—' %></td>
             <td class="col-date"><%= item.created_at.split('T')[0] %></td>
           </tr>
@@ -70,7 +68,7 @@
     <table class="table">
       <thead>
         <tr>
-          <th class="col-id">#</th>
+          <th class="col-id">ID</th>
           <th>Title</th>
           <th class="col-priority">Priority</th>
           <th class="col-status">Status</th>
@@ -81,7 +79,7 @@
       <tbody>
         <% features.forEach(item => { %>
           <tr>
-            <td class="col-id"><%= item.id %></td>
+            <td class="col-id">REQ-<%= String(item.display_number || 0).padStart(3, '0') %></td>
             <td><% if (currentUser) { %><a href="/bugs/<%= item.id %>"><%= item.title %></a><% } else { %><%= item.title %><% } %></td>
             <td class="col-priority"><span class="badge badge-<%= item.priority %>"><%= item.priority %></span></td>
             <td class="col-status"><span class="badge badge-status-<%= item.status %>"><%= item.status %></span></td>
@@ -108,7 +106,7 @@
     <table class="table">
       <thead>
         <tr>
-          <th class="col-id">#</th>
+          <th class="col-id">ID</th>
           <th>Title</th>
           <th class="col-priority">Priority</th>
           <th class="col-status">Status</th>
@@ -119,7 +117,7 @@
       <tbody>
         <% bugs.forEach(item => { %>
           <tr>
-            <td class="col-id"><%= item.id %></td>
+            <td class="col-id">BUG-<%= String(item.display_number || 0).padStart(3, '0') %></td>
             <td><% if (currentUser) { %><a href="/bugs/<%= item.id %>"><%= item.title %></a><% } else { %><%= item.title %><% } %></td>
             <td class="col-priority"><span class="badge badge-<%= item.priority %>"><%= item.priority %></span></td>
             <td class="col-status"><span class="badge badge-status-<%= item.status %>"><%= item.status %></span></td>

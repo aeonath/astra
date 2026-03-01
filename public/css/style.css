@@ -243,7 +243,7 @@ input:focus, textarea:focus, select:focus {
   letter-spacing: 0.5px;
 }
 .table tbody tr:hover { background: var(--bg-secondary); }
-.table .col-id { width: 50px; color: var(--text-muted); }
+.table .col-id { width: 80px; color: var(--text-muted); white-space: nowrap; font-size: 0.8rem; }
 .table .col-priority { width: 90px; }
 .table .col-status { width: 110px; }
 .table .col-assignee { width: 130px; }
@@ -367,6 +367,8 @@ input:focus, textarea:focus, select:focus {
 /* === Bug Detail Layout === */
 .bug-layout { display: grid; grid-template-columns: 1fr 280px; gap: 1.5rem; }
 .bug-main { min-width: 0; }
+.bug-title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+.bug-title-row h1 { font-size: 1.3rem; font-weight: 600; line-height: 1.4; }
 .bug-description p { white-space: pre-wrap; }
 
 .bug-sidebar { }
