@@ -7,7 +7,14 @@
       "Bash(timeout 5 node src/server.js)",
       "Bash(powershell -Command \"Start-Sleep -Seconds 2; Invoke-WebRequest -Uri http://localhost:9000/login -UseBasicParsing | Select-Object -ExpandProperty StatusCode\")",
       "Bash(node -e \"require\\(''./src/app''\\); console.log\\(''App loaded OK''\\)\")",
-      "Bash(node -e \"const db = require\\(''./src/db''\\); console.log\\(db.prepare\\(''SELECT id, name, public FROM projects''\\).all\\(\\)\\)\")"
+      "Bash(node -e \"const db = require\\(''./src/db''\\); console.log\\(db.prepare\\(''SELECT id, name, public FROM projects''\\).all\\(\\)\\)\")",
+      "Bash(node -e \":*)",
+      "Bash(curl -s -D - http://localhost:9000/)",
+      "Bash(curl -s http://localhost:9000/projects/astra)",
+      "Bash(netstat -ano)",
+      "Bash(wmic process where \"ProcessId=813296\" get CommandLine)",
+      "Bash(tasklist /fi \"PID eq 813296\" /v /fo list)",
+      "Bash(powershell -Command \"Get-Process -Id 813296 | Select-Object ProcessName, Id, StartTime | Format-List\")"
     ]
   }
 }
