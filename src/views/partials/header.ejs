@@ -40,7 +40,9 @@
         <a href="/projects/submit?type=feature<%= typeof project !== 'undefined' && project ? '&category_id=' + (project.category_id || '') + '&project_id=' + project.id : '' %>" class="btn btn-sm btn-feature">Request a Feature</a>
       <% } %>
     </div>
-    <a href="/login" class="btn btn-sm btn-primary">Log In</a>
+    <% if (currentPath !== '/login') { %>
+      <a href="/login" class="btn btn-sm btn-primary">Log In</a>
+    <% } %>
   </div>
   <% } %>
 
