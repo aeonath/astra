@@ -26,9 +26,11 @@
           <span class="stat stat-feature">
             <span class="stat-num"><%= project.open_features %></span> open features
           </span>
+          <% if (currentUser) { %>
           <span class="stat stat-todo">
             <span class="stat-num"><%= project.open_todos %></span> open todos
           </span>
+          <% } %>
         </div>
       </a>
     <% }) %>
