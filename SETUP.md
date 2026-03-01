@@ -41,6 +41,11 @@ sudo useradd -r -m -s /bin/bash astra
 sudo mkdir -p /var/lib/astra
 sudo chown astra:astra /var/lib/astra
 
+# Allow astra user to restart its own service
+sudo visudo -f /etc/sudoers.d/astra
+# Add this line:
+#   astra ALL=(root) NOPASSWD: /usr/bin/systemctl restart astra
+
 # Switch to the astra user
 sudo su - astra
 
@@ -198,8 +203,7 @@ npm install --production
 # Apply any new database migrations (safe — only runs unapplied migrations)
 npm run db:migrate
 
-# Exit back to admin user, then restart the service
-exit
+# Restart the service
 sudo systemctl restart astra
 ```
 
@@ -224,7 +228,6 @@ nano .env
 # Bridge legacy migrations to the new system
 npm run db:migrate
 
-exit
 sudo systemctl restart astra
 ```
 
