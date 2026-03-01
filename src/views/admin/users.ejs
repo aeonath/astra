@@ -4,9 +4,10 @@
   <h1>Manage Users</h1>
 </div>
 
-<div class="form-card">
-  <h2>Add User</h2>
-  <form action="/admin/users" method="POST">
+<div class="form-card" id="user-form-card">
+  <h2 id="form-title">Add User</h2>
+  <form id="user-form" action="/admin/users" method="POST">
+    <input type="hidden" id="edit-id" name="edit_id" value="">
     <div class="form-row">
       <div class="form-group">
         <label for="username">Username</label>
@@ -22,7 +23,7 @@
         <label for="email">Email</label>
         <input type="email" id="email" name="email" required>
       </div>
-      <div class="form-group">
+      <div class="form-group" id="password-group">
         <label for="password">Password</label>
         <input type="password" id="password" name="password" required>
       </div>
@@ -34,7 +35,10 @@
         <option value="admin">Admin</option>
       </select>
     </div>
-    <button type="submit" class="btn btn-primary">Create User</button>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary" id="form-submit">Create User</button>
+      <button type="button" class="btn btn-ghost" id="cancel-edit" style="display:none;" onclick="cancelEdit()">Cancel</button>
+    </div>
   </form>
 </div>
 
@@ -51,28 +55,59 @@
   </thead>
   <tbody>
     <% users.forEach(user => { %>
-      <tr class="<%= user.active ? '' : 'row-muted' %>">
+      <tr class="<%= user.active ? '' : 'row-muted' %>" style="cursor:pointer;"
+          onclick="editUser(<%= user.id %>, '<%= user.username %>', '<%- user.display_name.replace(/'/g, "\\'") %>', '<%- user.email.replace(/'/g, "\\'") %>', '<%= user.role %>')">
         <td><%= user.username %></td>
         <td><%= user.display_name %></td>
         <td><%= user.email %></td>
         <td><span class="badge"><%= user.role %></span></td>
         <td><span class="badge badge-status-<%= user.active ? 'open' : 'closed' %>"><%= user.active ? 'Active' : 'Disabled' %></span></td>
-        <td class="actions">
-          <form action="/admin/users/<%= user.id %>/toggle" method="POST" class="inline-form">
-            <button type="submit" class="btn btn-sm btn-ghost"><%= user.active ? 'Disable' : 'Enable' %></button>
-          </form>
+        <td class="actions" onclick="event.stopPropagation()">
           <% if (user.role !== 'admin') { %>
+            <form action="/admin/users/<%= user.id %>/toggle" method="POST" class="inline-form">
+              <button type="submit" class="btn btn-sm btn-ghost"><%= user.active ? 'Disable' : 'Enable' %></button>
+            </form>
             <form action="/admin/users/<%= user.id %>/reset-password" method="POST" class="inline-form reset-pw-form">
               <input type="password" name="password" placeholder="New password" required class="input-sm">
               <button type="submit" class="btn btn-sm btn-ghost">Reset PW</button>
             </form>
-          <% } else { %>
-            <span class="text-muted">CLI only</span>
           <% } %>
         </td>
       </tr>
     <% }) %>
   </tbody>
 </table>
+
+<script>
+function editUser(id, username, displayName, email, role) {
+  document.getElementById('form-title').textContent = 'Edit User';
+  document.getElementById('form-submit').textContent = 'Save Changes';
+  document.getElementById('cancel-edit').style.display = '';
+  document.getElementById('edit-id').value = id;
+  document.getElementById('username').value = username;
+  document.getElementById('username').readOnly = true;
+  document.getElementById('display_name').value = displayName;
+  document.getElementById('email').value = email;
+  document.getElementById('role').value = role;
+  document.getElementById('password').removeAttribute('required');
+  document.getElementById('password').placeholder = 'Leave blank to keep current';
+  document.getElementById('user-form-card').scrollIntoView({ behavior: 'smooth' });
+}
+
+function cancelEdit() {
+  document.getElementById('form-title').textContent = 'Add User';
+  document.getElementById('form-submit').textContent = 'Create User';
+  document.getElementById('cancel-edit').style.display = 'none';
+  document.getElementById('edit-id').value = '';
+  document.getElementById('username').value = '';
+  document.getElementById('username').readOnly = false;
+  document.getElementById('display_name').value = '';
+  document.getElementById('email').value = '';
+  document.getElementById('role').value = 'user';
+  document.getElementById('password').value = '';
+  document.getElementById('password').setAttribute('required', '');
+  document.getElementById('password').placeholder = '';
+}
+</script>
 
 <%- include('../partials/footer') %>

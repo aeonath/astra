@@ -85,8 +85,36 @@ router.get('/users', (req, res) => {
 });
 
 router.post('/users', async (req, res) => {
-  const { username, display_name, email, password, role } = req.body;
+  const { edit_id, username, display_name, email, password, role } = req.body;
 
+  // Edit existing user
+  if (edit_id) {
+    const user = db.prepare('SELECT * FROM users WHERE id = ?').get(edit_id);
+    if (!user) {
+      req.session.flash = { type: 'error', message: 'User not found.' };
+      return res.redirect('/admin/users');
+    }
+
+    if (!display_name || !email) {
+      req.session.flash = { type: 'error', message: 'Display name and email are required.' };
+      return res.redirect('/admin/users');
+    }
+
+    try {
+      db.prepare(`UPDATE users SET display_name = ?, email = ?, role = ?, updated_at = datetime('now') WHERE id = ?`)
+        .run(display_name, email, role === 'admin' ? 'admin' : 'user', user.id);
+      req.session.flash = { type: 'success', message: `User "${user.username}" updated.` };
+    } catch (err) {
+      if (err.message.includes('UNIQUE')) {
+        req.session.flash = { type: 'error', message: 'That email is already in use.' };
+      } else {
+        throw err;
+      }
+    }
+    return res.redirect('/admin/users');
+  }
+
+  // Create new user
   if (!username || !display_name || !email || !password) {
     req.session.flash = { type: 'error', message: 'All fields are required.' };
     return res.redirect('/admin/users');
@@ -109,11 +137,15 @@ router.post('/users', async (req, res) => {
 
 router.post('/users/:id/toggle', (req, res) => {
   const user = db.prepare('SELECT * FROM users WHERE id = ?').get(req.params.id);
-  if (user && user.id !== req.session.userId) {
+  if (!user) {
+    return res.redirect('/admin/users');
+  }
+
+  if (user.role === 'admin') {
+    req.session.flash = { type: 'error', message: 'Admin accounts cannot be disabled.' };
+  } else {
     db.prepare(`UPDATE users SET active = ?, updated_at = datetime('now') WHERE id = ?`).run(user.active ? 0 : 1, user.id);
     req.session.flash = { type: 'success', message: `User "${user.username}" ${user.active ? 'disabled' : 'enabled'}.` };
-  } else if (user && user.id === req.session.userId) {
-    req.session.flash = { type: 'error', message: 'You cannot disable your own account.' };
   }
   res.redirect('/admin/users');
 });
