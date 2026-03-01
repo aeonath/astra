@@ -118,4 +118,20 @@ router.get('/:slug', (req, res) => {
   });
 });
 
+// POST /projects/:slug/notes — save project notes (requires login)
+router.post('/:slug/notes', (req, res) => {
+  if (!req.session.userId) {
+    return res.redirect('/login');
+  }
+  const project = db.prepare('SELECT * FROM projects WHERE slug = ? AND active = 1').get(req.params.slug);
+  if (!project) {
+    req.session.flash = { type: 'error', message: 'Project not found.' };
+    return res.redirect('/projects');
+  }
+  const notes = req.body.notes || '';
+  db.prepare('UPDATE projects SET notes = ? WHERE id = ?').run(notes, project.id);
+  req.session.flash = { type: 'success', message: 'Notes saved.' };
+  res.redirect('/projects/' + project.slug);
+});
+
 module.exports = router;

@@ -140,4 +140,29 @@
   <% } %>
 </div>
 
+<% if (currentUser) { %>
+<div class="section-block section-notes">
+  <div class="section-header">
+    <h2>Notes</h2>
+    <button type="button" class="btn btn-sm btn-ghost" id="notes-edit-btn">Edit</button>
+  </div>
+  <div class="notes-display" id="notes-display">
+    <% if (project.notes) { %>
+      <pre class="notes-content"><%= project.notes %></pre>
+    <% } else { %>
+      <p class="text-muted">No notes yet. Click Edit to add notes.</p>
+    <% } %>
+  </div>
+  <form action="/projects/<%= project.slug %>/notes" method="POST" id="notes-form" style="display:none;">
+    <textarea id="notes-textarea" name="notes" rows="12" class="notes-editor"><%= project.notes || '' %></textarea>
+    <div class="form-actions" style="margin-top:0.75rem;">
+      <button type="submit" class="btn btn-primary btn-sm">Save</button>
+      <button type="button" class="btn btn-ghost btn-sm" id="notes-cancel-btn">Cancel</button>
+    </div>
+  </form>
+</div>
+<% } %>
+
+<script src="/js/project-notes.js"></script>
+
 <%- include('../partials/footer') %>

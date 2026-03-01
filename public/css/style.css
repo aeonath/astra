@@ -324,6 +324,30 @@ input:focus, textarea:focus, select:focus {
 .section-todo { border-left: 3px solid var(--teal); padding-left: 1rem; }
 .section-feature { border-left: 3px solid var(--purple); padding-left: 1rem; }
 .section-bug { border-left: 3px solid var(--danger); padding-left: 1rem; }
+.section-notes { border-left: 3px solid var(--warning, #d29922); padding-left: 1rem; }
+.notes-display {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  min-height: 4rem;
+}
+.notes-content {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  margin: 0;
+  line-height: 1.5;
+}
+.notes-editor {
+  font-family: 'Courier New', Courier, monospace !important;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  resize: vertical;
+  min-height: 10rem;
+}
 
 /* === Project Links === */
 .project-links { display: flex; gap: 0.75rem; margin-top: 0.4rem; }
