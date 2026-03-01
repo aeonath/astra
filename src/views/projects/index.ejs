@@ -1,0 +1,35 @@
+<%- include('../partials/header') %>
+
+<div class="page-header">
+  <h1>Projects</h1>
+</div>
+
+<% if (projects.length === 0) { %>
+  <div class="empty-state">
+    <p>No projects yet.</p>
+    <% if (isAdmin) { %>
+      <a href="/admin/projects" class="btn btn-primary">Create a Project</a>
+    <% } %>
+  </div>
+<% } else { %>
+  <div class="project-grid">
+    <% projects.forEach(project => { %>
+      <a href="/projects/<%= project.slug %>" class="project-card">
+        <h2><%= project.name %></h2>
+        <% if (project.description) { %>
+          <p class="project-desc"><%= project.description %></p>
+        <% } %>
+        <div class="project-stats">
+          <span class="stat">
+            <span class="stat-num"><%= project.open_bugs %></span> open
+          </span>
+          <span class="stat">
+            <span class="stat-num"><%= project.total_bugs %></span> total
+          </span>
+        </div>
+      </a>
+    <% }) %>
+  </div>
+<% } %>
+
+<%- include('../partials/footer') %>

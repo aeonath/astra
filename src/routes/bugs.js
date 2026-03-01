@@ -1,0 +1,126 @@
+const express = require('express');
+const db = require('../db');
+const router = express.Router();
+
+// GET /bugs/new?project=:slug — new bug form
+router.get('/new', (req, res) => {
+  const project = db.prepare('SELECT * FROM projects WHERE slug = ? AND active = 1').get(req.query.project);
+  if (!project) {
+    req.session.flash = { type: 'error', message: 'Project not found.' };
+    return res.redirect('/projects');
+  }
+  const users = db.prepare('SELECT id, display_name FROM users WHERE active = 1 ORDER BY display_name').all();
+  res.render('bugs/new', { title: 'Report Bug', project, users });
+});
+
+// POST /bugs — create bug
+router.post('/', (req, res) => {
+  const { project_id, title, description, priority, assignee_id } = req.body;
+
+  const project = db.prepare('SELECT * FROM projects WHERE id = ? AND active = 1').get(project_id);
+  if (!project) {
+    req.session.flash = { type: 'error', message: 'Project not found.' };
+    return res.redirect('/projects');
+  }
+
+  if (!title || !title.trim()) {
+    req.session.flash = { type: 'error', message: 'Bug title is required.' };
+    return res.redirect(`/bugs/new?project=${project.slug}`);
+  }
+
+  const result = db.prepare(`
+    INSERT INTO bugs (project_id, reporter_id, assignee_id, title, description, priority)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `).run(
+    project_id,
+    req.session.userId,
+    assignee_id || null,
+    title.trim(),
+    description || null,
+    priority || 'medium'
+  );
+
+  req.session.flash = { type: 'success', message: `Bug #${result.lastInsertRowid} created.` };
+  res.redirect(`/bugs/${result.lastInsertRowid}`);
+});
+
+// GET /bugs/:id — view bug
+router.get('/:id', (req, res) => {
+  const bug = db.prepare(`
+    SELECT b.*,
+      p.name as project_name, p.slug as project_slug,
+      u1.display_name as reporter_name,
+      u2.display_name as assignee_name
+    FROM bugs b
+    JOIN projects p ON b.project_id = p.id
+    LEFT JOIN users u1 ON b.reporter_id = u1.id
+    LEFT JOIN users u2 ON b.assignee_id = u2.id
+    WHERE b.id = ?
+  `).get(req.params.id);
+
+  if (!bug) {
+    req.session.flash = { type: 'error', message: 'Bug not found.' };
+    return res.redirect('/projects');
+  }
+
+  const comments = db.prepare(`
+    SELECT c.*, u.display_name as author_name
+    FROM comments c
+    JOIN users u ON c.user_id = u.id
+    WHERE c.bug_id = ?
+    ORDER BY c.created_at ASC
+  `).all(bug.id);
+
+  const users = db.prepare('SELECT id, display_name FROM users WHERE active = 1 ORDER BY display_name').all();
+
+  res.render('bugs/show', { title: `Bug #${bug.id}`, bug, comments, users });
+});
+
+// POST /bugs/:id — update bug
+router.post('/:id', (req, res) => {
+  const bug = db.prepare('SELECT * FROM bugs WHERE id = ?').get(req.params.id);
+  if (!bug) {
+    req.session.flash = { type: 'error', message: 'Bug not found.' };
+    return res.redirect('/projects');
+  }
+
+  const { title, description, status, priority, assignee_id } = req.body;
+
+  db.prepare(`
+    UPDATE bugs SET title = ?, description = ?, status = ?, priority = ?, assignee_id = ?, updated_at = datetime('now')
+    WHERE id = ?
+  `).run(
+    title || bug.title,
+    description ?? bug.description,
+    status || bug.status,
+    priority || bug.priority,
+    assignee_id || null,
+    bug.id
+  );
+
+  req.session.flash = { type: 'success', message: 'Bug updated.' };
+  res.redirect(`/bugs/${bug.id}`);
+});
+
+// POST /bugs/:id/comment — add comment
+router.post('/:id/comment', (req, res) => {
+  const { content } = req.body;
+  if (!content || !content.trim()) {
+    req.session.flash = { type: 'error', message: 'Comment cannot be empty.' };
+    return res.redirect(`/bugs/${req.params.id}`);
+  }
+
+  db.prepare('INSERT INTO comments (bug_id, user_id, content) VALUES (?, ?, ?)').run(
+    req.params.id,
+    req.session.userId,
+    content.trim()
+  );
+
+  // Also bump the bug's updated_at
+  db.prepare("UPDATE bugs SET updated_at = datetime('now') WHERE id = ?").run(req.params.id);
+
+  req.session.flash = { type: 'success', message: 'Comment added.' };
+  res.redirect(`/bugs/${req.params.id}`);
+});
+
+module.exports = router;

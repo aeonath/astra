@@ -1,0 +1,94 @@
+<%- include('../partials/header') %>
+
+<div class="page-header">
+  <div>
+    <div class="breadcrumb">
+      <a href="/projects/<%= bug.project_slug %>"><%= bug.project_name %></a>
+      <span>&rsaquo;</span>
+      <span>Bug #<%= bug.id %></span>
+    </div>
+    <h1><%= bug.title %></h1>
+  </div>
+</div>
+
+<div class="bug-layout">
+  <div class="bug-main">
+    <% if (bug.description) { %>
+      <div class="bug-description card">
+        <p><%= bug.description %></p>
+      </div>
+    <% } %>
+
+    <div class="comments-section">
+      <h2>Comments (<%= comments.length %>)</h2>
+
+      <% if (comments.length === 0) { %>
+        <p class="text-muted">No comments yet.</p>
+      <% } %>
+
+      <% comments.forEach(comment => { %>
+        <div class="comment card">
+          <div class="comment-header">
+            <strong><%= comment.author_name %></strong>
+            <span class="text-muted"><%= comment.created_at %></span>
+          </div>
+          <p><%= comment.content %></p>
+        </div>
+      <% }) %>
+
+      <form action="/bugs/<%= bug.id %>/comment" method="POST" class="comment-form">
+        <div class="form-group">
+          <textarea name="content" rows="3" placeholder="Add a comment..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm">Add Comment</button>
+      </form>
+    </div>
+  </div>
+
+  <aside class="bug-sidebar">
+    <form action="/bugs/<%= bug.id %>" method="POST" class="card sidebar-form">
+      <h3>Details</h3>
+
+      <div class="form-group">
+        <label for="status">Status</label>
+        <select id="status" name="status">
+          <% ['open', 'in_progress', 'resolved', 'closed', 'wontfix'].forEach(s => { %>
+            <option value="<%= s %>" <%= bug.status === s ? 'selected' : '' %>><%= s.replace('_', ' ') %></option>
+          <% }) %>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="priority">Priority</label>
+        <select id="priority" name="priority">
+          <% ['low', 'medium', 'high', 'critical'].forEach(p => { %>
+            <option value="<%= p %>" <%= bug.priority === p ? 'selected' : '' %>><%= p %></option>
+          <% }) %>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="assignee_id">Assignee</label>
+        <select id="assignee_id" name="assignee_id">
+          <option value="">Unassigned</option>
+          <% users.forEach(u => { %>
+            <option value="<%= u.id %>" <%= bug.assignee_id === u.id ? 'selected' : '' %>><%= u.display_name %></option>
+          <% }) %>
+        </select>
+      </div>
+
+      <input type="hidden" name="title" value="<%= bug.title %>">
+      <input type="hidden" name="description" value="<%= bug.description || '' %>">
+
+      <button type="submit" class="btn btn-primary btn-sm btn-block">Update</button>
+
+      <div class="sidebar-meta">
+        <p><strong>Reporter:</strong> <%= bug.reporter_name %></p>
+        <p><strong>Created:</strong> <%= bug.created_at %></p>
+        <p><strong>Updated:</strong> <%= bug.updated_at %></p>
+      </div>
+    </form>
+  </aside>
+</div>
+
+<%- include('../partials/footer') %>

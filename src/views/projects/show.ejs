@@ -1,0 +1,62 @@
+<%- include('../partials/header') %>
+
+<div class="page-header">
+  <div>
+    <h1><%= project.name %></h1>
+    <% if (project.description) { %>
+      <p class="text-muted"><%= project.description %></p>
+    <% } %>
+  </div>
+  <a href="/bugs/new?project=<%= project.slug %>" class="btn btn-primary">Report Bug</a>
+</div>
+
+<div class="status-tabs">
+  <a href="?status=all" class="tab <%= filterStatus === 'all' ? 'active' : '' %>">
+    All (<%= statusCounts.open + statusCounts.in_progress + statusCounts.resolved + statusCounts.closed + statusCounts.wontfix %>)
+  </a>
+  <a href="?status=open" class="tab <%= filterStatus === 'open' ? 'active' : '' %>">
+    Open (<%= statusCounts.open %>)
+  </a>
+  <a href="?status=in_progress" class="tab <%= filterStatus === 'in_progress' ? 'active' : '' %>">
+    In Progress (<%= statusCounts.in_progress %>)
+  </a>
+  <a href="?status=resolved" class="tab <%= filterStatus === 'resolved' ? 'active' : '' %>">
+    Resolved (<%= statusCounts.resolved %>)
+  </a>
+  <a href="?status=closed" class="tab <%= filterStatus === 'closed' ? 'active' : '' %>">
+    Closed (<%= statusCounts.closed %>)
+  </a>
+</div>
+
+<% if (bugs.length === 0) { %>
+  <div class="empty-state">
+    <p>No bugs matching this filter.</p>
+  </div>
+<% } else { %>
+  <table class="table">
+    <thead>
+      <tr>
+        <th class="col-id">#</th>
+        <th>Title</th>
+        <th class="col-priority">Priority</th>
+        <th class="col-status">Status</th>
+        <th class="col-assignee">Assignee</th>
+        <th class="col-date">Created</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% bugs.forEach(bug => { %>
+        <tr>
+          <td class="col-id"><%= bug.id %></td>
+          <td><a href="/bugs/<%= bug.id %>"><%= bug.title %></a></td>
+          <td class="col-priority"><span class="badge badge-<%= bug.priority %>"><%= bug.priority %></span></td>
+          <td class="col-status"><span class="badge badge-status-<%= bug.status %>"><%= bug.status.replace('_', ' ') %></span></td>
+          <td class="col-assignee"><%= bug.assignee_name || '—' %></td>
+          <td class="col-date"><%= bug.created_at.split('T')[0] %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+<% } %>
+
+<%- include('../partials/footer') %>

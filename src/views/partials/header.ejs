@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title + ' | ' : '' %>Astra</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <% if (currentUser) { %>
+  <nav class="navbar">
+    <div class="nav-brand">
+      <a href="/projects">&#9733; Astra</a>
+    </div>
+    <div class="nav-links">
+      <a href="/projects" class="<%= currentPath.startsWith('/projects') ? 'active' : '' %>">Projects</a>
+      <% if (isAdmin) { %>
+        <a href="/admin" class="<%= currentPath.startsWith('/admin') ? 'active' : '' %>">Admin</a>
+      <% } %>
+    </div>
+    <div class="nav-user">
+      <span class="user-name"><%= currentUser.display_name %></span>
+      <form action="/logout" method="POST" class="inline-form">
+        <button type="submit" class="btn btn-sm btn-ghost">Logout</button>
+      </form>
+    </div>
+  </nav>
+  <% } %>
+
+  <main class="container">
+    <% if (flash) { %>
+      <div class="alert alert-<%= flash.type %>">
+        <%= flash.message %>
+      </div>
+    <% } %>

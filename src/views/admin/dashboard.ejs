@@ -1,0 +1,31 @@
+<%- include('../partials/header') %>
+
+<div class="page-header">
+  <h1>Admin Dashboard</h1>
+</div>
+
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-number"><%= stats.users %></div>
+    <div class="stat-label">Users</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number"><%= stats.projects %></div>
+    <div class="stat-label">Projects</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number"><%= stats.openBugs %></div>
+    <div class="stat-label">Open Bugs</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number"><%= stats.totalBugs %></div>
+    <div class="stat-label">Total Bugs</div>
+  </div>
+</div>
+
+<div class="admin-links">
+  <a href="/admin/projects" class="btn btn-primary">Manage Projects</a>
+  <a href="/admin/users" class="btn btn-primary">Manage Users</a>
+</div>
+
+<%- include('../partials/footer') %>
