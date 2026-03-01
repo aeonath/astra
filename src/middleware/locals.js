@@ -15,5 +15,13 @@ module.exports = function locals(req, res, next) {
     }
   }
 
+  // Load site settings as a simple object
+  const rows = db.prepare('SELECT key, value FROM site_settings').all();
+  const siteSettings = {};
+  for (const row of rows) {
+    siteSettings[row.key] = row.value;
+  }
+  res.locals.siteSettings = siteSettings;
+
   next();
 };

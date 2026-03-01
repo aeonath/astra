@@ -78,6 +78,8 @@ a:hover { color: var(--accent-hover); }
 }
 .user-name { color: var(--text-secondary); font-size: 0.9rem; }
 
+.public-login { position: absolute; top: 1rem; right: 1.5rem; z-index: 10; }
+
 /* === Container === */
 .container {
   max-width: 1100px;

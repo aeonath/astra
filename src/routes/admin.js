@@ -279,4 +279,23 @@ router.post('/categories/:id/delete', (req, res) => {
   res.redirect('/admin/categories');
 });
 
+// --- Site Settings ---
+router.get('/settings', (req, res) => {
+  const rows = db.prepare('SELECT key, value FROM site_settings').all();
+  const settings = {};
+  for (const row of rows) {
+    settings[row.key] = row.value;
+  }
+  res.render('admin/settings', { title: 'Site Settings', settings });
+});
+
+router.post('/settings', (req, res) => {
+  const { tagline, footer_text } = req.body;
+  const update = db.prepare('UPDATE site_settings SET value = ? WHERE key = ?');
+  update.run(tagline || '', 'tagline');
+  update.run(footer_text || '', 'footer_text');
+  req.session.flash = { type: 'success', message: 'Site settings updated.' };
+  res.redirect('/admin/settings');
+});
+
 module.exports = router;

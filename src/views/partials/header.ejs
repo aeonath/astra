@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+  <% if (currentUser) { %>
   <nav class="navbar">
     <div class="nav-brand">
       <a href="/">&#9733; Astra</a>
@@ -19,16 +20,17 @@
       <% } %>
     </div>
     <div class="nav-user">
-      <% if (currentUser) { %>
-        <span class="user-name"><%= currentUser.display_name %></span>
-        <form action="/logout" method="POST" class="inline-form">
-          <button type="submit" class="btn btn-sm btn-ghost">Logout</button>
-        </form>
-      <% } else { %>
-        <a href="/login" class="btn btn-sm btn-primary">Log In</a>
-      <% } %>
+      <span class="user-name"><%= currentUser.display_name %></span>
+      <form action="/logout" method="POST" class="inline-form">
+        <button type="submit" class="btn btn-sm btn-ghost">Logout</button>
+      </form>
     </div>
   </nav>
+  <% } else { %>
+  <div class="public-login">
+    <a href="/login" class="btn btn-sm btn-primary">Log In</a>
+  </div>
+  <% } %>
 
   <main class="container">
     <% if (flash) { %>
