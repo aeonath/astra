@@ -57,7 +57,7 @@ Set `.env` to:
 PORT=9000
 HOST=127.0.0.1
 SESSION_SECRET=<paste-random-string-here>
-DB_PATH=./data/astra.db
+DB_PATH=/var/lib/astra/astra.db
 NODE_ENV=production
 ```
 
@@ -67,13 +67,23 @@ Generate a real session secret:
 openssl rand -hex 32
 ```
 
-Seed the database:
+Initialize the database:
 
 ```bash
+# Create the database directory (outside the app source tree)
+sudo mkdir -p /var/lib/astra
+sudo chown astra:astra /var/lib/astra
+
+# Initialize the database (one-time only — refuses to overwrite)
+cd /home/astra/app && sudo -u astra npm run db:init
+
+# Seed the default admin user and sample project
 cd /home/astra/app && sudo -u astra npm run seed
 ```
 
 Default login will be `admin` / `admin` — change the password immediately after first login.
+
+> **Important:** The database lives at `/var/lib/astra/astra.db`, outside the application directory. This ensures that `git pull`, redeploys, and restarts can never wipe the database. The app will refuse to start if the database is missing or has pending migrations.
 
 ## 5. Create systemd service
 
@@ -170,5 +180,34 @@ To deploy updates after pushing new code:
 cd /home/astra/app
 sudo -u astra git pull
 sudo -u astra npm install --production
+
+# Apply any new database migrations (safe — only runs unapplied migrations)
+sudo -u astra npm run db:migrate
+
 sudo systemctl restart astra
 ```
+
+> **Note:** If there are pending migrations, Astra will refuse to start until `npm run db:migrate` is run. This is intentional — the app never modifies the database schema automatically.
+
+## Migrating an Existing Installation
+
+If upgrading from a version that used the old `_migrations` table:
+
+```bash
+cd /home/astra/app
+
+# Move the database outside the source tree (if it was in ./data/)
+sudo mkdir -p /var/lib/astra
+sudo mv data/astra.db /var/lib/astra/astra.db
+sudo chown astra:astra /var/lib/astra/astra.db
+
+# Update .env to use the new absolute path
+# DB_PATH=/var/lib/astra/astra.db
+
+# Bridge legacy migrations to the new system
+sudo -u astra npm run db:migrate
+
+sudo systemctl restart astra
+```
+
+The migration runner automatically detects the old `_migrations` table and bridges it to the new `schema_migrations` system.
