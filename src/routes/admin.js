@@ -47,7 +47,7 @@ router.post('/projects', (req, res) => {
 router.post('/projects/:id/toggle', (req, res) => {
   const project = db.prepare('SELECT * FROM projects WHERE id = ?').get(req.params.id);
   if (project) {
-    db.prepare('UPDATE projects SET active = ?, updated_at = datetime("now") WHERE id = ?').run(project.active ? 0 : 1, project.id);
+    db.prepare(`UPDATE projects SET active = ?, updated_at = datetime('now') WHERE id = ?`).run(project.active ? 0 : 1, project.id);
     req.session.flash = { type: 'success', message: `Project "${project.name}" ${project.active ? 'archived' : 'restored'}.` };
   }
   res.redirect('/admin/projects');
@@ -56,7 +56,7 @@ router.post('/projects/:id/toggle', (req, res) => {
 router.post('/projects/:id/visibility', (req, res) => {
   const project = db.prepare('SELECT * FROM projects WHERE id = ?').get(req.params.id);
   if (project) {
-    db.prepare('UPDATE projects SET public = ?, updated_at = datetime("now") WHERE id = ?').run(project.public ? 0 : 1, project.id);
+    db.prepare(`UPDATE projects SET public = ?, updated_at = datetime('now') WHERE id = ?`).run(project.public ? 0 : 1, project.id);
     req.session.flash = { type: 'success', message: `Project "${project.name}" is now ${project.public ? 'private' : 'public'}.` };
   }
   res.redirect('/admin/projects');
@@ -108,7 +108,7 @@ router.post('/users', async (req, res) => {
 router.post('/users/:id/toggle', (req, res) => {
   const user = db.prepare('SELECT * FROM users WHERE id = ?').get(req.params.id);
   if (user && user.id !== req.session.userId) {
-    db.prepare('UPDATE users SET active = ?, updated_at = datetime("now") WHERE id = ?').run(user.active ? 0 : 1, user.id);
+    db.prepare(`UPDATE users SET active = ?, updated_at = datetime('now') WHERE id = ?`).run(user.active ? 0 : 1, user.id);
     req.session.flash = { type: 'success', message: `User "${user.username}" ${user.active ? 'disabled' : 'enabled'}.` };
   } else if (user && user.id === req.session.userId) {
     req.session.flash = { type: 'error', message: 'You cannot disable your own account.' };
@@ -123,7 +123,7 @@ router.post('/users/:id/reset-password', async (req, res) => {
     return res.redirect('/admin/users');
   }
   const hash = await bcrypt.hash(password, 12);
-  db.prepare('UPDATE users SET password_hash = ?, updated_at = datetime("now") WHERE id = ?').run(hash, req.params.id);
+  db.prepare(`UPDATE users SET password_hash = ?, updated_at = datetime('now') WHERE id = ?`).run(hash, req.params.id);
   req.session.flash = { type: 'success', message: 'Password reset successfully.' };
   res.redirect('/admin/users');
 });
