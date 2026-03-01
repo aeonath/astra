@@ -14,7 +14,14 @@
       "Bash(netstat -ano)",
       "Bash(wmic process where \"ProcessId=813296\" get CommandLine)",
       "Bash(tasklist /fi \"PID eq 813296\" /v /fo list)",
-      "Bash(powershell -Command \"Get-Process -Id 813296 | Select-Object ProcessName, Id, StartTime | Format-List\")"
+      "Bash(powershell -Command \"Get-Process -Id 813296 | Select-Object ProcessName, Id, StartTime | Format-List\")",
+      "Bash(DB_PATH=C:/Work/astra/data/astra.db node src/db/migrate.js)",
+      "Bash(DB_PATH=C:/Work/astra/data/nonexistent.db node src/server.js)",
+      "Bash(DB_PATH=\"\" node src/server.js)",
+      "Bash(DB_PATH=./data/astra.db node src/server.js)",
+      "Bash(DB_PATH=C:/Work/astra/data/test-init.db node src/db/init.js)",
+      "Bash(DB_PATH=C:/Work/astra/data/test-init.db timeout 3 node src/server.js)",
+      "Bash(timeout 3 node src/server.js)"
     ]
   }
 }
