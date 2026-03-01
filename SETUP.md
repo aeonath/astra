@@ -36,19 +36,24 @@ sudo apt install -y build-essential python3
 ## 4. Deploy the app
 
 ```bash
-# Create app user
+# Create app user and database directory
 sudo useradd -r -m -s /bin/bash astra
+sudo mkdir -p /var/lib/astra
+sudo chown astra:astra /var/lib/astra
 
-# Clone the repo (adjust URL to your actual repo)
-sudo -u astra git clone https://github.com/aeonath/astra.git /home/astra/app
+# Switch to the astra user
+sudo su - astra
+
+# Clone the repo
+git clone https://github.com/aeonath/astra.git ~/app
 
 # Install dependencies
-cd /home/astra/app
-sudo -u astra npm install --production
+cd ~/app
+npm install --production
 
 # Create .env
-sudo -u astra cp .env.example .env
-sudo -u astra nano /home/astra/app/.env
+cp .env.example .env
+nano .env
 ```
 
 Set `.env` to:
@@ -61,27 +66,33 @@ DB_PATH=/var/lib/astra/astra.db
 NODE_ENV=production
 ```
 
-Generate a real session secret:
+Generate a real session secret (run in a separate terminal or before editing .env):
 
 ```bash
 openssl rand -hex 32
 ```
 
-Initialize the database:
+Initialize the database and seed:
 
 ```bash
-# Create the database directory (outside the app source tree)
-sudo mkdir -p /var/lib/astra
-sudo chown astra:astra /var/lib/astra
-
-# Initialize the database (one-time only — refuses to overwrite)
-cd /home/astra/app && sudo -u astra npm run db:init
-
-# Seed the default admin user and sample project
-cd /home/astra/app && sudo -u astra npm run seed
+# Still as the astra user, from ~/app
+npm run db:init
+npm run seed
 ```
 
 Default login will be `admin` / `admin` — change the password immediately after first login.
+
+To reset the admin password from the command line:
+
+```bash
+npm run reset-password -- admin yournewpassword
+```
+
+Exit back to your admin user when done:
+
+```bash
+exit
+```
 
 > **Important:** The database lives at `/var/lib/astra/astra.db`, outside the application directory. This ensures that `git pull`, redeploys, and restarts can never wipe the database. The app will refuse to start if the database is missing or has pending migrations.
 
@@ -177,13 +188,18 @@ Visit `https://astra.miranova.studio` — you should see the Astra login page.
 To deploy updates after pushing new code:
 
 ```bash
-cd /home/astra/app
-sudo -u astra git pull
-sudo -u astra npm install --production
+# Switch to the astra user
+sudo su - astra
+cd ~/app
+
+git pull
+npm install --production
 
 # Apply any new database migrations (safe — only runs unapplied migrations)
-sudo -u astra npm run db:migrate
+npm run db:migrate
 
+# Exit back to admin user, then restart the service
+exit
 sudo systemctl restart astra
 ```
 
@@ -194,19 +210,21 @@ sudo systemctl restart astra
 If upgrading from a version that used the old `_migrations` table:
 
 ```bash
-cd /home/astra/app
-
-# Move the database outside the source tree (if it was in ./data/)
+# Create database directory and move the DB outside the source tree
 sudo mkdir -p /var/lib/astra
-sudo mv data/astra.db /var/lib/astra/astra.db
+sudo mv /home/astra/app/data/astra.db /var/lib/astra/astra.db
 sudo chown astra:astra /var/lib/astra/astra.db
 
-# Update .env to use the new absolute path
-# DB_PATH=/var/lib/astra/astra.db
+# Switch to astra user and update .env
+sudo su - astra
+cd ~/app
+nano .env
+# Set DB_PATH=/var/lib/astra/astra.db
 
 # Bridge legacy migrations to the new system
-sudo -u astra npm run db:migrate
+npm run db:migrate
 
+exit
 sudo systemctl restart astra
 ```
 
