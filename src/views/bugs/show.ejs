@@ -15,6 +15,7 @@
 <div class="bug-layout">
   <div class="bug-main">
     <div id="bug-display">
+      <% if (bug.type !== 'todo') { %>
       <div class="bug-description card">
         <% if (bug.description) { %>
           <p id="bug-desc-text"><%= bug.description %></p>
@@ -22,10 +23,17 @@
           <p id="bug-desc-text" class="text-muted">No description provided.</p>
         <% } %>
       </div>
+      <% } %>
     </div>
 
     <form action="/bugs/<%= bug.id %>" method="POST" id="bug-edit-form" style="display:none;">
       <div class="card" style="margin-bottom:1rem;">
+        <% if (bug.type === 'todo') { %>
+        <div class="form-group">
+          <label for="edit-title">Task</label>
+          <textarea id="edit-title" name="title" rows="2" required><%= bug.title %></textarea>
+        </div>
+        <% } else { %>
         <div class="form-group">
           <label for="edit-title">Title</label>
           <input type="text" id="edit-title" name="title" value="<%= bug.title %>" required>
@@ -34,9 +42,13 @@
           <label for="edit-description">Description</label>
           <textarea id="edit-description" name="description" rows="6"><%= bug.description || '' %></textarea>
         </div>
+        <% } %>
         <input type="hidden" name="status" value="<%= bug.status %>">
         <input type="hidden" name="priority" value="<%= bug.priority %>">
         <input type="hidden" name="assignee_id" value="<%= bug.assignee_id || '' %>">
+        <% if (bug.type === 'todo') { %>
+        <input type="hidden" name="description" value="<%= bug.description || '' %>">
+        <% } %>
         <div class="form-actions">
           <button type="submit" class="btn btn-primary btn-sm">Save</button>
           <button type="button" class="btn btn-ghost btn-sm" id="cancel-edit-btn">Cancel</button>
