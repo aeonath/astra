@@ -32,8 +32,29 @@ router.get('/projects', (req, res) => {
 });
 
 router.post('/projects', (req, res) => {
-  const { name, description, default_assignee_id, category_id } = req.body;
+  const { edit_id, name, description, default_assignee_id, category_id } = req.body;
   const isPublic = req.body.public === 'on' ? 1 : 0;
+
+  // Edit existing project
+  if (edit_id) {
+    const project = db.prepare('SELECT * FROM projects WHERE id = ?').get(edit_id);
+    if (!project) {
+      req.session.flash = { type: 'error', message: 'Project not found.' };
+      return res.redirect('/admin/projects');
+    }
+
+    if (!description && !name) {
+      req.session.flash = { type: 'error', message: 'Project name is required.' };
+      return res.redirect('/admin/projects');
+    }
+
+    db.prepare(`UPDATE projects SET description = ?, public = ?, default_assignee_id = ?, category_id = ?, updated_at = datetime('now') WHERE id = ?`)
+      .run(description || null, isPublic, default_assignee_id || null, category_id || null, project.id);
+    req.session.flash = { type: 'success', message: `Project "${project.name}" updated.` };
+    return res.redirect('/admin/projects');
+  }
+
+  // Create new project
   const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
   if (!name || !slug) {

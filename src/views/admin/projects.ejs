@@ -4,9 +4,10 @@
   <h1>Manage Projects</h1>
 </div>
 
-<div class="form-card">
-  <h2>Add Project</h2>
-  <form action="/admin/projects" method="POST">
+<div class="form-card" id="project-form-card">
+  <h2 id="form-title">Add Project</h2>
+  <form action="/admin/projects" method="POST" id="project-form">
+    <input type="hidden" id="edit-id" name="edit_id" value="">
     <div class="form-row">
       <div class="form-group">
         <label for="name">Name</label>
@@ -39,10 +40,13 @@
     </div>
     <div class="form-group">
       <label class="checkbox-label">
-        <input type="checkbox" name="public" checked> Publicly visible
+        <input type="checkbox" id="public" name="public" checked> Publicly visible
       </label>
     </div>
-    <button type="submit" class="btn btn-primary">Create Project</button>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary" id="form-submit">Create Project</button>
+      <button type="button" class="btn btn-danger" id="cancel-edit" style="display:none;">Cancel</button>
+    </div>
   </form>
 </div>
 
@@ -59,13 +63,19 @@
   </thead>
   <tbody>
     <% projects.forEach(project => { %>
-      <tr class="<%= project.active ? '' : 'row-muted' %>">
+      <tr class="<%= project.active ? '' : 'row-muted' %>" style="cursor:pointer;"
+          data-project-id="<%= project.id %>"
+          data-name="<%= project.name %>"
+          data-description="<%= project.description || '' %>"
+          data-category-id="<%= project.category_id || '' %>"
+          data-default-assignee-id="<%= project.default_assignee_id || '' %>"
+          data-public="<%= project.public %>">
         <td><%= project.name %></td>
         <td><%= project.category_name || '—' %></td>
         <td><%= project.assignee_name || '—' %></td>
         <td><span class="badge badge-status-<%= project.public ? 'open' : 'closed' %>"><%= project.public ? 'Public' : 'Private' %></span></td>
         <td><span class="badge badge-status-<%= project.active ? 'open' : 'closed' %>"><%= project.active ? 'Active' : 'Archived' %></span></td>
-        <td class="actions">
+        <td class="actions no-row-click">
           <form action="/admin/projects/<%= project.id %>/visibility" method="POST" class="inline-form">
             <button type="submit" class="btn btn-sm btn-ghost"><%= project.public ? 'Make Private' : 'Make Public' %></button>
           </form>
@@ -80,5 +90,7 @@
     <% }) %>
   </tbody>
 </table>
+
+<script src="/js/admin-projects.js"></script>
 
 <%- include('../partials/footer') %>
