@@ -23,6 +23,7 @@ router.get('/projects', (req, res) => {
 
 router.post('/projects', (req, res) => {
   const { name, description } = req.body;
+  const isPublic = req.body.public === 'on' ? 1 : 0;
   const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
   if (!name || !slug) {
@@ -31,7 +32,7 @@ router.post('/projects', (req, res) => {
   }
 
   try {
-    db.prepare('INSERT INTO projects (name, slug, description) VALUES (?, ?, ?)').run(name, slug, description || null);
+    db.prepare('INSERT INTO projects (name, slug, description, public) VALUES (?, ?, ?, ?)').run(name, slug, description || null, isPublic);
     req.session.flash = { type: 'success', message: `Project "${name}" created.` };
   } catch (err) {
     if (err.message.includes('UNIQUE')) {
@@ -48,6 +49,15 @@ router.post('/projects/:id/toggle', (req, res) => {
   if (project) {
     db.prepare('UPDATE projects SET active = ?, updated_at = datetime("now") WHERE id = ?').run(project.active ? 0 : 1, project.id);
     req.session.flash = { type: 'success', message: `Project "${project.name}" ${project.active ? 'archived' : 'restored'}.` };
+  }
+  res.redirect('/admin/projects');
+});
+
+router.post('/projects/:id/visibility', (req, res) => {
+  const project = db.prepare('SELECT * FROM projects WHERE id = ?').get(req.params.id);
+  if (project) {
+    db.prepare('UPDATE projects SET public = ?, updated_at = datetime("now") WHERE id = ?').run(project.public ? 0 : 1, project.id);
+    req.session.flash = { type: 'success', message: `Project "${project.name}" is now ${project.public ? 'private' : 'public'}.` };
   }
   res.redirect('/admin/projects');
 });

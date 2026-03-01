@@ -7,7 +7,9 @@
       <p class="text-muted"><%= project.description %></p>
     <% } %>
   </div>
-  <a href="/bugs/new?project=<%= project.slug %>" class="btn btn-primary">Report Bug</a>
+  <% if (currentUser) { %>
+    <a href="/bugs/new?project=<%= project.slug %>" class="btn btn-primary">Report Bug</a>
+  <% } %>
 </div>
 
 <div class="status-tabs">
@@ -48,7 +50,7 @@
       <% bugs.forEach(bug => { %>
         <tr>
           <td class="col-id"><%= bug.id %></td>
-          <td><a href="/bugs/<%= bug.id %>"><%= bug.title %></a></td>
+          <td><% if (currentUser) { %><a href="/bugs/<%= bug.id %>"><%= bug.title %></a><% } else { %><%= bug.title %><% } %></td>
           <td class="col-priority"><span class="badge badge-<%= bug.priority %>"><%= bug.priority %></span></td>
           <td class="col-status"><span class="badge badge-status-<%= bug.status %>"><%= bug.status.replace('_', ' ') %></span></td>
           <td class="col-assignee"><%= bug.assignee_name || '—' %></td>

@@ -5,7 +5,9 @@
       "Bash(npm install --save-dev nodemon)",
       "Bash(npm run seed)",
       "Bash(timeout 5 node src/server.js)",
-      "Bash(powershell -Command \"Start-Sleep -Seconds 2; Invoke-WebRequest -Uri http://localhost:9000/login -UseBasicParsing | Select-Object -ExpandProperty StatusCode\")"
+      "Bash(powershell -Command \"Start-Sleep -Seconds 2; Invoke-WebRequest -Uri http://localhost:9000/login -UseBasicParsing | Select-Object -ExpandProperty StatusCode\")",
+      "Bash(node -e \"require\\(''./src/app''\\); console.log\\(''App loaded OK''\\)\")",
+      "Bash(node -e \"const db = require\\(''./src/db''\\); console.log\\(db.prepare\\(''SELECT id, name, public FROM projects''\\).all\\(\\)\\)\")"
     ]
   }
 }

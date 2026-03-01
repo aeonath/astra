@@ -5,12 +5,13 @@ const router = express.Router();
 
 // GET /projects — list all active projects
 router.get('/', (req, res) => {
+  const isLoggedIn = !!req.session.userId;
   const projects = db.prepare(`
     SELECT p.*,
       (SELECT COUNT(*) FROM bugs WHERE project_id = p.id AND status IN ('open','in_progress')) as open_bugs,
       (SELECT COUNT(*) FROM bugs WHERE project_id = p.id) as total_bugs
     FROM projects p
-    WHERE p.active = 1
+    WHERE p.active = 1 ${isLoggedIn ? '' : 'AND p.public = 1'}
     ORDER BY p.name
   `).all();
 
@@ -19,8 +20,9 @@ router.get('/', (req, res) => {
 
 // GET /projects/:slug — show project bugs
 router.get('/:slug', (req, res) => {
+  const isLoggedIn = !!req.session.userId;
   const project = db.prepare('SELECT * FROM projects WHERE slug = ? AND active = 1').get(req.params.slug);
-  if (!project) {
+  if (!project || (!project.public && !isLoggedIn)) {
     req.session.flash = { type: 'error', message: 'Project not found.' };
     return res.redirect('/projects');
   }

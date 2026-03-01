@@ -18,6 +18,7 @@ function init(db) {
       name TEXT NOT NULL,
       slug TEXT UNIQUE NOT NULL,
       description TEXT,
+      public INTEGER NOT NULL DEFAULT 0,
       active INTEGER NOT NULL DEFAULT 1,
       created_at TEXT NOT NULL DEFAULT (datetime('now')),
       updated_at TEXT NOT NULL DEFAULT (datetime('now'))
@@ -49,11 +50,30 @@ function init(db) {
       FOREIGN KEY (user_id) REFERENCES users(id)
     );
 
+    CREATE TABLE IF NOT EXISTS _migrations (
+      name TEXT PRIMARY KEY
+    );
+  `);
+
+  // Migrations
+  migrate(db, 'add_public_to_projects', `
+    ALTER TABLE projects ADD COLUMN public INTEGER NOT NULL DEFAULT 0
+  `);
+
+  db.exec(`
     CREATE INDEX IF NOT EXISTS idx_bugs_project ON bugs(project_id);
     CREATE INDEX IF NOT EXISTS idx_bugs_status ON bugs(status);
     CREATE INDEX IF NOT EXISTS idx_bugs_assignee ON bugs(assignee_id);
     CREATE INDEX IF NOT EXISTS idx_comments_bug ON comments(bug_id);
   `);
+}
+
+function migrate(db, name, sql) {
+  const exists = db.prepare('SELECT 1 FROM _migrations WHERE name = ?').get(name);
+  if (!exists) {
+    db.exec(sql);
+    db.prepare('INSERT INTO _migrations (name) VALUES (?)').run(name);
+  }
 }
 
 module.exports = { init };
