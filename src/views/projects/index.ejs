@@ -12,29 +12,63 @@
     <% } %>
   </div>
 <% } else { %>
-  <div class="project-grid">
-    <% projects.forEach(project => { %>
-      <a href="/projects/<%= project.slug %>" class="project-card">
-        <h2><%= project.name %></h2>
-        <% if (project.description) { %>
-          <p class="project-desc"><%= project.description %></p>
-        <% } %>
-        <div class="project-stats">
-          <span class="stat stat-bug">
-            <span class="stat-num"><%= project.open_bugs %></span> open bugs
-          </span>
-          <span class="stat stat-feature">
-            <span class="stat-num"><%= project.open_features %></span> open features
-          </span>
-          <% if (currentUser) { %>
-          <span class="stat stat-todo">
-            <span class="stat-num"><%= project.open_todos %></span> open todos
-          </span>
+  <% categories.forEach(cat => { %>
+    <% const catProjects = projects.filter(p => p.category_id === cat.id); %>
+    <% if (catProjects.length > 0) { %>
+      <h2 class="category-heading"><%= cat.name %></h2>
+      <div class="project-grid">
+        <% catProjects.forEach(project => { %>
+          <a href="/projects/<%= project.slug %>" class="project-card">
+            <h2><%= project.name %></h2>
+            <% if (project.description) { %>
+              <p class="project-desc"><%= project.description %></p>
+            <% } %>
+            <div class="project-stats">
+              <span class="stat stat-bug">
+                <span class="stat-num"><%= project.open_bugs %></span> open bugs
+              </span>
+              <span class="stat stat-feature">
+                <span class="stat-num"><%= project.open_features %></span> open features
+              </span>
+              <% if (currentUser) { %>
+              <span class="stat stat-todo">
+                <span class="stat-num"><%= project.open_todos %></span> open todos
+              </span>
+              <% } %>
+            </div>
+          </a>
+        <% }) %>
+      </div>
+    <% } %>
+  <% }) %>
+
+  <% const uncategorized = projects.filter(p => !p.category_id); %>
+  <% if (uncategorized.length > 0) { %>
+    <h2 class="category-heading">Other</h2>
+    <div class="project-grid">
+      <% uncategorized.forEach(project => { %>
+        <a href="/projects/<%= project.slug %>" class="project-card">
+          <h2><%= project.name %></h2>
+          <% if (project.description) { %>
+            <p class="project-desc"><%= project.description %></p>
           <% } %>
-        </div>
-      </a>
-    <% }) %>
-  </div>
+          <div class="project-stats">
+            <span class="stat stat-bug">
+              <span class="stat-num"><%= project.open_bugs %></span> open bugs
+            </span>
+            <span class="stat stat-feature">
+              <span class="stat-num"><%= project.open_features %></span> open features
+            </span>
+            <% if (currentUser) { %>
+            <span class="stat stat-todo">
+              <span class="stat-num"><%= project.open_todos %></span> open todos
+            </span>
+            <% } %>
+          </div>
+        </a>
+      <% }) %>
+    </div>
+  <% } %>
 <% } %>
 
 <%- include('../partials/footer') %>

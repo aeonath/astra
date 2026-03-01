@@ -315,7 +315,9 @@ input:focus, textarea:focus, select:focus {
 }
 
 /* === Project Grid === */
-.project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+.category-heading { font-size: 1.2rem; font-weight: 600; margin: 1.5rem 0 0.75rem; color: var(--text-secondary); border-bottom: 1px solid var(--border); padding-bottom: 0.4rem; }
+.category-heading:first-of-type { margin-top: 0; }
+.project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
 .project-card {
   display: block;
   background: var(--bg-secondary);

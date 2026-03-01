@@ -1,0 +1,55 @@
+<%- include('../partials/header') %>
+
+<div class="page-header">
+  <h1>Manage Categories</h1>
+</div>
+
+<div class="form-card">
+  <h2>Add Category</h2>
+  <form action="/admin/categories" method="POST">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" required placeholder="Category name">
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Create Category</button>
+  </form>
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Order</th>
+      <th>Name</th>
+      <th>Projects</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% categories.forEach((cat, i) => { %>
+      <tr>
+        <td><%= cat.sort_order %></td>
+        <td><%= cat.name %></td>
+        <td><%= cat.project_count %></td>
+        <td class="actions">
+          <% if (i > 0) { %>
+            <form action="/admin/categories/<%= cat.id %>/move-up" method="POST" class="inline-form">
+              <button type="submit" class="btn btn-sm btn-ghost">&uarr; Up</button>
+            </form>
+          <% } %>
+          <% if (i < categories.length - 1) { %>
+            <form action="/admin/categories/<%= cat.id %>/move-down" method="POST" class="inline-form">
+              <button type="submit" class="btn btn-sm btn-ghost">&darr; Down</button>
+            </form>
+          <% } %>
+          <form action="/admin/categories/<%= cat.id %>/delete" method="POST" class="inline-form">
+            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+          </form>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+
+<%- include('../partials/footer') %>

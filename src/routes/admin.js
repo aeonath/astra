@@ -20,17 +20,19 @@ router.get('/', (req, res) => {
 // --- Projects Management ---
 router.get('/projects', (req, res) => {
   const projects = db.prepare(`
-    SELECT p.*, u.display_name as assignee_name
+    SELECT p.*, u.display_name as assignee_name, c.name as category_name
     FROM projects p
     LEFT JOIN users u ON p.default_assignee_id = u.id
+    LEFT JOIN categories c ON p.category_id = c.id
     ORDER BY p.name
   `).all();
   const users = db.prepare('SELECT id, display_name FROM users WHERE active = 1 ORDER BY display_name').all();
-  res.render('admin/projects', { title: 'Manage Projects', projects, users });
+  const categories = db.prepare('SELECT id, name FROM categories ORDER BY sort_order').all();
+  res.render('admin/projects', { title: 'Manage Projects', projects, users, categories });
 });
 
 router.post('/projects', (req, res) => {
-  const { name, description, default_assignee_id } = req.body;
+  const { name, description, default_assignee_id, category_id } = req.body;
   const isPublic = req.body.public === 'on' ? 1 : 0;
   const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
@@ -40,7 +42,7 @@ router.post('/projects', (req, res) => {
   }
 
   try {
-    db.prepare('INSERT INTO projects (name, slug, description, public, default_assignee_id) VALUES (?, ?, ?, ?, ?)').run(name, slug, description || null, isPublic, default_assignee_id || null);
+    db.prepare('INSERT INTO projects (name, slug, description, public, default_assignee_id, category_id) VALUES (?, ?, ?, ?, ?, ?)').run(name, slug, description || null, isPublic, default_assignee_id || null, category_id || null);
     req.session.flash = { type: 'success', message: `Project "${name}" created.` };
   } catch (err) {
     if (err.message.includes('UNIQUE')) {
@@ -185,6 +187,75 @@ router.post('/users/:id/reset-password', async (req, res) => {
 
   req.session.flash = { type: 'success', message: `Password reset for "${user.username}". They have been logged out.` };
   res.redirect('/admin/users');
+});
+
+// --- Categories Management ---
+router.get('/categories', (req, res) => {
+  const categories = db.prepare(`
+    SELECT c.*, (SELECT COUNT(*) FROM projects WHERE category_id = c.id) as project_count
+    FROM categories c
+    ORDER BY c.sort_order
+  `).all();
+  res.render('admin/categories', { title: 'Manage Categories', categories });
+});
+
+router.post('/categories', (req, res) => {
+  const { name } = req.body;
+  if (!name || !name.trim()) {
+    req.session.flash = { type: 'error', message: 'Category name is required.' };
+    return res.redirect('/admin/categories');
+  }
+
+  try {
+    const maxOrder = db.prepare('SELECT MAX(sort_order) as max FROM categories').get().max || 0;
+    db.prepare('INSERT INTO categories (name, sort_order) VALUES (?, ?)').run(name.trim(), maxOrder + 1);
+    req.session.flash = { type: 'success', message: `Category "${name.trim()}" created.` };
+  } catch (err) {
+    if (err.message.includes('UNIQUE')) {
+      req.session.flash = { type: 'error', message: 'A category with that name already exists.' };
+    } else {
+      throw err;
+    }
+  }
+  res.redirect('/admin/categories');
+});
+
+router.post('/categories/:id/move-up', (req, res) => {
+  const current = db.prepare('SELECT * FROM categories WHERE id = ?').get(req.params.id);
+  if (current) {
+    const prev = db.prepare('SELECT * FROM categories WHERE sort_order < ? ORDER BY sort_order DESC LIMIT 1').get(current.sort_order);
+    if (prev) {
+      db.prepare('UPDATE categories SET sort_order = ? WHERE id = ?').run(prev.sort_order, current.id);
+      db.prepare('UPDATE categories SET sort_order = ? WHERE id = ?').run(current.sort_order, prev.id);
+    }
+  }
+  res.redirect('/admin/categories');
+});
+
+router.post('/categories/:id/move-down', (req, res) => {
+  const current = db.prepare('SELECT * FROM categories WHERE id = ?').get(req.params.id);
+  if (current) {
+    const next = db.prepare('SELECT * FROM categories WHERE sort_order > ? ORDER BY sort_order ASC LIMIT 1').get(current.sort_order);
+    if (next) {
+      db.prepare('UPDATE categories SET sort_order = ? WHERE id = ?').run(next.sort_order, current.id);
+      db.prepare('UPDATE categories SET sort_order = ? WHERE id = ?').run(current.sort_order, next.id);
+    }
+  }
+  res.redirect('/admin/categories');
+});
+
+router.post('/categories/:id/delete', (req, res) => {
+  const category = db.prepare('SELECT * FROM categories WHERE id = ?').get(req.params.id);
+  if (category) {
+    const projectCount = db.prepare('SELECT COUNT(*) as count FROM projects WHERE category_id = ?').get(category.id).count;
+    if (projectCount > 0) {
+      req.session.flash = { type: 'error', message: `Cannot delete "${category.name}" — it has ${projectCount} project(s). Reassign them first.` };
+    } else {
+      db.prepare('DELETE FROM categories WHERE id = ?').run(category.id);
+      req.session.flash = { type: 'success', message: `Category "${category.name}" deleted.` };
+    }
+  }
+  res.redirect('/admin/categories');
 });
 
 module.exports = router;
