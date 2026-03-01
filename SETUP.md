@@ -238,14 +238,14 @@ The migration runner automatically detects the old `_migrations` table and bridg
 
 ## Database Backups
 
-A backup script is included at `astra_db_backup.sh`. It reads `DB_PATH` from the `.env` file, creates a safe SQLite backup, and gzip-compresses it to the same directory as the database with a date stamp (e.g. `astra.db-20260301.gz`).
+A backup script is included at `scripts/astra_db_backup.sh`. It reads `DB_PATH` from the `.env` file, creates a safe SQLite backup, and gzip-compresses it to the same directory as the database with a date stamp (e.g. `astra.db-20260301.gz`).
 
 ### Manual backup
 
 ```bash
 sudo su - astra
 cd ~/app
-bash astra_db_backup.sh
+bash scripts/astra_db_backup.sh
 ```
 
 ### Automated daily backup via crontab
@@ -258,13 +258,13 @@ sudo crontab -u astra -e
 Add this line to run the backup daily at 2:00 AM:
 
 ```
-0 2 * * * /home/astra/app/astra_db_backup.sh >> /var/log/astra-backup.log 2>&1
+0 2 * * * /home/astra/app/scripts/astra_db_backup.sh >> /var/log/astra-backup.log 2>&1
 ```
 
 Make sure the script is executable:
 
 ```bash
-chmod +x /home/astra/app/astra_db_backup.sh
+chmod +x /home/astra/app/scripts/astra_db_backup.sh
 ```
 
 Backups are written to `/var/lib/astra/` alongside the database. Old backups are **not** automatically pruned — add a cleanup line to crontab if needed:
