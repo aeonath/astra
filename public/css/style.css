@@ -469,6 +469,14 @@ input:focus, textarea:focus, select:focus {
 .public-actions { display: flex; justify-content: center; gap: 1rem; margin-top: 2.5rem; padding-bottom: 1rem; }
 
 /* === Submit Notice === */
+.submission-detail-content {
+  padding: 0.75rem 1rem;
+  background: rgba(255,255,255,0.03);
+  border-left: 3px solid var(--accent);
+}
+.submission-detail-content p { margin: 0.3rem 0; }
+.submission-detail-text { white-space: pre-wrap; color: var(--text-secondary); }
+
 .submit-notice {
   background: rgba(88,166,255,0.08);
   border: 1px solid rgba(88,166,255,0.2);

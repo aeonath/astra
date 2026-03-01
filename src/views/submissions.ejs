@@ -23,7 +23,7 @@
   </thead>
   <tbody>
     <% submissions.forEach(sub => { %>
-      <tr class="<%= sub.status === 'dismissed' ? 'row-muted' : '' %>">
+      <tr class="<%= sub.status === 'dismissed' ? 'row-muted' : '' %> submission-row" style="cursor:pointer;" data-detail="detail-<%= sub.id %>">
         <td><span class="badge badge-type-<%= sub.type %>"><%= sub.type === 'feature' ? 'Feature' : 'Bug' %></span></td>
         <td><%= sub.project_name %></td>
         <td>
@@ -63,9 +63,25 @@
           <% } %>
         </td>
       </tr>
+      <tr class="submission-detail" id="detail-<%= sub.id %>" style="display:none;">
+        <td colspan="7">
+          <div class="submission-detail-content">
+            <p><strong>Submitter:</strong> <%= sub.name %><% if (sub.email) { %> &lt;<%= sub.email %>&gt;<% } %></p>
+            <p><strong>Summary:</strong> <%= sub.title %></p>
+            <% if (sub.description) { %>
+              <p><strong>Details:</strong></p>
+              <p class="submission-detail-text"><%= sub.description %></p>
+            <% } else { %>
+              <p class="text-muted">No additional details provided.</p>
+            <% } %>
+          </div>
+        </td>
+      </tr>
     <% }) %>
   </tbody>
 </table>
 <% } %>
+
+<script src="/js/submissions.js"></script>
 
 <%- include('partials/footer') %>
