@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('category_id').value = categoryId;
       document.getElementById('default_assignee_id').value = defaultAssigneeId;
       document.getElementById('homepage_url').value = homepageUrl;
-      document.getElementById('github_url').value = githubUrl;
+      document.getElementById('github_url').value = githubUrl.replace('https://github.com/', '');
       document.getElementById('github_private').checked = githubPrivate === '1';
       document.getElementById('public').checked = isPublic === '1';
 

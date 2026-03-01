@@ -33,7 +33,11 @@ router.get('/projects', (req, res) => {
 });
 
 router.post('/projects', (req, res) => {
-  const { edit_id, name, description, default_assignee_id, category_id, homepage_url, github_url } = req.body;
+  const { edit_id, name, description, default_assignee_id, category_id, homepage_url } = req.body;
+  let github_url = req.body.github_url ? req.body.github_url.trim() : '';
+  if (github_url && !github_url.startsWith('http')) {
+    github_url = 'https://github.com/' + github_url;
+  }
   const isPublic = req.body.public === 'on' ? 1 : 0;
   const githubPrivate = req.body.github_private === 'on' ? 1 : 0;
 
