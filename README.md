@@ -16,14 +16,18 @@ Bug tracking database for all projects at Miranova Studio.
 # Install dependencies
 npm install
 
-# Seed the database (creates admin user + sample project)
+# Copy and edit environment config
+cp .env.example .env
+# Edit .env — DB_PATH must be an absolute path
+
+# Initialize the database
+npm run db:init
+
+# Seed default admin user and sample project
 npm run seed
 
 # Start dev server with auto-reload
 npm run dev
-
-# Or start production server
-npm start
 ```
 
 The app runs at **http://localhost:9000** by default.
@@ -33,7 +37,15 @@ The app runs at **http://localhost:9000** by default.
 - **Username:** `admin`
 - **Password:** `admin`
 
-Change this immediately after first login.
+### Setting the Admin Password
+
+The admin password **cannot be changed from the web UI**. Use the CLI:
+
+```bash
+npm run reset-password -- admin yournewpassword
+```
+
+Change the default password immediately after first login.
 
 ## Configuration
 
@@ -44,8 +56,26 @@ Copy `.env.example` to `.env` and adjust:
 | `PORT` | `9000` | Server port |
 | `HOST` | `localhost` | Bind address |
 | `SESSION_SECRET` | — | Secret for session signing |
-| `DB_PATH` | `./data/astra.db` | Path to SQLite database |
+| `DB_PATH` | — | Absolute path to SQLite database (required) |
+| `SESSION_DB_DIR` | same dir as `DB_PATH` | Directory for session database |
 | `NODE_ENV` | `development` | Environment mode |
+
+## Scripts
+
+| Command | Description |
+|---|---|
+| `npm start` | Start production server |
+| `npm run dev` | Start dev server with auto-reload |
+| `npm run db:init` | Create and initialize a new database |
+| `npm run db:migrate` | Run pending database migrations |
+| `npm run seed` | Seed default admin user and sample project |
+| `npm run reset-password -- <user> <pass>` | Reset a user's password via CLI |
+
+## Database
+
+The database must live **outside** the application source tree in production. `DB_PATH` must be set to an absolute path. The app will refuse to start if the database is missing or has pending migrations.
+
+See [SETUP.md](SETUP.md) for full production deployment instructions.
 
 ## Production
 

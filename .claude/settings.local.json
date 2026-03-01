@@ -26,6 +26,7 @@
       "Bash(git commit *)",
       "Bash(cd /c/Work/astra && git add *)",
       "Bash(cd /c/Work/astra && git commit *)",
+      "Bash(cd /c/Work/astra && git add . && git commit *)",
       "Bash(cd /c/Work/astra)",
       "Bash(mkdir *)"
     ]
