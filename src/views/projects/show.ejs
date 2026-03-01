@@ -31,7 +31,7 @@
     <table class="table">
       <thead>
         <tr>
-          <% if (showStatus === 'open') { %><th class="col-id">#</th><% } %>
+          <% if (showStatus === 'open') { %><th class="col-todo-num"></th><% } %>
           <th>Task</th>
           <th class="col-priority">Priority</th>
           <th class="col-assignee">Assignee</th>
@@ -41,7 +41,7 @@
       <tbody>
         <% todos.forEach((item, idx) => { %>
           <tr>
-            <% if (showStatus === 'open') { %><td class="col-id"><%= idx + 1 %></td><% } %>
+            <% if (showStatus === 'open') { %><td class="col-todo-num"><%= idx + 1 %>.</td><% } %>
             <td><a href="/bugs/<%= item.id %>"><%= item.title %></a></td>
             <td class="col-priority"><span class="badge badge-<%= item.priority %>"><%= item.priority %></span></td>
             <td class="col-assignee"><%= item.assignee_name || '—' %></td>
