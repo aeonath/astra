@@ -303,6 +303,19 @@ input:focus, textarea:focus, select:focus {
 .section-feature { border-left: 3px solid var(--purple); padding-left: 1rem; }
 .section-bug { border-left: 3px solid var(--danger); padding-left: 1rem; }
 
+/* === Project Links === */
+.project-links { display: flex; gap: 0.75rem; margin-top: 0.4rem; }
+.project-link {
+  font-size: 0.85rem;
+  color: var(--accent);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.project-link:hover { text-decoration: underline; }
+.project-link::before { content: '\2197'; font-size: 0.75rem; }
+
 /* === Page Header === */
 .page-header {
   display: flex;

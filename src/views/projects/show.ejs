@@ -6,6 +6,16 @@
     <% if (project.description) { %>
       <p class="text-muted"><%= project.description %></p>
     <% } %>
+    <% if (project.homepage_url || (project.github_url && (currentUser || !project.github_private))) { %>
+    <div class="project-links">
+      <% if (project.homepage_url) { %>
+        <a href="<%= project.homepage_url %>" target="_blank" class="project-link">Homepage</a>
+      <% } %>
+      <% if (project.github_url && (currentUser || !project.github_private)) { %>
+        <a href="<%= project.github_url %>" target="_blank" class="project-link">GitHub</a>
+      <% } %>
+    </div>
+    <% } %>
   </div>
   <% if (currentUser) { %>
     <div class="btn-group">

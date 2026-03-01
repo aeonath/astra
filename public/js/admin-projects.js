@@ -15,6 +15,9 @@ document.addEventListener('DOMContentLoaded', function () {
       var categoryId = row.dataset.categoryId;
       var defaultAssigneeId = row.dataset.defaultAssigneeId;
       var isPublic = row.dataset.public;
+      var homepageUrl = row.dataset.homepageUrl;
+      var githubUrl = row.dataset.githubUrl;
+      var githubPrivate = row.dataset.githubPrivate;
 
       document.getElementById('form-title').textContent = 'Edit Project';
       document.getElementById('form-submit').textContent = 'Save Changes';
@@ -25,6 +28,9 @@ document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('description').value = description;
       document.getElementById('category_id').value = categoryId;
       document.getElementById('default_assignee_id').value = defaultAssigneeId;
+      document.getElementById('homepage_url').value = homepageUrl;
+      document.getElementById('github_url').value = githubUrl;
+      document.getElementById('github_private').checked = githubPrivate === '1';
       document.getElementById('public').checked = isPublic === '1';
       document.getElementById('project-form-card').scrollIntoView({ behavior: 'smooth' });
     });
@@ -42,6 +48,9 @@ document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('description').value = '';
       document.getElementById('category_id').value = '';
       document.getElementById('default_assignee_id').value = '';
+      document.getElementById('homepage_url').value = '';
+      document.getElementById('github_url').value = '';
+      document.getElementById('github_private').checked = false;
       document.getElementById('public').checked = true;
     });
   }

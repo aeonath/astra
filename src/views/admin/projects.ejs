@@ -38,6 +38,21 @@
         </select>
       </div>
     </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="homepage_url">Homepage URL</label>
+        <input type="text" id="homepage_url" name="homepage_url" placeholder="https://example.com">
+      </div>
+      <div class="form-group">
+        <label for="github_url">GitHub URL</label>
+        <input type="text" id="github_url" name="github_url" placeholder="https://github.com/org/repo">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="checkbox-label">
+        <input type="checkbox" id="github_private" name="github_private"> GitHub repo is private (only shown to logged-in users)
+      </label>
+    </div>
     <div class="form-group">
       <label class="checkbox-label">
         <input type="checkbox" id="public" name="public" checked> Publicly visible
@@ -69,6 +84,9 @@
           data-description="<%= project.description || '' %>"
           data-category-id="<%= project.category_id || '' %>"
           data-default-assignee-id="<%= project.default_assignee_id || '' %>"
+          data-homepage-url="<%= project.homepage_url || '' %>"
+          data-github-url="<%= project.github_url || '' %>"
+          data-github-private="<%= project.github_private %>"
           data-public="<%= project.public %>">
         <td><%= project.name %></td>
         <td><%= project.category_name || '—' %></td>

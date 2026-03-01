@@ -32,8 +32,9 @@ router.get('/projects', (req, res) => {
 });
 
 router.post('/projects', (req, res) => {
-  const { edit_id, name, description, default_assignee_id, category_id } = req.body;
+  const { edit_id, name, description, default_assignee_id, category_id, homepage_url, github_url } = req.body;
   const isPublic = req.body.public === 'on' ? 1 : 0;
+  const githubPrivate = req.body.github_private === 'on' ? 1 : 0;
 
   // Edit existing project
   if (edit_id) {
@@ -48,8 +49,8 @@ router.post('/projects', (req, res) => {
       return res.redirect('/admin/projects');
     }
 
-    db.prepare(`UPDATE projects SET description = ?, public = ?, default_assignee_id = ?, category_id = ?, updated_at = datetime('now') WHERE id = ?`)
-      .run(description || null, isPublic, default_assignee_id || null, category_id || null, project.id);
+    db.prepare(`UPDATE projects SET description = ?, public = ?, default_assignee_id = ?, category_id = ?, homepage_url = ?, github_url = ?, github_private = ?, updated_at = datetime('now') WHERE id = ?`)
+      .run(description || null, isPublic, default_assignee_id || null, category_id || null, homepage_url || null, github_url || null, githubPrivate, project.id);
     req.session.flash = { type: 'success', message: `Project "${project.name}" updated.` };
     return res.redirect('/admin/projects');
   }
@@ -63,7 +64,7 @@ router.post('/projects', (req, res) => {
   }
 
   try {
-    db.prepare('INSERT INTO projects (name, slug, description, public, default_assignee_id, category_id) VALUES (?, ?, ?, ?, ?, ?)').run(name, slug, description || null, isPublic, default_assignee_id || null, category_id || null);
+    db.prepare('INSERT INTO projects (name, slug, description, public, default_assignee_id, category_id, homepage_url, github_url, github_private) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)').run(name, slug, description || null, isPublic, default_assignee_id || null, category_id || null, homepage_url || null, github_url || null, githubPrivate);
     req.session.flash = { type: 'success', message: `Project "${name}" created.` };
   } catch (err) {
     if (err.message.includes('UNIQUE')) {
