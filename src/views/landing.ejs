@@ -5,6 +5,7 @@
   <p class="text-muted"><%= siteSettings.tagline || '' %></p>
 </div>
 
+<% const canAccessProjects = currentUser || siteSettings.public_project_access === '1'; %>
 <% if (projects.length === 0) { %>
   <div class="empty-state">
     <p>No projects yet.</p>
@@ -16,7 +17,7 @@
       <h2 class="category-heading"><%= cat.name %></h2>
       <div class="project-summary-grid">
         <% catProjects.forEach(project => { %>
-          <a href="/projects/<%= project.slug %>" class="project-summary-card">
+          <<%= canAccessProjects ? 'a href="/projects/' + project.slug + '"' : 'div' %> class="project-summary-card">
             <h2><%= project.name %></h2>
             <% if (project.description) { %>
               <p class="project-desc"><%= project.description %></p>
@@ -37,7 +38,7 @@
               </div>
               <% } %>
             </div>
-          </a>
+          </<%= canAccessProjects ? 'a' : 'div' %>>
         <% }) %>
       </div>
     <% } %>
@@ -48,7 +49,7 @@
     <h2 class="category-heading">Other</h2>
     <div class="project-summary-grid">
       <% uncategorized.forEach(project => { %>
-        <a href="/projects/<%= project.slug %>" class="project-summary-card">
+        <<%= canAccessProjects ? 'a href="/projects/' + project.slug + '"' : 'div' %> class="project-summary-card">
           <h2><%= project.name %></h2>
           <% if (project.description) { %>
             <p class="project-desc"><%= project.description %></p>
@@ -69,7 +70,7 @@
             </div>
             <% } %>
           </div>
-        </a>
+        </<%= canAccessProjects ? 'a' : 'div' %>>
       <% }) %>
     </div>
   <% } %>
