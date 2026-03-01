@@ -28,7 +28,11 @@
   </nav>
   <% } else { %>
   <div class="public-header">
-    <a href="/" class="public-brand">&#9733; Astra</a>
+    <% if (currentPath !== '/') { %>
+      <a href="/" class="public-brand">&#9733; Astra</a>
+    <% } else { %>
+      <span></span>
+    <% } %>
     <a href="/login" class="btn btn-sm btn-primary">Log In</a>
   </div>
   <% } %>
