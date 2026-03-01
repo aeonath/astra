@@ -52,4 +52,4 @@ No test framework is configured yet.
 ## After Every Change
 
 1. **Changelog:** Write a changelog entry to `changelog/YYYYMMDD-HHMM-CHANGELOG.md` summarizing what was changed and why.
-2. **Commit:** Run `git add .` then `git commit -a -m "brief summary"` after every task the user asks you to do. Do not skip this.
+2. **Commit:** Run `git add .` and `git commit -m "brief summary"` as **separate commands** (do NOT chain with `&&`). Chaining triggers permission prompts every time. Do not skip this step.
