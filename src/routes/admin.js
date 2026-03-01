@@ -13,6 +13,7 @@ router.get('/', (req, res) => {
     projects: db.prepare('SELECT COUNT(*) as count FROM projects').get().count,
     openBugs: db.prepare("SELECT COUNT(*) as count FROM bugs WHERE status = 'open'").get().count,
     totalBugs: db.prepare('SELECT COUNT(*) as count FROM bugs').get().count,
+    newSubmissions: db.prepare("SELECT COUNT(*) as count FROM public_submissions WHERE status = 'new'").get().count,
   };
   res.render('admin/dashboard', { title: 'Admin Dashboard', stats });
 });
@@ -299,6 +300,28 @@ router.post('/settings', (req, res) => {
   update.run(publicProjectAccess, 'public_project_access');
   req.session.flash = { type: 'success', message: 'Site settings updated.' };
   res.redirect('/admin/settings');
+});
+
+// --- Public Submissions ---
+router.get('/submissions', (req, res) => {
+  const submissions = db.prepare(`
+    SELECT s.*, p.name as project_name
+    FROM public_submissions s
+    JOIN projects p ON s.project_id = p.id
+    ORDER BY s.created_at DESC
+  `).all();
+  res.render('admin/submissions', { title: 'Submissions', submissions });
+});
+
+router.post('/submissions/:id/status', (req, res) => {
+  const { status } = req.body;
+  const validStatuses = ['new', 'reviewed', 'dismissed'];
+  if (!validStatuses.includes(status)) {
+    return res.redirect('/admin/submissions');
+  }
+  db.prepare('UPDATE public_submissions SET status = ? WHERE id = ?').run(status, req.params.id);
+  req.session.flash = { type: 'success', message: 'Submission status updated.' };
+  res.redirect('/admin/submissions');
 });
 
 module.exports = router;

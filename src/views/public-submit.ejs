@@ -1,0 +1,61 @@
+<%- include('partials/header') %>
+
+<div class="page-header">
+  <h1><%= type === 'feature' ? 'Request a Feature' : 'Report a Bug' %></h1>
+</div>
+
+<div class="submit-notice">
+  This will be sent to our development team for review. It will not appear on the site directly.
+</div>
+
+<div class="form-card">
+  <form action="/projects/submit" method="POST">
+    <input type="hidden" name="type" value="<%= type %>">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="name">Your Name <span class="text-muted">(required)</span></label>
+        <input type="text" id="name" name="name" required placeholder="Your name">
+      </div>
+      <div class="form-group">
+        <label for="email">Your Email <span class="text-muted">(optional, so we can follow up)</span></label>
+        <input type="email" id="email" name="email" placeholder="you@example.com">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="category">Category</label>
+        <select id="category" name="category">
+          <option value="">All Categories</option>
+          <% categories.forEach(cat => { %>
+            <option value="<%= cat.id %>"><%= cat.name %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="project_id">Project <span class="text-muted">(required)</span></label>
+        <select id="project_id" name="project_id" required>
+          <option value="">Select a project</option>
+          <% projects.forEach(p => { %>
+            <option value="<%= p.id %>" data-category="<%= p.category_id || '' %>"><%= p.name %></option>
+          <% }) %>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="title">Summary <span class="text-muted">(required)</span></label>
+      <input type="text" id="title" name="title" required placeholder="<%= type === 'feature' ? 'Briefly describe the feature you would like' : 'Briefly describe the issue' %>">
+    </div>
+    <div class="form-group">
+      <label for="description">Details <span class="text-muted">(optional)</span></label>
+      <textarea id="description" name="description" rows="5" placeholder="<%= type === 'feature' ? 'Provide any additional details about the feature request...' : 'Steps to reproduce, expected behavior, what happened instead...' %>"></textarea>
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn <%= type === 'feature' ? 'btn-feature' : 'btn-primary' %>">Submit</button>
+      <a href="/" class="btn btn-ghost">Cancel</a>
+    </div>
+  </form>
+</div>
+
+<script src="/js/public-submit.js"></script>
+
+<%- include('partials/footer') %>

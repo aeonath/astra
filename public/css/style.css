@@ -463,6 +463,24 @@ input:focus, textarea:focus, select:focus {
 .stat-todo { color: var(--teal); }
 .stat-todo .stat-num { color: var(--teal); }
 
+/* === Public Actions (landing page bottom buttons) === */
+.public-actions { display: flex; justify-content: center; gap: 1rem; margin-top: 2.5rem; padding-bottom: 1rem; }
+
+/* === Submit Notice === */
+.submit-notice {
+  background: rgba(88,166,255,0.08);
+  border: 1px solid rgba(88,166,255,0.2);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+/* === Stat Card Link === */
+.stat-card-link { text-decoration: none; color: inherit; transition: border-color 0.15s; }
+.stat-card-link:hover { border-color: var(--accent); color: inherit; }
+
 /* === Error Page === */
 .error-page { text-align: center; padding: 4rem 1rem; }
 .error-page h1 { font-size: 2rem; margin-bottom: 0.5rem; }

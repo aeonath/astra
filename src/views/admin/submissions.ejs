@@ -1,0 +1,71 @@
+<%- include('../partials/header') %>
+
+<div class="page-header">
+  <h1>Submissions</h1>
+</div>
+
+<% if (submissions.length === 0) { %>
+  <div class="empty-state">
+    <p>No submissions yet.</p>
+  </div>
+<% } else { %>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Project</th>
+      <th>Submitter</th>
+      <th>Summary</th>
+      <th>Status</th>
+      <th>Date</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% submissions.forEach(sub => { %>
+      <tr class="<%= sub.status === 'dismissed' ? 'row-muted' : '' %>">
+        <td><span class="badge badge-type-<%= sub.type %>"><%= sub.type === 'feature' ? 'Feature' : 'Bug' %></span></td>
+        <td><%= sub.project_name %></td>
+        <td>
+          <%= sub.name %>
+          <% if (sub.email) { %>
+            <br><span class="text-muted" style="font-size:0.8rem;"><%= sub.email %></span>
+          <% } %>
+        </td>
+        <td>
+          <strong><%= sub.title %></strong>
+          <% if (sub.description) { %>
+            <br><span class="text-muted" style="font-size:0.85rem;"><%= sub.description.length > 120 ? sub.description.substring(0, 120) + '...' : sub.description %></span>
+          <% } %>
+        </td>
+        <td><span class="badge badge-status-<%= sub.status === 'new' ? 'open' : 'closed' %>"><%= sub.status %></span></td>
+        <td class="col-date"><%= sub.created_at %></td>
+        <td class="actions no-row-click">
+          <% if (sub.status === 'new') { %>
+            <form action="/admin/submissions/<%= sub.id %>/status" method="POST" class="inline-form">
+              <input type="hidden" name="status" value="reviewed">
+              <button type="submit" class="btn btn-sm btn-ghost">Review</button>
+            </form>
+            <form action="/admin/submissions/<%= sub.id %>/status" method="POST" class="inline-form">
+              <input type="hidden" name="status" value="dismissed">
+              <button type="submit" class="btn btn-sm btn-danger">Dismiss</button>
+            </form>
+          <% } else if (sub.status === 'reviewed') { %>
+            <form action="/admin/submissions/<%= sub.id %>/status" method="POST" class="inline-form">
+              <input type="hidden" name="status" value="dismissed">
+              <button type="submit" class="btn btn-sm btn-danger">Dismiss</button>
+            </form>
+          <% } else { %>
+            <form action="/admin/submissions/<%= sub.id %>/status" method="POST" class="inline-form">
+              <input type="hidden" name="status" value="new">
+              <button type="submit" class="btn btn-sm btn-ghost">Reopen</button>
+            </form>
+          <% } %>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+<% } %>
+
+<%- include('../partials/footer') %>

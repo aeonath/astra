@@ -21,12 +21,17 @@
     <div class="stat-number"><%= stats.totalBugs %></div>
     <div class="stat-label">Total Bugs</div>
   </div>
+  <a href="/admin/submissions" class="stat-card stat-card-link">
+    <div class="stat-number"><%= stats.newSubmissions %></div>
+    <div class="stat-label">New Submissions</div>
+  </a>
 </div>
 
 <div class="admin-links">
   <a href="/admin/projects" class="btn btn-primary">Manage Projects</a>
   <a href="/admin/categories" class="btn btn-primary">Manage Categories</a>
   <a href="/admin/users" class="btn btn-primary">Manage Users</a>
+  <a href="/admin/submissions" class="btn btn-primary">Submissions</a>
   <a href="/admin/settings" class="btn btn-primary">Site Settings</a>
 </div>
 

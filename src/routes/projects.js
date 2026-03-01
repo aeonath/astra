@@ -22,6 +22,50 @@ router.get('/', (req, res) => {
   res.render('projects/index', { title: 'Projects', projects, categories });
 });
 
+// GET /projects/submit — public bug report / feature request form
+router.get('/submit', (req, res) => {
+  const validTypes = ['bug', 'feature'];
+  const type = validTypes.includes(req.query.type) ? req.query.type : 'bug';
+  const categories = db.prepare('SELECT * FROM categories ORDER BY sort_order').all();
+  const projects = db.prepare('SELECT id, name, category_id FROM projects WHERE active = 1 AND public = 1 ORDER BY name').all();
+  const titles = { bug: 'Report a Bug', feature: 'Request a Feature' };
+  res.render('public-submit', { title: titles[type], type, categories, projects });
+});
+
+// GET /projects/submit/projects — JSON API for project dropdown
+router.get('/submit/projects', (req, res) => {
+  const categoryId = req.query.category_id;
+  let projects;
+  if (categoryId) {
+    projects = db.prepare('SELECT id, name FROM projects WHERE active = 1 AND public = 1 AND category_id = ? ORDER BY name').all(categoryId);
+  } else {
+    projects = db.prepare('SELECT id, name FROM projects WHERE active = 1 AND public = 1 ORDER BY name').all();
+  }
+  res.json(projects);
+});
+
+// POST /projects/submit — process public submission
+router.post('/submit', (req, res) => {
+  const { type, project_id, name, email, title, description } = req.body;
+  const validTypes = ['bug', 'feature'];
+  if (!validTypes.includes(type) || !project_id || !name || !title) {
+    req.session.flash = { type: 'error', message: 'Please fill in all required fields.' };
+    return res.redirect(`/projects/submit?type=${type || 'bug'}`);
+  }
+
+  const project = db.prepare('SELECT id FROM projects WHERE id = ? AND active = 1 AND public = 1').get(project_id);
+  if (!project) {
+    req.session.flash = { type: 'error', message: 'Invalid project selected.' };
+    return res.redirect(`/projects/submit?type=${type}`);
+  }
+
+  db.prepare('INSERT INTO public_submissions (type, project_id, name, email, title, description) VALUES (?, ?, ?, ?, ?, ?)').run(type, project_id, name.trim(), email ? email.trim() : null, title.trim(), description ? description.trim() : null);
+
+  const label = type === 'feature' ? 'feature request' : 'bug report';
+  req.session.flash = { type: 'success', message: `Your ${label} has been submitted and will be reviewed by our team. Thank you!` };
+  res.redirect('/');
+});
+
 // GET /projects/:slug — show project detail with todos, features, and bugs
 router.get('/:slug', (req, res) => {
   const isLoggedIn = !!req.session.userId;
