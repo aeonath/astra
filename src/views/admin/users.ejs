@@ -37,7 +37,7 @@
     </div>
     <div class="form-actions">
       <button type="submit" class="btn btn-primary" id="form-submit">Create User</button>
-      <button type="button" class="btn btn-ghost" id="cancel-edit" style="display:none;" onclick="cancelEdit()">Cancel</button>
+      <button type="button" class="btn btn-ghost" id="cancel-edit" style="display:none;">Cancel</button>
     </div>
   </form>
 </div>
@@ -56,13 +56,17 @@
   <tbody>
     <% users.forEach(user => { %>
       <tr class="<%= user.active ? '' : 'row-muted' %>" style="cursor:pointer;"
-          onclick="editUser(<%= user.id %>, '<%= user.username %>', '<%- user.display_name.replace(/'/g, "\\'") %>', '<%- user.email.replace(/'/g, "\\'") %>', '<%= user.role %>')">
+          data-user-id="<%= user.id %>"
+          data-username="<%= user.username %>"
+          data-display-name="<%= user.display_name %>"
+          data-email="<%= user.email %>"
+          data-role="<%= user.role %>">
         <td><%= user.username %></td>
         <td><%= user.display_name %></td>
         <td><%= user.email %></td>
         <td><span class="badge"><%= user.role %></span></td>
         <td><span class="badge badge-status-<%= user.active ? 'open' : 'closed' %>"><%= user.active ? 'Active' : 'Disabled' %></span></td>
-        <td class="actions" onclick="event.stopPropagation()">
+        <td class="actions no-row-click">
           <% if (user.role !== 'admin') { %>
             <form action="/admin/users/<%= user.id %>/toggle" method="POST" class="inline-form">
               <button type="submit" class="btn btn-sm btn-ghost"><%= user.active ? 'Disable' : 'Enable' %></button>
@@ -78,36 +82,6 @@
   </tbody>
 </table>
 
-<script>
-function editUser(id, username, displayName, email, role) {
-  document.getElementById('form-title').textContent = 'Edit User';
-  document.getElementById('form-submit').textContent = 'Save Changes';
-  document.getElementById('cancel-edit').style.display = '';
-  document.getElementById('edit-id').value = id;
-  document.getElementById('username').value = username;
-  document.getElementById('username').readOnly = true;
-  document.getElementById('display_name').value = displayName;
-  document.getElementById('email').value = email;
-  document.getElementById('role').value = role;
-  document.getElementById('password').removeAttribute('required');
-  document.getElementById('password').placeholder = 'Leave blank to keep current';
-  document.getElementById('user-form-card').scrollIntoView({ behavior: 'smooth' });
-}
-
-function cancelEdit() {
-  document.getElementById('form-title').textContent = 'Add User';
-  document.getElementById('form-submit').textContent = 'Create User';
-  document.getElementById('cancel-edit').style.display = 'none';
-  document.getElementById('edit-id').value = '';
-  document.getElementById('username').value = '';
-  document.getElementById('username').readOnly = false;
-  document.getElementById('display_name').value = '';
-  document.getElementById('email').value = '';
-  document.getElementById('role').value = 'user';
-  document.getElementById('password').value = '';
-  document.getElementById('password').setAttribute('required', '');
-  document.getElementById('password').placeholder = '';
-}
-</script>
+<script src="/js/admin-users.js"></script>
 
 <%- include('../partials/footer') %>
