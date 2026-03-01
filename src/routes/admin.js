@@ -100,17 +100,16 @@ router.post('/users', async (req, res) => {
       return res.redirect('/admin/users');
     }
 
-    try {
-      db.prepare(`UPDATE users SET display_name = ?, email = ?, role = ?, updated_at = datetime('now') WHERE id = ?`)
-        .run(display_name, email, role === 'admin' ? 'admin' : 'user', user.id);
-      req.session.flash = { type: 'success', message: `User "${user.username}" updated.` };
-    } catch (err) {
-      if (err.message.includes('UNIQUE')) {
-        req.session.flash = { type: 'error', message: 'That email is already in use.' };
-      } else {
-        throw err;
-      }
+    // Check if email is taken by a different user
+    const emailOwner = db.prepare('SELECT id FROM users WHERE email = ? AND id != ?').get(email, user.id);
+    if (emailOwner) {
+      req.session.flash = { type: 'error', message: 'That email is already in use by another user.' };
+      return res.redirect('/admin/users');
     }
+
+    db.prepare(`UPDATE users SET display_name = ?, email = ?, role = ?, updated_at = datetime('now') WHERE id = ?`)
+      .run(display_name, email, role === 'admin' ? 'admin' : 'user', user.id);
+    req.session.flash = { type: 'success', message: `User "${user.username}" updated.` };
     return res.redirect('/admin/users');
   }
 

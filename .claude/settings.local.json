@@ -21,7 +21,10 @@
       "Bash(DB_PATH=./data/astra.db node src/server.js)",
       "Bash(DB_PATH=C:/Work/astra/data/test-init.db node src/db/init.js)",
       "Bash(DB_PATH=C:/Work/astra/data/test-init.db timeout 3 node src/server.js)",
-      "Bash(timeout 3 node src/server.js)"
+      "Bash(timeout 3 node src/server.js)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(mkdir *)"
     ]
   }
 }
