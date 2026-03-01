@@ -4,7 +4,7 @@
   <h1>Manage Projects</h1>
 </div>
 
-<div class="form-card" id="project-form-card">
+<div class="form-card" id="project-form-card" style="display:none;">
   <h2 id="form-title">Add Project</h2>
   <form action="/admin/projects" method="POST" id="project-form">
     <input type="hidden" id="edit-id" name="edit_id" value="">
@@ -60,7 +60,7 @@
     </div>
     <div class="form-actions">
       <button type="submit" class="btn btn-primary" id="form-submit">Create Project</button>
-      <button type="button" class="btn btn-danger" id="cancel-edit" style="display:none;">Cancel</button>
+      <button type="button" class="btn btn-ghost" id="cancel-edit">Cancel</button>
     </div>
   </form>
 </div>
@@ -108,6 +108,10 @@
     <% }) %>
   </tbody>
 </table>
+
+<div style="margin-top:1rem;">
+  <button type="button" class="btn btn-primary" id="add-project-btn">Add Project</button>
+</div>
 
 <script src="/js/admin-projects.js"></script>
 
