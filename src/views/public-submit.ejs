@@ -27,7 +27,7 @@
         <select id="category" name="category">
           <option value="">Select a category</option>
           <% categories.forEach(cat => { %>
-            <option value="<%= cat.id %>"><%= cat.name %></option>
+            <option value="<%= cat.id %>" <%= preselect.categoryId == cat.id ? 'selected' : '' %>><%= cat.name %></option>
           <% }) %>
         </select>
       </div>
@@ -53,6 +53,8 @@
   </form>
 </div>
 
+<input type="hidden" id="preselect-category" value="<%= preselect.categoryId %>">
+<input type="hidden" id="preselect-project" value="<%= preselect.projectId %>">
 <script src="/js/public-submit.js"></script>
 
 <%- include('partials/footer') %>

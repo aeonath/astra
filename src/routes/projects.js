@@ -28,7 +28,8 @@ router.get('/submit', (req, res) => {
   const type = validTypes.includes(req.query.type) ? req.query.type : 'bug';
   const categories = db.prepare('SELECT * FROM categories ORDER BY sort_order').all();
   const titles = { bug: 'Report a Bug', feature: 'Request a Feature' };
-  res.render('public-submit', { title: titles[type], type, categories });
+  const preselect = { categoryId: req.query.category_id || '', projectId: req.query.project_id || '' };
+  res.render('public-submit', { title: titles[type], type, categories, preselect });
 });
 
 // GET /projects/submit/projects — JSON API for project dropdown

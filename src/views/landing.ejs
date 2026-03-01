@@ -76,11 +76,4 @@
   <% } %>
 <% } %>
 
-<% if (!currentUser) { %>
-<div class="public-actions">
-  <a href="/projects/submit?type=bug" class="btn btn-primary">Report a Bug</a>
-  <a href="/projects/submit?type=feature" class="btn btn-feature">Request a Feature</a>
-</div>
-<% } %>
-
 <%- include('partials/footer') %>
