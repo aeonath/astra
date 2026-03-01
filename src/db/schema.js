@@ -76,7 +76,12 @@ function init(db) {
 function migrate(db, name, sql) {
   const exists = db.prepare('SELECT 1 FROM _migrations WHERE name = ?').get(name);
   if (!exists) {
-    db.exec(sql);
+    try {
+      db.exec(sql);
+    } catch (e) {
+      // Column may already exist if table was created with it (fresh database)
+      if (!e.message.includes('duplicate column')) throw e;
+    }
     db.prepare('INSERT INTO _migrations (name) VALUES (?)').run(name);
   }
 }

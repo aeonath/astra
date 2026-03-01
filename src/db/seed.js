@@ -31,8 +31,8 @@ async function seed() {
   const existingProject = db.prepare('SELECT id FROM projects WHERE slug = ?').get('astra');
   if (!existingProject) {
     db.prepare(`
-      INSERT INTO projects (name, slug, description)
-      VALUES (?, ?, ?)
+      INSERT INTO projects (name, slug, description, public)
+      VALUES (?, ?, ?, 1)
     `).run('Astra', 'astra', 'Bug tracker for the Astra project itself');
     console.log('Created sample project: Astra');
   }
