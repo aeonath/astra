@@ -258,7 +258,7 @@ sudo crontab -u astra -e
 Add this line to run the backup daily at 2:00 AM:
 
 ```
-0 2 * * * /home/astra/app/scripts/astra_db_backup.sh >> /var/log/astra-backup.log 2>&1
+0 2 * * * /home/astra/app/scripts/astra_db_backup.sh >> /home/astra/astra-backup.log 2>&1
 ```
 
 Make sure the script is executable:
