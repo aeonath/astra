@@ -32,8 +32,8 @@ sudo apt install -y nginx certbot python3-certbot-nginx
 # Install build tools (needed for bcrypt/better-sqlite3 native modules)
 sudo apt install -y build-essential python3
 
-# Install sqlite3 CLI and cron (needed for database backups)
-sudo apt install -y sqlite3 cron
+# Install cron (needed for scheduled database backups)
+sudo apt install -y cron
 ```
 
 ## 4. Deploy the app

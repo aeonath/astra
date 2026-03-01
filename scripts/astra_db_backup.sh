@@ -29,8 +29,8 @@ BACKUP_DIR="$(dirname "$DB_PATH")"
 DATE=$(date +%Y%m%d)
 BACKUP_FILE="$BACKUP_DIR/astra.db-${DATE}.gz"
 
-# Use sqlite3 .backup for a safe online backup, then gzip
-sqlite3 "$DB_PATH" ".backup '$BACKUP_DIR/astra.db-${DATE}'"
+# Copy and gzip
+cp "$DB_PATH" "$BACKUP_DIR/astra.db-${DATE}"
 gzip -f "$BACKUP_DIR/astra.db-${DATE}"
 
 echo "Backup created: $BACKUP_FILE"
