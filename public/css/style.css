@@ -19,6 +19,7 @@
   --danger: #f85149;
   --critical: #ff7b72;
   --purple: #bc8cff;
+  --teal: #39d2c0;
   --radius: 6px;
   --shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
@@ -136,6 +137,13 @@ a:hover { color: var(--accent-hover); }
   color: var(--purple);
 }
 .btn-feature:hover { background: rgba(188,140,255,0.25); color: var(--purple); }
+
+.btn-todo {
+  background: rgba(57,210,192,0.15);
+  border-color: rgba(57,210,192,0.3);
+  color: var(--teal);
+}
+.btn-todo:hover { background: rgba(57,210,192,0.25); color: var(--teal); }
 
 .btn-group { display: flex; gap: 0.5rem; }
 
@@ -265,19 +273,28 @@ input:focus, textarea:focus, select:focus {
 
 .badge-type-bug { background: rgba(248,81,73,0.15); color: var(--danger); }
 .badge-type-feature { background: rgba(188,140,255,0.15); color: var(--purple); }
+.badge-type-todo { background: rgba(57,210,192,0.15); color: var(--teal); }
 
-/* === View Tabs (Bug/Feature toggle) === */
-.view-tabs { display: flex; gap: 0; margin-bottom: 0.75rem; border-bottom: 2px solid var(--border); }
-.view-tab {
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--text-secondary);
-  border-bottom: 2px solid transparent;
-  margin-bottom: -2px;
+/* === Section Blocks (Project Show) === */
+.section-block { margin-bottom: 2rem; }
+.section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--border);
 }
-.view-tab:hover { color: var(--text-primary); }
-.view-tab.active { color: var(--text-primary); border-bottom-color: var(--accent); }
+.section-header h2 { font-size: 1.1rem; font-weight: 600; }
+.section-counts { font-size: 0.85rem; color: var(--text-secondary); }
+.count-open { color: var(--success); margin-right: 0.75rem; }
+.count-closed { color: var(--text-muted); }
+.section-todo { border-left: 3px solid var(--teal); padding-left: 1rem; }
+.section-feature { border-left: 3px solid var(--purple); padding-left: 1rem; }
+.section-bug { border-left: 3px solid var(--danger); padding-left: 1rem; }
+
+/* === View Toggle === */
+.view-toggle { margin-bottom: 1.5rem; }
 
 /* === Page Header === */
 .page-header {
@@ -400,22 +417,21 @@ input:focus, textarea:focus, select:focus {
 .summary-stat { text-align: center; flex: 1; padding: 0.5rem 0; border-radius: var(--radius); }
 .summary-num { display: block; font-size: 1.4rem; font-weight: 700; }
 .summary-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; }
-.summary-open { background: rgba(63,185,80,0.08); }
-.summary-open .summary-num { color: var(--success); }
-.summary-open .summary-label { color: var(--success); }
-.summary-in-progress { background: rgba(88,166,255,0.08); }
-.summary-in-progress .summary-num { color: var(--accent); }
-.summary-in-progress .summary-label { color: var(--accent); }
-.summary-resolved { background: rgba(188,140,255,0.08); }
-.summary-resolved .summary-num { color: var(--purple); }
-.summary-resolved .summary-label { color: var(--purple); }
-.summary-closed { background: rgba(139,148,158,0.08); }
-.summary-closed .summary-num { color: var(--text-secondary); }
-.summary-closed .summary-label { color: var(--text-secondary); }
-.summary-heading { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-top: 0.75rem; margin-bottom: 0.25rem; font-weight: 500; }
+.summary-bugs { background: rgba(248,81,73,0.08); }
+.summary-bugs .summary-num { color: var(--danger); }
+.summary-bugs .summary-label { color: var(--danger); }
+.summary-features { background: rgba(188,140,255,0.08); }
+.summary-features .summary-num { color: var(--purple); }
+.summary-features .summary-label { color: var(--purple); }
+.summary-todos { background: rgba(57,210,192,0.08); }
+.summary-todos .summary-num { color: var(--teal); }
+.summary-todos .summary-label { color: var(--teal); }
+.stat-bug { color: var(--danger); }
+.stat-bug .stat-num { color: var(--danger); }
 .stat-feature { color: var(--purple); }
 .stat-feature .stat-num { color: var(--purple); }
-.summary-total { margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-muted); text-align: right; }
+.stat-todo { color: var(--teal); }
+.stat-todo .stat-num { color: var(--teal); }
 
 /* === Error Page === */
 .error-page { text-align: center; padding: 4rem 1rem; }

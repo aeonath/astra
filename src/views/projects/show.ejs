@@ -9,68 +9,133 @@
   </div>
   <% if (currentUser) { %>
     <div class="btn-group">
-      <a href="/bugs/new?project=<%= project.slug %>&type=bug" class="btn btn-primary">Report Bug</a>
+      <a href="/bugs/new?project=<%= project.slug %>&type=todo" class="btn btn-todo">Add Todo</a>
       <a href="/bugs/new?project=<%= project.slug %>&type=feature" class="btn btn-feature">Request Feature</a>
+      <a href="/bugs/new?project=<%= project.slug %>&type=bug" class="btn btn-primary">Report Bug</a>
     </div>
   <% } %>
 </div>
 
-<div class="view-tabs">
-  <a href="?view=bugs&status=open" class="view-tab <%= viewType === 'bug' ? 'active' : '' %>">
-    Bugs (<%= bugTotal %>)
-  </a>
-  <a href="?view=features&status=open" class="view-tab <%= viewType === 'feature' ? 'active' : '' %>">
-    Features (<%= featureTotal %>)
-  </a>
+<div class="view-toggle">
+  <% if (showAll) { %>
+    <a href="?" class="btn btn-sm btn-ghost">Show Open Only</a>
+  <% } else { %>
+    <a href="?show=all" class="btn btn-sm btn-ghost">Show All (incl. closed)</a>
+  <% } %>
 </div>
 
-<div class="status-tabs">
-  <a href="?view=<%= viewType === 'feature' ? 'features' : 'bugs' %>&status=all" class="tab <%= filterStatus === 'all' ? 'active' : '' %>">
-    All (<%= statusCounts.open + statusCounts.in_progress + statusCounts.resolved + statusCounts.closed + statusCounts.wontfix %>)
-  </a>
-  <a href="?view=<%= viewType === 'feature' ? 'features' : 'bugs' %>&status=open" class="tab <%= filterStatus === 'open' ? 'active' : '' %>">
-    Open (<%= statusCounts.open %>)
-  </a>
-  <a href="?view=<%= viewType === 'feature' ? 'features' : 'bugs' %>&status=in_progress" class="tab <%= filterStatus === 'in_progress' ? 'active' : '' %>">
-    In Progress (<%= statusCounts.in_progress %>)
-  </a>
-  <a href="?view=<%= viewType === 'feature' ? 'features' : 'bugs' %>&status=resolved" class="tab <%= filterStatus === 'resolved' ? 'active' : '' %>">
-    Resolved (<%= statusCounts.resolved %>)
-  </a>
-  <a href="?view=<%= viewType === 'feature' ? 'features' : 'bugs' %>&status=closed" class="tab <%= filterStatus === 'closed' ? 'active' : '' %>">
-    Closed (<%= statusCounts.closed %>)
-  </a>
-</div>
-
-<% if (items.length === 0) { %>
-  <div class="empty-state">
-    <p>No <%= viewType === 'feature' ? 'feature requests' : 'bugs' %> matching this filter.</p>
+<div class="section-block section-todo">
+  <div class="section-header">
+    <h2>Todos</h2>
+    <span class="section-counts">
+      <span class="count-open"><%= todoCounts.open %> open</span>
+      <span class="count-closed"><%= todoCounts.closed %> closed</span>
+    </span>
   </div>
-<% } else { %>
-  <table class="table">
-    <thead>
-      <tr>
-        <th class="col-id">#</th>
-        <th>Title</th>
-        <th class="col-priority">Priority</th>
-        <th class="col-status">Status</th>
-        <th class="col-assignee">Assignee</th>
-        <th class="col-date">Created</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% items.forEach(item => { %>
+  <% if (todos.length === 0) { %>
+    <div class="empty-state"><p>No todos<%= showAll ? '' : ' open' %>.</p></div>
+  <% } else { %>
+    <table class="table">
+      <thead>
         <tr>
-          <td class="col-id"><%= item.id %></td>
-          <td><% if (currentUser) { %><a href="/bugs/<%= item.id %>"><%= item.title %></a><% } else { %><%= item.title %><% } %></td>
-          <td class="col-priority"><span class="badge badge-<%= item.priority %>"><%= item.priority %></span></td>
-          <td class="col-status"><span class="badge badge-status-<%= item.status %>"><%= item.status.replace('_', ' ') %></span></td>
-          <td class="col-assignee"><%= item.assignee_name || '—' %></td>
-          <td class="col-date"><%= item.created_at.split('T')[0] %></td>
+          <th class="col-id">#</th>
+          <th>Title</th>
+          <th class="col-priority">Priority</th>
+          <th class="col-status">Status</th>
+          <th class="col-assignee">Assignee</th>
+          <th class="col-date">Created</th>
         </tr>
-      <% }) %>
-    </tbody>
-  </table>
-<% } %>
+      </thead>
+      <tbody>
+        <% todos.forEach(item => { %>
+          <tr>
+            <td class="col-id"><%= item.id %></td>
+            <td><% if (currentUser) { %><a href="/bugs/<%= item.id %>"><%= item.title %></a><% } else { %><%= item.title %><% } %></td>
+            <td class="col-priority"><span class="badge badge-<%= item.priority %>"><%= item.priority %></span></td>
+            <td class="col-status"><span class="badge badge-status-<%= item.status %>"><%= item.status %></span></td>
+            <td class="col-assignee"><%= item.assignee_name || '—' %></td>
+            <td class="col-date"><%= item.created_at.split('T')[0] %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } %>
+</div>
+
+<div class="section-block section-feature">
+  <div class="section-header">
+    <h2>Feature Requests</h2>
+    <span class="section-counts">
+      <span class="count-open"><%= featureCounts.open %> open</span>
+      <span class="count-closed"><%= featureCounts.closed %> closed</span>
+    </span>
+  </div>
+  <% if (features.length === 0) { %>
+    <div class="empty-state"><p>No feature requests<%= showAll ? '' : ' open' %>.</p></div>
+  <% } else { %>
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="col-id">#</th>
+          <th>Title</th>
+          <th class="col-priority">Priority</th>
+          <th class="col-status">Status</th>
+          <th class="col-assignee">Assignee</th>
+          <th class="col-date">Created</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% features.forEach(item => { %>
+          <tr>
+            <td class="col-id"><%= item.id %></td>
+            <td><% if (currentUser) { %><a href="/bugs/<%= item.id %>"><%= item.title %></a><% } else { %><%= item.title %><% } %></td>
+            <td class="col-priority"><span class="badge badge-<%= item.priority %>"><%= item.priority %></span></td>
+            <td class="col-status"><span class="badge badge-status-<%= item.status %>"><%= item.status %></span></td>
+            <td class="col-assignee"><%= item.assignee_name || '—' %></td>
+            <td class="col-date"><%= item.created_at.split('T')[0] %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } %>
+</div>
+
+<div class="section-block section-bug">
+  <div class="section-header">
+    <h2>Bugs</h2>
+    <span class="section-counts">
+      <span class="count-open"><%= bugCounts.open %> open</span>
+      <span class="count-closed"><%= bugCounts.closed %> closed</span>
+    </span>
+  </div>
+  <% if (bugs.length === 0) { %>
+    <div class="empty-state"><p>No bugs<%= showAll ? '' : ' open' %>.</p></div>
+  <% } else { %>
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="col-id">#</th>
+          <th>Title</th>
+          <th class="col-priority">Priority</th>
+          <th class="col-status">Status</th>
+          <th class="col-assignee">Assignee</th>
+          <th class="col-date">Created</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% bugs.forEach(item => { %>
+          <tr>
+            <td class="col-id"><%= item.id %></td>
+            <td><% if (currentUser) { %><a href="/bugs/<%= item.id %>"><%= item.title %></a><% } else { %><%= item.title %><% } %></td>
+            <td class="col-priority"><span class="badge badge-<%= item.priority %>"><%= item.priority %></span></td>
+            <td class="col-status"><span class="badge badge-status-<%= item.status %>"><%= item.status %></span></td>
+            <td class="col-assignee"><%= item.assignee_name || '—' %></td>
+            <td class="col-date"><%= item.created_at.split('T')[0] %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } %>
+</div>
 
 <%- include('../partials/footer') %>

@@ -20,14 +20,14 @@
           <p class="project-desc"><%= project.description %></p>
         <% } %>
         <div class="project-stats">
-          <span class="stat">
+          <span class="stat stat-bug">
             <span class="stat-num"><%= project.open_bugs %></span> open bugs
-          </span>
-          <span class="stat">
-            <span class="stat-num"><%= project.total_bugs %></span> total
           </span>
           <span class="stat stat-feature">
             <span class="stat-num"><%= project.open_features %></span> open features
+          </span>
+          <span class="stat stat-todo">
+            <span class="stat-num"><%= project.open_todos %></span> open todos
           </span>
         </div>
       </a>

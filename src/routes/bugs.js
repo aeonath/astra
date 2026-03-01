@@ -3,23 +3,25 @@ const express = require('express');
 const db = require('../db');
 const router = express.Router();
 
-// GET /bugs/new?project=:slug&type=bug|feature — new bug/feature form
+// GET /bugs/new?project=:slug&type=bug|feature|todo — new item form
 router.get('/new', (req, res) => {
   const project = db.prepare('SELECT * FROM projects WHERE slug = ? AND active = 1').get(req.query.project);
   if (!project) {
     req.session.flash = { type: 'error', message: 'Project not found.' };
     return res.redirect('/projects');
   }
-  const issueType = req.query.type === 'feature' ? 'feature' : 'bug';
+  const validTypes = ['bug', 'feature', 'todo'];
+  const issueType = validTypes.includes(req.query.type) ? req.query.type : 'bug';
   const users = db.prepare('SELECT id, display_name FROM users WHERE active = 1 ORDER BY display_name').all();
-  const title = issueType === 'feature' ? 'Request Feature' : 'Report Bug';
-  res.render('bugs/new', { title, project, users, issueType });
+  const titles = { bug: 'Report Bug', feature: 'Request Feature', todo: 'Add Todo' };
+  res.render('bugs/new', { title: titles[issueType], project, users, issueType });
 });
 
-// POST /bugs — create bug or feature
+// POST /bugs — create bug, feature, or todo
 router.post('/', (req, res) => {
   const { project_id, title, description, priority, assignee_id } = req.body;
-  const issueType = req.body.type === 'feature' ? 'feature' : 'bug';
+  const validTypes = ['bug', 'feature', 'todo'];
+  const issueType = validTypes.includes(req.body.type) ? req.body.type : 'bug';
 
   const project = db.prepare('SELECT * FROM projects WHERE id = ? AND active = 1').get(project_id);
   if (!project) {
@@ -45,8 +47,8 @@ router.post('/', (req, res) => {
     issueType
   );
 
-  const label = issueType === 'feature' ? 'Feature' : 'Bug';
-  req.session.flash = { type: 'success', message: `${label} #${result.lastInsertRowid} created.` };
+  const labels = { bug: 'Bug', feature: 'Feature', todo: 'Todo' };
+  req.session.flash = { type: 'success', message: `${labels[issueType]} #${result.lastInsertRowid} created.` };
   res.redirect(`/bugs/${result.lastInsertRowid}`);
 });
 
@@ -79,7 +81,8 @@ router.get('/:id', (req, res) => {
 
   const users = db.prepare('SELECT id, display_name FROM users WHERE active = 1 ORDER BY display_name').all();
 
-  const label = bug.type === 'feature' ? 'Feature' : 'Bug';
+  const labels = { bug: 'Bug', feature: 'Feature', todo: 'Todo' };
+  const label = labels[bug.type] || 'Bug';
   res.render('bugs/show', { title: `${label} #${bug.id}`, bug, comments, users });
 });
 
@@ -92,6 +95,8 @@ router.post('/:id', (req, res) => {
   }
 
   const { title, description, status, priority, assignee_id } = req.body;
+  const validStatuses = ['open', 'closed'];
+  const newStatus = validStatuses.includes(status) ? status : bug.status;
 
   db.prepare(`
     UPDATE bugs SET title = ?, description = ?, status = ?, priority = ?, assignee_id = ?, updated_at = datetime('now')
@@ -99,13 +104,14 @@ router.post('/:id', (req, res) => {
   `).run(
     title || bug.title,
     description ?? bug.description,
-    status || bug.status,
+    newStatus,
     priority || bug.priority,
     assignee_id || null,
     bug.id
   );
 
-  const updateLabel = bug.type === 'feature' ? 'Feature' : 'Bug';
+  const updateLabels = { bug: 'Bug', feature: 'Feature', todo: 'Todo' };
+  const updateLabel = updateLabels[bug.type] || 'Bug';
   req.session.flash = { type: 'success', message: `${updateLabel} updated.` };
   res.redirect(`/bugs/${bug.id}`);
 });

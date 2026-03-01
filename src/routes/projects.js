@@ -8,10 +8,9 @@ router.get('/', (req, res) => {
   const isLoggedIn = !!req.session.userId;
   const projects = db.prepare(`
     SELECT p.*,
-      (SELECT COUNT(*) FROM bugs WHERE project_id = p.id AND type = 'bug' AND status IN ('open','in_progress')) as open_bugs,
-      (SELECT COUNT(*) FROM bugs WHERE project_id = p.id AND type = 'bug') as total_bugs,
-      (SELECT COUNT(*) FROM bugs WHERE project_id = p.id AND type = 'feature' AND status IN ('open','in_progress')) as open_features,
-      (SELECT COUNT(*) FROM bugs WHERE project_id = p.id AND type = 'feature') as total_features
+      (SELECT COUNT(*) FROM bugs WHERE project_id = p.id AND type = 'bug' AND status = 'open') as open_bugs,
+      (SELECT COUNT(*) FROM bugs WHERE project_id = p.id AND type = 'feature' AND status = 'open') as open_features,
+      (SELECT COUNT(*) FROM bugs WHERE project_id = p.id AND type = 'todo' AND status = 'open') as open_todos
     FROM projects p
     WHERE p.active = 1 ${isLoggedIn ? '' : 'AND p.public = 1'}
     ORDER BY p.name
@@ -20,7 +19,7 @@ router.get('/', (req, res) => {
   res.render('projects/index', { title: 'Projects', projects });
 });
 
-// GET /projects/:slug — show project bugs
+// GET /projects/:slug — show project detail with todos, features, and bugs
 router.get('/:slug', (req, res) => {
   const isLoggedIn = !!req.session.userId;
   const project = db.prepare('SELECT * FROM projects WHERE slug = ? AND active = 1').get(req.params.slug);
@@ -29,50 +28,43 @@ router.get('/:slug', (req, res) => {
     return res.redirect('/projects');
   }
 
-  const viewType = req.query.view === 'features' ? 'feature' : 'bug';
-  const status = req.query.status || 'open';
-  const validStatuses = ['all', 'open', 'in_progress', 'resolved', 'closed', 'wontfix'];
-  const filterStatus = validStatuses.includes(status) ? status : 'open';
+  const showAll = req.query.show === 'all';
+  const statusFilter = showAll ? '' : "AND b.status = 'open'";
 
-  let itemsQuery = `
+  const itemQuery = `
     SELECT b.*,
       u1.display_name as reporter_name,
       u2.display_name as assignee_name
     FROM bugs b
     LEFT JOIN users u1 ON b.reporter_id = u1.id
     LEFT JOIN users u2 ON b.assignee_id = u2.id
-    WHERE b.project_id = ? AND b.type = ?
+    WHERE b.project_id = ? AND b.type = ? ${statusFilter}
+    ORDER BY b.created_at DESC
   `;
 
-  const params = [project.id, viewType];
-  if (filterStatus !== 'all') {
-    itemsQuery += ' AND b.status = ?';
-    params.push(filterStatus);
-  }
-  itemsQuery += ' ORDER BY b.created_at DESC';
+  const todos = db.prepare(itemQuery).all(project.id, 'todo');
+  const features = db.prepare(itemQuery).all(project.id, 'feature');
+  const bugs = db.prepare(itemQuery).all(project.id, 'bug');
 
-  const items = db.prepare(itemsQuery).all(...params);
+  const countQuery = `SELECT
+    SUM(CASE WHEN status = 'open' THEN 1 ELSE 0 END) as open_count,
+    SUM(CASE WHEN status = 'closed' THEN 1 ELSE 0 END) as closed_count
+    FROM bugs WHERE project_id = ? AND type = ?`;
 
-  const counts = db.prepare(`
-    SELECT status, COUNT(*) as count FROM bugs WHERE project_id = ? AND type = ? GROUP BY status
-  `).all(project.id, viewType);
-
-  const statusCounts = { open: 0, in_progress: 0, resolved: 0, closed: 0, wontfix: 0 };
-  counts.forEach(c => { statusCounts[c.status] = c.count; });
-
-  // Totals for the view toggle tabs
-  const bugTotal = db.prepare("SELECT COUNT(*) as count FROM bugs WHERE project_id = ? AND type = 'bug'").get(project.id).count;
-  const featureTotal = db.prepare("SELECT COUNT(*) as count FROM bugs WHERE project_id = ? AND type = 'feature'").get(project.id).count;
+  const todoRaw = db.prepare(countQuery).get(project.id, 'todo');
+  const featureRaw = db.prepare(countQuery).get(project.id, 'feature');
+  const bugRaw = db.prepare(countQuery).get(project.id, 'bug');
 
   res.render('projects/show', {
     title: project.name,
     project,
-    items,
-    viewType,
-    filterStatus,
-    statusCounts,
-    bugTotal,
-    featureTotal,
+    todos,
+    features,
+    bugs,
+    todoCounts: { open: todoRaw.open_count || 0, closed: todoRaw.closed_count || 0 },
+    featureCounts: { open: featureRaw.open_count || 0, closed: featureRaw.closed_count || 0 },
+    bugCounts: { open: bugRaw.open_count || 0, closed: bugRaw.closed_count || 0 },
+    showAll,
   });
 });
 

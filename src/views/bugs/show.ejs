@@ -3,11 +3,11 @@
 <div class="page-header">
   <div>
     <div class="breadcrumb">
-      <a href="/projects/<%= bug.project_slug %><%= bug.type === 'feature' ? '?view=features' : '' %>"><%= bug.project_name %></a>
+      <a href="/projects/<%= bug.project_slug %>"><%= bug.project_name %></a>
       <span>&rsaquo;</span>
-      <span><%= bug.type === 'feature' ? 'Feature' : 'Bug' %> #<%= bug.id %></span>
+      <span><%= bug.type === 'feature' ? 'Feature' : bug.type === 'todo' ? 'Todo' : 'Bug' %> #<%= bug.id %></span>
     </div>
-    <h1><span class="badge badge-type-<%= bug.type %>"><%= bug.type === 'feature' ? 'Feature' : 'Bug' %></span> <%= bug.title %></h1>
+    <h1><span class="badge badge-type-<%= bug.type %>"><%= bug.type === 'feature' ? 'Feature' : bug.type === 'todo' ? 'Todo' : 'Bug' %></span> <%= bug.title %></h1>
   </div>
 </div>
 
@@ -52,8 +52,8 @@
       <div class="form-group">
         <label for="status">Status</label>
         <select id="status" name="status">
-          <% ['open', 'in_progress', 'resolved', 'closed', 'wontfix'].forEach(s => { %>
-            <option value="<%= s %>" <%= bug.status === s ? 'selected' : '' %>><%= s.replace('_', ' ') %></option>
+          <% ['open', 'closed'].forEach(s => { %>
+            <option value="<%= s %>" <%= bug.status === s ? 'selected' : '' %>><%= s %></option>
           <% }) %>
         </select>
       </div>
@@ -83,7 +83,7 @@
       <button type="submit" class="btn btn-primary btn-sm btn-block">Update</button>
 
       <div class="sidebar-meta">
-        <p><strong>Type:</strong> <%= bug.type === 'feature' ? 'Feature Request' : 'Bug Report' %></p>
+        <p><strong>Type:</strong> <%= bug.type === 'feature' ? 'Feature Request' : bug.type === 'todo' ? 'Todo Item' : 'Bug Report' %></p>
         <p><strong>Reporter:</strong> <%= bug.reporter_name %></p>
         <p><strong>Created:</strong> <%= bug.created_at %></p>
         <p><strong>Updated:</strong> <%= bug.updated_at %></p>
