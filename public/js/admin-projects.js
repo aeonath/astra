@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // Add Project button — show form below table
   addBtn.addEventListener('click', function () {
     resetForm();
+    formCard.style.marginTop = '1.5rem';
     addBtn.parentNode.insertAdjacentElement('beforebegin', formCard);
     showForm();
     addBtn.style.display = 'none';
@@ -70,6 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('github_private').checked = githubPrivate === '1';
       document.getElementById('public').checked = isPublic === '1';
 
+      formCard.style.marginTop = '';
       table.insertAdjacentElement('beforebegin', formCard);
       showForm();
       addBtn.style.display = '';
