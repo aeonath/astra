@@ -29,6 +29,7 @@ function init(db) {
       project_id INTEGER NOT NULL,
       reporter_id INTEGER NOT NULL,
       assignee_id INTEGER,
+      type TEXT NOT NULL DEFAULT 'bug' CHECK(type IN ('bug', 'feature')),
       title TEXT NOT NULL,
       description TEXT,
       status TEXT NOT NULL DEFAULT 'open' CHECK(status IN ('open', 'in_progress', 'resolved', 'closed', 'wontfix')),
@@ -58,6 +59,10 @@ function init(db) {
   // Migrations
   migrate(db, 'add_public_to_projects', `
     ALTER TABLE projects ADD COLUMN public INTEGER NOT NULL DEFAULT 0
+  `);
+
+  migrate(db, 'add_type_column_to_bugs', `
+    ALTER TABLE bugs ADD COLUMN type TEXT NOT NULL DEFAULT 'bug'
   `);
 
   db.exec(`

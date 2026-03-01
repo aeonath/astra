@@ -130,6 +130,15 @@ a:hover { color: var(--accent-hover); }
 }
 .btn-primary:hover { background: rgba(88,166,255,0.25); color: var(--accent-hover); }
 
+.btn-feature {
+  background: rgba(188,140,255,0.15);
+  border-color: rgba(188,140,255,0.3);
+  color: var(--purple);
+}
+.btn-feature:hover { background: rgba(188,140,255,0.25); color: var(--purple); }
+
+.btn-group { display: flex; gap: 0.5rem; }
+
 .btn-danger {
   background: rgba(248,81,73,0.1);
   border-color: rgba(248,81,73,0.3);
@@ -253,6 +262,22 @@ input:focus, textarea:focus, select:focus {
 .badge-status-resolved { background: rgba(188,140,255,0.15); color: var(--purple); }
 .badge-status-closed { background: rgba(139,148,158,0.15); color: var(--text-secondary); }
 .badge-status-wontfix { background: rgba(139,148,158,0.1); color: var(--text-muted); }
+
+.badge-type-bug { background: rgba(248,81,73,0.15); color: var(--danger); }
+.badge-type-feature { background: rgba(188,140,255,0.15); color: var(--purple); }
+
+/* === View Tabs (Bug/Feature toggle) === */
+.view-tabs { display: flex; gap: 0; margin-bottom: 0.75rem; border-bottom: 2px solid var(--border); }
+.view-tab {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+}
+.view-tab:hover { color: var(--text-primary); }
+.view-tab.active { color: var(--text-primary); border-bottom-color: var(--accent); }
 
 /* === Page Header === */
 .page-header {
@@ -387,6 +412,9 @@ input:focus, textarea:focus, select:focus {
 .summary-closed { background: rgba(139,148,158,0.08); }
 .summary-closed .summary-num { color: var(--text-secondary); }
 .summary-closed .summary-label { color: var(--text-secondary); }
+.summary-heading { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-top: 0.75rem; margin-bottom: 0.25rem; font-weight: 500; }
+.stat-feature { color: var(--purple); }
+.stat-feature .stat-num { color: var(--purple); }
 .summary-total { margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-muted); text-align: right; }
 
 /* === Error Page === */

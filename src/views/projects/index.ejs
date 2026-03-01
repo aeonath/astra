@@ -21,10 +21,13 @@
         <% } %>
         <div class="project-stats">
           <span class="stat">
-            <span class="stat-num"><%= project.open_bugs %></span> open
+            <span class="stat-num"><%= project.open_bugs %></span> open bugs
           </span>
           <span class="stat">
             <span class="stat-num"><%= project.total_bugs %></span> total
+          </span>
+          <span class="stat stat-feature">
+            <span class="stat-num"><%= project.open_features %></span> open features
           </span>
         </div>
       </a>

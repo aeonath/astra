@@ -8,31 +8,43 @@
     <% } %>
   </div>
   <% if (currentUser) { %>
-    <a href="/bugs/new?project=<%= project.slug %>" class="btn btn-primary">Report Bug</a>
+    <div class="btn-group">
+      <a href="/bugs/new?project=<%= project.slug %>&type=bug" class="btn btn-primary">Report Bug</a>
+      <a href="/bugs/new?project=<%= project.slug %>&type=feature" class="btn btn-feature">Request Feature</a>
+    </div>
   <% } %>
 </div>
 
+<div class="view-tabs">
+  <a href="?view=bugs&status=open" class="view-tab <%= viewType === 'bug' ? 'active' : '' %>">
+    Bugs (<%= bugTotal %>)
+  </a>
+  <a href="?view=features&status=open" class="view-tab <%= viewType === 'feature' ? 'active' : '' %>">
+    Features (<%= featureTotal %>)
+  </a>
+</div>
+
 <div class="status-tabs">
-  <a href="?status=all" class="tab <%= filterStatus === 'all' ? 'active' : '' %>">
+  <a href="?view=<%= viewType === 'feature' ? 'features' : 'bugs' %>&status=all" class="tab <%= filterStatus === 'all' ? 'active' : '' %>">
     All (<%= statusCounts.open + statusCounts.in_progress + statusCounts.resolved + statusCounts.closed + statusCounts.wontfix %>)
   </a>
-  <a href="?status=open" class="tab <%= filterStatus === 'open' ? 'active' : '' %>">
+  <a href="?view=<%= viewType === 'feature' ? 'features' : 'bugs' %>&status=open" class="tab <%= filterStatus === 'open' ? 'active' : '' %>">
     Open (<%= statusCounts.open %>)
   </a>
-  <a href="?status=in_progress" class="tab <%= filterStatus === 'in_progress' ? 'active' : '' %>">
+  <a href="?view=<%= viewType === 'feature' ? 'features' : 'bugs' %>&status=in_progress" class="tab <%= filterStatus === 'in_progress' ? 'active' : '' %>">
     In Progress (<%= statusCounts.in_progress %>)
   </a>
-  <a href="?status=resolved" class="tab <%= filterStatus === 'resolved' ? 'active' : '' %>">
+  <a href="?view=<%= viewType === 'feature' ? 'features' : 'bugs' %>&status=resolved" class="tab <%= filterStatus === 'resolved' ? 'active' : '' %>">
     Resolved (<%= statusCounts.resolved %>)
   </a>
-  <a href="?status=closed" class="tab <%= filterStatus === 'closed' ? 'active' : '' %>">
+  <a href="?view=<%= viewType === 'feature' ? 'features' : 'bugs' %>&status=closed" class="tab <%= filterStatus === 'closed' ? 'active' : '' %>">
     Closed (<%= statusCounts.closed %>)
   </a>
 </div>
 
-<% if (bugs.length === 0) { %>
+<% if (items.length === 0) { %>
   <div class="empty-state">
-    <p>No bugs matching this filter.</p>
+    <p>No <%= viewType === 'feature' ? 'feature requests' : 'bugs' %> matching this filter.</p>
   </div>
 <% } else { %>
   <table class="table">
@@ -47,14 +59,14 @@
       </tr>
     </thead>
     <tbody>
-      <% bugs.forEach(bug => { %>
+      <% items.forEach(item => { %>
         <tr>
-          <td class="col-id"><%= bug.id %></td>
-          <td><% if (currentUser) { %><a href="/bugs/<%= bug.id %>"><%= bug.title %></a><% } else { %><%= bug.title %><% } %></td>
-          <td class="col-priority"><span class="badge badge-<%= bug.priority %>"><%= bug.priority %></span></td>
-          <td class="col-status"><span class="badge badge-status-<%= bug.status %>"><%= bug.status.replace('_', ' ') %></span></td>
-          <td class="col-assignee"><%= bug.assignee_name || '—' %></td>
-          <td class="col-date"><%= bug.created_at.split('T')[0] %></td>
+          <td class="col-id"><%= item.id %></td>
+          <td><% if (currentUser) { %><a href="/bugs/<%= item.id %>"><%= item.title %></a><% } else { %><%= item.title %><% } %></td>
+          <td class="col-priority"><span class="badge badge-<%= item.priority %>"><%= item.priority %></span></td>
+          <td class="col-status"><span class="badge badge-status-<%= item.status %>"><%= item.status.replace('_', ' ') %></span></td>
+          <td class="col-assignee"><%= item.assignee_name || '—' %></td>
+          <td class="col-date"><%= item.created_at.split('T')[0] %></td>
         </tr>
       <% }) %>
     </tbody>

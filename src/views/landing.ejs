@@ -20,6 +20,7 @@
         <% if (project.description) { %>
           <p class="project-desc"><%= project.description %></p>
         <% } %>
+        <h3 class="summary-heading">Bugs</h3>
         <div class="summary-stats">
           <div class="summary-stat summary-open">
             <span class="summary-num"><%= project.open_count %></span>
@@ -38,7 +39,7 @@
             <span class="summary-label">Closed</span>
           </div>
         </div>
-        <div class="summary-total"><%= project.total_count %> total</div>
+        <div class="summary-total"><%= project.total_bugs %> total bugs &middot; <%= project.open_features %> open / <%= project.total_features %> total features</div>
       </a>
     <% }) %>
   </div>
