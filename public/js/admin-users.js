@@ -1,5 +1,12 @@
 // Copyright (c) 2026 MiraNova Studios
 document.addEventListener('DOMContentLoaded', function () {
+  // Clear form fields to prevent browser autofill
+  document.getElementById('username').value = '';
+  document.getElementById('display_name').value = '';
+  document.getElementById('email').value = '';
+  document.getElementById('password').value = '';
+  document.getElementById('role').value = 'user';
+
   // Stop clicks on action buttons/inputs from triggering row edit
   var actionCells = document.querySelectorAll('.no-row-click');
   actionCells.forEach(function (cell) {
