@@ -13,6 +13,8 @@ Astra is a bug tracking web application for MiraNova Studios. It uses Node.js, E
 
 - `npm run dev` — Start dev server with auto-reload (nodemon)
 - `npm start` — Start production server
+- `npm run db:init` — One-time database initialization (creates DB file, runs all migrations)
+- `npm run db:migrate` — Apply pending migrations to an existing database
 - `npm run seed` — Create default admin user (admin/admin) and sample project
 
 No test framework is configured yet.
@@ -28,9 +30,9 @@ No test framework is configured yet.
 - `/bugs/*` — Requires login (`requireLogin` middleware)
 - `/admin/*` — Requires admin role (`requireAdmin` middleware)
 
-**Database:** SQLite with WAL mode and foreign keys enabled. Schema initialized on app start via `src/db/schema.js`. Sessions stored in a separate `data/sessions.db`.
+**Database:** SQLite with WAL mode and foreign keys enabled. The database lives OUTSIDE the source tree (configured via `DB_PATH` env var, must be absolute path). The app never auto-creates or auto-modifies the database on startup. Sessions stored alongside the main DB (configurable via `SESSION_DB_DIR`).
 
-**Migrations:** Use the `migrate(db, name, sql)` function in `src/db/schema.js`. It tracks applied migrations in a `_migrations` table and only runs each migration once. Add new migrations after existing ones.
+**Migrations:** Forward-only, versioned migration files in `src/db/migrations/`. Each file exports `{ version, name, up(db) }`. Tracked in a `schema_migrations` table. To add a new migration, create the next numbered file (e.g. `005-description.js`) and run `npm run db:migrate`. The app refuses to start if there are pending migrations.
 
 **Views:** EJS templates using a partials pattern — every page includes `partials/header.ejs` and `partials/footer.ejs`. No layout engine.
 
@@ -40,7 +42,7 @@ No test framework is configured yet.
 
 - Every `.js` source file must start with `// Copyright (c) 2026 MiraNova Studios`
 - Footer displays: © 2026 MiraNova Studios
-- Bug statuses: `open`, `in_progress`, `resolved`, `closed`, `wontfix`
+- Bug statuses: `open`, `closed`
 - Bug priorities: `critical`, `high`, `medium`, `low`
 - User roles: `admin`, `user`
 - Project slugs auto-generated from name (lowercase, hyphens, no special chars)

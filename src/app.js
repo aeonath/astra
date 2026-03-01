@@ -31,11 +31,14 @@ app.use(express.json());
 // Static files
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
+// Session store — lives alongside the main database by default
+const sessionDbDir = process.env.SESSION_DB_DIR || path.dirname(process.env.DB_PATH);
+
 // Session
 app.use(session({
   store: new SQLiteStore({
     db: 'sessions.db',
-    dir: path.join(__dirname, '..', 'data'),
+    dir: sessionDbDir,
   }),
   secret: process.env.SESSION_SECRET || 'fallback-secret',
   resave: false,
