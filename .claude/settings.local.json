@@ -24,6 +24,9 @@
       "Bash(timeout 3 node src/server.js)",
       "Bash(git add *)",
       "Bash(git commit *)",
+      "Bash(cd /c/Work/astra && git add *)",
+      "Bash(cd /c/Work/astra && git commit *)",
+      "Bash(cd /c/Work/astra)",
       "Bash(mkdir *)"
     ]
   }
