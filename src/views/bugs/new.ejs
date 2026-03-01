@@ -34,7 +34,7 @@
       <select id="assignee_id" name="assignee_id">
         <option value="">Unassigned</option>
         <% users.forEach(u => { %>
-          <option value="<%= u.id %>"><%= u.display_name %></option>
+          <option value="<%= u.id %>" <%= project.default_assignee_id === u.id ? 'selected' : '' %>><%= u.display_name %></option>
         <% }) %>
       </select>
     </div>

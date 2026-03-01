@@ -40,7 +40,7 @@ router.post('/', (req, res) => {
   `).run(
     project_id,
     req.session.userId,
-    assignee_id || null,
+    assignee_id || project.default_assignee_id || null,
     title.trim(),
     description || null,
     priority || 'medium',

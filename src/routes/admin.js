@@ -19,12 +19,18 @@ router.get('/', (req, res) => {
 
 // --- Projects Management ---
 router.get('/projects', (req, res) => {
-  const projects = db.prepare('SELECT * FROM projects ORDER BY name').all();
-  res.render('admin/projects', { title: 'Manage Projects', projects });
+  const projects = db.prepare(`
+    SELECT p.*, u.display_name as assignee_name
+    FROM projects p
+    LEFT JOIN users u ON p.default_assignee_id = u.id
+    ORDER BY p.name
+  `).all();
+  const users = db.prepare('SELECT id, display_name FROM users WHERE active = 1 ORDER BY display_name').all();
+  res.render('admin/projects', { title: 'Manage Projects', projects, users });
 });
 
 router.post('/projects', (req, res) => {
-  const { name, description } = req.body;
+  const { name, description, default_assignee_id } = req.body;
   const isPublic = req.body.public === 'on' ? 1 : 0;
   const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
@@ -34,7 +40,7 @@ router.post('/projects', (req, res) => {
   }
 
   try {
-    db.prepare('INSERT INTO projects (name, slug, description, public) VALUES (?, ?, ?, ?)').run(name, slug, description || null, isPublic);
+    db.prepare('INSERT INTO projects (name, slug, description, public, default_assignee_id) VALUES (?, ?, ?, ?, ?)').run(name, slug, description || null, isPublic, default_assignee_id || null);
     req.session.flash = { type: 'success', message: `Project "${name}" created.` };
   } catch (err) {
     if (err.message.includes('UNIQUE')) {

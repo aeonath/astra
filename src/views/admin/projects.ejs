@@ -17,10 +17,21 @@
         <input type="text" id="description" name="description" placeholder="Brief description">
       </div>
     </div>
-    <div class="form-group">
-      <label class="checkbox-label">
-        <input type="checkbox" name="public" checked> Publicly visible
-      </label>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="default_assignee_id">Default Assignee</label>
+        <select id="default_assignee_id" name="default_assignee_id">
+          <option value="">Unassigned</option>
+          <% users.forEach(u => { %>
+            <option value="<%= u.id %>"><%= u.display_name %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="checkbox-label">
+          <input type="checkbox" name="public" checked> Publicly visible
+        </label>
+      </div>
     </div>
     <button type="submit" class="btn btn-primary">Create Project</button>
   </form>
@@ -31,9 +42,9 @@
     <tr>
       <th>Name</th>
       <th>Slug</th>
+      <th>Default Assignee</th>
       <th>Visibility</th>
       <th>Status</th>
-      <th>Created</th>
       <th>Actions</th>
     </tr>
   </thead>
@@ -42,9 +53,9 @@
       <tr class="<%= project.active ? '' : 'row-muted' %>">
         <td><%= project.name %></td>
         <td class="text-muted"><%= project.slug %></td>
+        <td><%= project.assignee_name || '—' %></td>
         <td><span class="badge badge-status-<%= project.public ? 'open' : 'closed' %>"><%= project.public ? 'Public' : 'Private' %></span></td>
         <td><span class="badge badge-status-<%= project.active ? 'open' : 'closed' %>"><%= project.active ? 'Active' : 'Archived' %></span></td>
-        <td><%= project.created_at.split('T')[0] %></td>
         <td class="actions">
           <form action="/admin/projects/<%= project.id %>/visibility" method="POST" class="inline-form">
             <button type="submit" class="btn btn-sm btn-ghost"><%= project.public ? 'Make Private' : 'Make Public' %></button>

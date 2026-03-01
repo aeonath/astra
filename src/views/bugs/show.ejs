@@ -13,11 +13,13 @@
 
 <div class="bug-layout">
   <div class="bug-main">
-    <% if (bug.description) { %>
-      <div class="bug-description card">
+    <div class="bug-description card">
+      <% if (bug.description) { %>
         <p><%= bug.description %></p>
-      </div>
-    <% } %>
+      <% } else { %>
+        <p class="text-muted">No description provided.</p>
+      <% } %>
+    </div>
 
     <div class="comments-section">
       <h2>Comments (<%= comments.length %>)</h2>
@@ -50,6 +52,16 @@
       <h3>Details</h3>
 
       <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" id="title" name="title" value="<%= bug.title %>" required>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" name="description" rows="4"><%= bug.description || '' %></textarea>
+      </div>
+
+      <div class="form-group">
         <label for="status">Status</label>
         <select id="status" name="status">
           <% ['open', 'closed'].forEach(s => { %>
@@ -76,9 +88,6 @@
           <% }) %>
         </select>
       </div>
-
-      <input type="hidden" name="title" value="<%= bug.title %>">
-      <input type="hidden" name="description" value="<%= bug.description || '' %>">
 
       <button type="submit" class="btn btn-primary btn-sm btn-block">Update</button>
 
