@@ -93,7 +93,16 @@ router.get('/:id', (req, res) => {
 
   const prefixes = { bug: 'BUG', feature: 'REQ' };
   const prefix = prefixes[bug.type];
-  const displayId = prefix && bug.display_number ? `${prefix}-${String(bug.display_number).padStart(3, '0')}` : (bug.type === 'todo' ? 'Todo' : `#${bug.id}`);
+  let displayId;
+  if (prefix && bug.display_number) {
+    displayId = `${prefix}-${String(bug.display_number).padStart(3, '0')}`;
+  } else if (bug.type === 'todo') {
+    const openTodos = db.prepare("SELECT id FROM bugs WHERE project_id = ? AND type = 'todo' AND status = 'open' ORDER BY created_at").all(bug.project_id);
+    const idx = openTodos.findIndex(t => t.id === bug.id);
+    displayId = idx >= 0 ? `Task ${idx + 1}` : 'Task';
+  } else {
+    displayId = `#${bug.id}`;
+  }
   res.render('bugs/show', { title: displayId, bug, comments, users, displayId });
 });
 
