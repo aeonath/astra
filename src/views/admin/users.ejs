@@ -61,10 +61,14 @@
           <form action="/admin/users/<%= user.id %>/toggle" method="POST" class="inline-form">
             <button type="submit" class="btn btn-sm btn-ghost"><%= user.active ? 'Disable' : 'Enable' %></button>
           </form>
-          <form action="/admin/users/<%= user.id %>/reset-password" method="POST" class="inline-form reset-pw-form">
-            <input type="password" name="password" placeholder="New password" required class="input-sm">
-            <button type="submit" class="btn btn-sm btn-ghost">Reset PW</button>
-          </form>
+          <% if (user.role !== 'admin') { %>
+            <form action="/admin/users/<%= user.id %>/reset-password" method="POST" class="inline-form reset-pw-form">
+              <input type="password" name="password" placeholder="New password" required class="input-sm">
+              <button type="submit" class="btn btn-sm btn-ghost">Reset PW</button>
+            </form>
+          <% } else { %>
+            <span class="text-muted">CLI only</span>
+          <% } %>
         </td>
       </tr>
     <% }) %>

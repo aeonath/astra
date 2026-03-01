@@ -1,6 +1,8 @@
 // Copyright (c) 2026 MiraNova Studios
 const express = require('express');
 const bcrypt = require('bcrypt');
+const Database = require('better-sqlite3');
+const path = require('path');
 const db = require('../db');
 const router = express.Router();
 
@@ -117,14 +119,41 @@ router.post('/users/:id/toggle', (req, res) => {
 });
 
 router.post('/users/:id/reset-password', async (req, res) => {
+  const user = db.prepare('SELECT id, username, role FROM users WHERE id = ?').get(req.params.id);
+  if (!user) {
+    req.session.flash = { type: 'error', message: 'User not found.' };
+    return res.redirect('/admin/users');
+  }
+
+  if (user.role === 'admin') {
+    req.session.flash = { type: 'error', message: 'Admin passwords must be reset via the command line: npm run reset-password' };
+    return res.redirect('/admin/users');
+  }
+
   const { password } = req.body;
   if (!password) {
     req.session.flash = { type: 'error', message: 'Password is required.' };
     return res.redirect('/admin/users');
   }
+
   const hash = await bcrypt.hash(password, 12);
-  db.prepare(`UPDATE users SET password_hash = ?, updated_at = datetime('now') WHERE id = ?`).run(hash, req.params.id);
-  req.session.flash = { type: 'success', message: 'Password reset successfully.' };
+  db.prepare(`UPDATE users SET password_hash = ?, updated_at = datetime('now') WHERE id = ?`).run(hash, user.id);
+
+  // Destroy the user's sessions to force them to log in with the new password
+  const sessionDbDir = process.env.SESSION_DB_DIR || path.dirname(process.env.DB_PATH);
+  const sessDb = new Database(path.join(sessionDbDir, 'sessions.db'));
+  const sessions = sessDb.prepare('SELECT sid, sess FROM sessions').all();
+  for (const row of sessions) {
+    try {
+      const data = JSON.parse(row.sess);
+      if (data.userId === user.id) {
+        sessDb.prepare('DELETE FROM sessions WHERE sid = ?').run(row.sid);
+      }
+    } catch (_) { /* skip malformed session rows */ }
+  }
+  sessDb.close();
+
+  req.session.flash = { type: 'success', message: `Password reset for "${user.username}". They have been logged out.` };
   res.redirect('/admin/users');
 });
 
