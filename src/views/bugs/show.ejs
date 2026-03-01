@@ -120,7 +120,7 @@
       <input type="hidden" name="title" value="<%= bug.title %>">
       <input type="hidden" name="description" value="<%= bug.description || '' %>">
 
-      <button type="submit" class="btn btn-primary btn-sm btn-block">Update</button>
+      <button type="submit" class="btn btn-primary btn-block">Update</button>
 
       <div class="sidebar-meta">
         <p><strong>Type:</strong> <span class="badge badge-type-<%= bug.type %>"><%= bug.type === 'feature' ? 'Feature' : bug.type === 'todo' ? 'Todo' : 'Bug' %></span></p>

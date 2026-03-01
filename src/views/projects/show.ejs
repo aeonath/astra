@@ -50,7 +50,7 @@
       </thead>
       <tbody>
         <% todos.forEach((item, idx) => { %>
-          <tr>
+          <tr class="clickable-row" data-href="/bugs/<%= item.id %>">
             <% if (showStatus === 'open') { %><td class="col-todo-num"><%= idx + 1 %>.</td><% } %>
             <td><a href="/bugs/<%= item.id %>"><%= item.title %></a></td>
             <td class="col-priority"><span class="badge badge-<%= item.priority %>"><%= item.priority %></span></td>
@@ -88,7 +88,7 @@
       </thead>
       <tbody>
         <% features.forEach(item => { %>
-          <tr>
+          <tr<% if (currentUser) { %> class="clickable-row" data-href="/bugs/<%= item.id %>"<% } %>>
             <td class="col-id">REQ-<%= String(item.display_number || 0).padStart(3, '0') %></td>
             <td><% if (currentUser) { %><a href="/bugs/<%= item.id %>"><%= item.title %></a><% } else { %><%= item.title %><% } %></td>
             <td class="col-priority"><span class="badge badge-<%= item.priority %>"><%= item.priority %></span></td>
@@ -126,7 +126,7 @@
       </thead>
       <tbody>
         <% bugs.forEach(item => { %>
-          <tr>
+          <tr<% if (currentUser) { %> class="clickable-row" data-href="/bugs/<%= item.id %>"<% } %>>
             <td class="col-id">BUG-<%= String(item.display_number || 0).padStart(3, '0') %></td>
             <td><% if (currentUser) { %><a href="/bugs/<%= item.id %>"><%= item.title %></a><% } else { %><%= item.title %><% } %></td>
             <td class="col-priority"><span class="badge badge-<%= item.priority %>"><%= item.priority %></span></td>
@@ -163,6 +163,7 @@
 </div>
 <% } %>
 
+<script src="/js/clickable-rows.js"></script>
 <script src="/js/project-notes.js"></script>
 
 <%- include('../partials/footer') %>
