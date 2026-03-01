@@ -1,12 +1,12 @@
 #!/bin/bash
 # Copyright (c) 2026 MiraNova Studios
 # Backup the Astra database to a gzipped file with date stamp.
-# Reads DB_PATH from the .env file in the same directory as this script.
+# Reads DB_PATH from the .env file in the project root (one level up from scripts/).
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-ENV_FILE="$SCRIPT_DIR/.env"
+ENV_FILE="$SCRIPT_DIR/../.env"
 
 if [ ! -f "$ENV_FILE" ]; then
   echo "Error: .env file not found at $ENV_FILE" >&2
