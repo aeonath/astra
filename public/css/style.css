@@ -396,6 +396,8 @@ input:focus, textarea:focus, select:focus {
   max-width: 380px;
 }
 .login-title { text-align: center; font-size: 1.8rem; margin-bottom: 0.25rem; }
+.login-brand-link { color: var(--text-primary); }
+.login-brand-link:hover { color: var(--accent-hover); }
 .login-subtitle { text-align: center; color: var(--text-muted); margin-bottom: 1.5rem; }
 
 /* === Landing Page === */

@@ -7,10 +7,9 @@
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-  <% if (currentUser) { %>
   <nav class="navbar">
     <div class="nav-brand">
-      <a href="/projects">&#9733; Astra</a>
+      <a href="/">&#9733; Astra</a>
     </div>
     <div class="nav-links">
       <a href="/projects" class="<%= currentPath.startsWith('/projects') ? 'active' : '' %>">Projects</a>
@@ -19,13 +18,16 @@
       <% } %>
     </div>
     <div class="nav-user">
-      <span class="user-name"><%= currentUser.display_name %></span>
-      <form action="/logout" method="POST" class="inline-form">
-        <button type="submit" class="btn btn-sm btn-ghost">Logout</button>
-      </form>
+      <% if (currentUser) { %>
+        <span class="user-name"><%= currentUser.display_name %></span>
+        <form action="/logout" method="POST" class="inline-form">
+          <button type="submit" class="btn btn-sm btn-ghost">Logout</button>
+        </form>
+      <% } else { %>
+        <a href="/login" class="btn btn-sm btn-primary">Log In</a>
+      <% } %>
     </div>
   </nav>
-  <% } %>
 
   <main class="container">
     <% if (flash) { %>
