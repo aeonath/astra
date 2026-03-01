@@ -2,10 +2,9 @@
 module.exports = {
   version: 4,
   name: 'add-todo-type-simplify-status',
+  disableForeignKeys: true,
   up(db) {
     db.exec(`
-      PRAGMA foreign_keys = OFF;
-
       CREATE TABLE bugs_new (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         project_id INTEGER NOT NULL,
@@ -36,8 +35,6 @@ module.exports = {
       CREATE INDEX idx_bugs_status ON bugs(status);
       CREATE INDEX idx_bugs_assignee ON bugs(assignee_id);
       CREATE INDEX idx_bugs_type ON bugs(type);
-
-      PRAGMA foreign_keys = ON;
     `);
   },
 };

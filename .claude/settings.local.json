@@ -28,7 +28,9 @@
       "Bash(cd /c/Work/astra && git commit *)",
       "Bash(cd /c/Work/astra && git add . && git commit *)",
       "Bash(cd /c/Work/astra)",
-      "Bash(mkdir *)"
+      "Bash(mkdir *)",
+      "Bash(node -e \"require\\(''dotenv''\\).config\\(\\); const dbPath = process.env.DB_PATH; console.log\\(''DB_PATH:'', dbPath\\);\")",
+      "Bash(node -e \"const Database = require\\(''better-sqlite3''\\); const db = new Database\\(''C:/Work/astra/data/astra.db''\\); console.log\\(db.prepare\\(\"\"SELECT sql FROM sqlite_master WHERE type=''table'' AND name=''users''\"\"\\).get\\(\\).sql\\);\")"
     ]
   }
 }

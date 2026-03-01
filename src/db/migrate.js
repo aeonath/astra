@@ -106,6 +106,9 @@ function runMigrations(db) {
 
   for (const m of pending) {
     console.log(`\nApplying ${String(m.version).padStart(3, '0')}-${m.name}...`);
+    if (m.disableForeignKeys) {
+      db.pragma('foreign_keys = OFF');
+    }
     const runInTransaction = db.transaction(() => {
       m.up(db);
       db.prepare(
@@ -113,6 +116,9 @@ function runMigrations(db) {
       ).run(m.version, m.name);
     });
     runInTransaction();
+    if (m.disableForeignKeys) {
+      db.pragma('foreign_keys = ON');
+    }
     console.log(`  Done.`);
   }
 
