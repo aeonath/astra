@@ -25,6 +25,9 @@
     <div class="nav-user">
       <form action="/bugs/search" method="GET" class="nav-search">
         <input type="text" name="q" placeholder="Search..." class="nav-search-input">
+        <% if (typeof project !== 'undefined' && project && project.slug) { %>
+          <input type="hidden" name="project" value="<%= project.slug %>">
+        <% } %>
         <button type="submit" class="btn btn-sm btn-ghost nav-search-btn">Search</button>
       </form>
       <span class="user-name"><%= currentUser.display_name %></span>

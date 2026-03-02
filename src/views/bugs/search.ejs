@@ -7,14 +7,20 @@
 <form action="/bugs/search" method="GET" class="search-form-page">
   <div class="search-input-group">
     <input type="text" name="q" value="<%= q %>" placeholder="Search bugs, features, todos..." autofocus>
+    <% if (projectSlug) { %>
+      <input type="hidden" name="project" value="<%= projectSlug %>">
+    <% } %>
     <button type="submit" class="btn btn-primary">Search</button>
   </div>
+  <% if (projectSlug && projectName) { %>
+    <p class="text-muted" style="margin-top:0.5rem;">Searching in <strong><%= projectName %></strong> &mdash; <a href="/bugs/search?q=<%= encodeURIComponent(q) %>">search all projects</a></p>
+  <% } %>
 </form>
 
 <% if (q && results.length === 0) { %>
-  <div class="empty-state"><p>No results found for "<%= q %>".</p></div>
+  <div class="empty-state"><p>No results found for "<%= q %>"<%= projectName ? ' in ' + projectName : '' %>.</p></div>
 <% } else if (results.length > 0) { %>
-  <p class="text-muted"><%= results.length %> result<%= results.length !== 1 ? 's' : '' %> for "<%= q %>"</p>
+  <p class="text-muted"><%= results.length %> result<%= results.length !== 1 ? 's' : '' %> for "<%= q %>"<%= projectName ? ' in ' + projectName : '' %></p>
   <table class="table">
     <thead>
       <tr>
