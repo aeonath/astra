@@ -17,7 +17,7 @@
       <h2 class="category-heading"><%= cat.name %></h2>
       <div class="project-summary-grid">
         <% catProjects.forEach(project => { %>
-          <<%= canAccessProjects ? 'a href="/projects/' + project.slug + '"' : 'div' %> class="project-summary-card">
+          <<%- canAccessProjects ? 'a href="/projects/' + project.slug + '"' : 'div' %> class="project-summary-card">
             <h2><%= project.name %></h2>
             <% if (project.description) { %>
               <p class="project-desc"><%= project.description %></p>
@@ -38,7 +38,7 @@
               </div>
               <% } %>
             </div>
-          </<%= canAccessProjects ? 'a' : 'div' %>>
+          </<%- canAccessProjects ? 'a' : 'div' %>>
         <% }) %>
       </div>
     <% } %>
@@ -49,7 +49,7 @@
     <h2 class="category-heading">Other</h2>
     <div class="project-summary-grid">
       <% uncategorized.forEach(project => { %>
-        <<%= canAccessProjects ? 'a href="/projects/' + project.slug + '"' : 'div' %> class="project-summary-card">
+        <<%- canAccessProjects ? 'a href="/projects/' + project.slug + '"' : 'div' %> class="project-summary-card">
           <h2><%= project.name %></h2>
           <% if (project.description) { %>
             <p class="project-desc"><%= project.description %></p>
@@ -70,7 +70,7 @@
             </div>
             <% } %>
           </div>
-        </<%= canAccessProjects ? 'a' : 'div' %>>
+        </<%- canAccessProjects ? 'a' : 'div' %>>
       <% }) %>
     </div>
   <% } %>
