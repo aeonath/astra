@@ -20,7 +20,15 @@ module.exports = {
         updated_at TEXT NOT NULL DEFAULT (datetime('now'))
       );
 
-      INSERT INTO bugs_new SELECT * FROM bugs;
+      INSERT INTO bugs_new (id, project_id, reporter_id, assignee_id, title, description, status, priority, type, display_number, created_at, updated_at)
+        SELECT id, project_id, reporter_id, assignee_id, title, description,
+          CASE
+            WHEN status = 'in_progress' THEN 'in_progress'
+            WHEN status IN ('closed', 'resolved', 'wontfix') THEN 'closed'
+            ELSE 'open'
+          END,
+          priority, type, display_number, created_at, updated_at
+        FROM bugs;
       DROP TABLE bugs;
       ALTER TABLE bugs_new RENAME TO bugs;
     `);
