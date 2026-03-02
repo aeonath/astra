@@ -106,7 +106,7 @@
   <div class="section-header">
     <h2>Bugs</h2>
     <span class="section-counts">
-      <a href="?show=open" class="count-tab<%= showStatus === 'open' ? ' count-tab-active' : '' %>"><%= bugCounts.open %> open</a>
+      <a href="?show=open" class="count-tab<%= showStatus === 'open' ? ' count-tab-active' : '' %> <%= bugCounts.open > 0 ? 'count-bugs-red' : 'count-bugs-green' %>"><%= bugCounts.open %> open</a>
       <a href="?show=closed" class="count-tab<%= showStatus === 'closed' ? ' count-tab-active' : '' %>"><%= bugCounts.closed %> closed</a>
     </span>
   </div>

@@ -323,6 +323,8 @@ input:focus, textarea:focus, select:focus {
 }
 .count-tab:hover { color: var(--text-primary); background: var(--bg-tertiary); }
 .count-tab-active { color: var(--text-primary); background: var(--bg-tertiary); font-weight: 500; }
+.count-bugs-green { color: #4CAF50; }
+.count-bugs-red { color: var(--danger); }
 .section-todo { border-left: 3px solid var(--teal); padding-left: 1rem; }
 .section-feature { border-left: 3px solid var(--purple); padding-left: 1rem; }
 .section-bug { border-left: 3px solid var(--danger); padding-left: 1rem; }
