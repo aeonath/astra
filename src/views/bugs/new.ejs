@@ -47,7 +47,7 @@
   </div>
 
   <div class="form-actions">
-    <button type="submit" class="btn <%= issueType === 'feature' ? 'btn-feature' : issueType === 'todo' ? 'btn-todo' : 'btn-primary' %>">Submit <%= issueType === 'feature' ? 'Feature' : issueType === 'todo' ? 'Todo' : 'Bug' %></button>
+    <button type="submit" class="btn <%= issueType === 'feature' ? 'btn-feature' : issueType === 'todo' ? 'btn-todo' : 'btn-primary' %>">Submit <%= issueType === 'feature' ? 'Feature Request' : issueType === 'todo' ? 'Todo' : 'Bug' %></button>
     <a href="/projects/<%= project.slug %>" class="btn btn-ghost">Cancel</a>
   </div>
 </form>
