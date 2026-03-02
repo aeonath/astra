@@ -13,7 +13,9 @@
 <div class="bug-layout">
   <div class="bug-main">
     <% if (bug.type !== 'todo') { %>
+      <br/>
       <h2>Description:</h2>
+      <br/>
     <% } %>
     <div class="bug-title-row">
       <h1 id="bug-title-display"><%= bug.title %></h1>
@@ -22,7 +24,9 @@
 
     <div id="bug-display">
       <% if (bug.type !== 'todo') { %>
+      <br/>
       <h2>Additional Notes:</h2>
+      <br/>
       <div class="bug-description card">
         <% if (bug.description) { %>
           <p id="bug-desc-text"><%= bug.description %></p>
