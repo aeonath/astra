@@ -77,6 +77,13 @@ a:hover { color: var(--accent-hover); }
   gap: 0.75rem;
 }
 .user-name { color: var(--text-secondary); font-size: 0.9rem; }
+.nav-search { display: flex; align-items: center; gap: 0.25rem; }
+.nav-search-input { background: var(--bg-tertiary); border: 1px solid var(--border); color: var(--text-primary); padding: 0.25rem 0.5rem; border-radius: var(--radius); font-size: 0.85rem; width: 160px; }
+.nav-search-input:focus { outline: none; border-color: var(--accent); }
+.nav-search-btn { padding: 0.25rem 0.5rem; }
+.search-form-page { margin-bottom: 1.5rem; }
+.search-input-group { display: flex; gap: 0.5rem; }
+.search-input-group input { flex: 1; }
 
 .public-header { position: absolute; top: 1rem; left: 1.5rem; right: 1.5rem; z-index: 10; display: flex; justify-content: space-between; align-items: center; }
 .public-header + main.container { padding-top: 3.5rem; }

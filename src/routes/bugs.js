@@ -62,6 +62,27 @@ router.post('/', (req, res) => {
   res.redirect(`/bugs/${result.lastInsertRowid}`);
 });
 
+// GET /bugs/search — search bugs, features, and todos
+router.get('/search', (req, res) => {
+  const q = (req.query.q || '').trim();
+  let results = [];
+  if (q) {
+    const pattern = '%' + q + '%';
+    results = db.prepare(`
+      SELECT b.id, b.title, b.type, b.status, b.priority, b.display_number, b.created_at,
+        p.name as project_name, p.slug as project_slug,
+        u.display_name as assignee_name
+      FROM bugs b
+      JOIN projects p ON b.project_id = p.id
+      LEFT JOIN users u ON b.assignee_id = u.id
+      WHERE (b.title LIKE ? OR b.description LIKE ?)
+      ORDER BY b.updated_at DESC
+      LIMIT 100
+    `).all(pattern, pattern);
+  }
+  res.render('bugs/search', { title: 'Search Results', q, results });
+});
+
 // GET /bugs/:id — view bug
 router.get('/:id', (req, res) => {
   const bug = db.prepare(`
