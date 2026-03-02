@@ -12,6 +12,9 @@
 
 <div class="bug-layout">
   <div class="bug-main">
+    <% if (bug.type !== 'todo') { %>
+      <h3 class="detail-label">Description</h3>
+    <% } %>
     <div class="bug-title-row">
       <h1 id="bug-title-display"><%= bug.title %></h1>
       <button type="button" class="btn btn-sm btn-ghost" id="edit-btn">Edit</button>
@@ -19,11 +22,12 @@
 
     <div id="bug-display">
       <% if (bug.type !== 'todo') { %>
+      <h3 class="detail-label">Additional Notes</h3>
       <div class="bug-description card">
         <% if (bug.description) { %>
           <p id="bug-desc-text"><%= bug.description %></p>
         <% } else { %>
-          <p id="bug-desc-text" class="text-muted">No description provided.</p>
+          <p id="bug-desc-text" class="text-muted">No additional notes.</p>
         <% } %>
       </div>
       <% } %>
@@ -38,11 +42,11 @@
         </div>
         <% } else { %>
         <div class="form-group">
-          <label for="edit-title">Title</label>
+          <label for="edit-title">Description</label>
           <input type="text" id="edit-title" name="title" value="<%= bug.title %>" required>
         </div>
         <div class="form-group">
-          <label for="edit-description">Description</label>
+          <label for="edit-description">Additional Notes</label>
           <textarea id="edit-description" name="description" rows="6"><%= bug.description || '' %></textarea>
         </div>
         <% } %>
