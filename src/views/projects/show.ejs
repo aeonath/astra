@@ -92,7 +92,7 @@
             <td class="col-id">REQ-<%= String(item.display_number || 0).padStart(3, '0') %></td>
             <td><% if (currentUser) { %><a href="/bugs/<%= item.id %>"><%= item.title %></a><% } else { %><%= item.title %><% } %></td>
             <td class="col-priority"><span class="badge badge-<%= item.priority %>"><%= item.priority %></span></td>
-            <td class="col-status"><span class="badge badge-status-<%= item.status %>"><%= item.status %></span></td>
+            <td class="col-status"><span class="badge badge-status-<%= item.status %>"><%= item.status === 'in_progress' ? 'in progress' : item.status %></span></td>
             <td class="col-assignee"><%= item.assignee_name || '—' %></td>
             <td class="col-date"><%= item.created_at.split('T')[0] %></td>
           </tr>
@@ -130,7 +130,7 @@
             <td class="col-id">BUG-<%= String(item.display_number || 0).padStart(3, '0') %></td>
             <td><% if (currentUser) { %><a href="/bugs/<%= item.id %>"><%= item.title %></a><% } else { %><%= item.title %><% } %></td>
             <td class="col-priority"><span class="badge badge-<%= item.priority %>"><%= item.priority %></span></td>
-            <td class="col-status"><span class="badge badge-status-<%= item.status %>"><%= item.status %></span></td>
+            <td class="col-status"><span class="badge badge-status-<%= item.status %>"><%= item.status === 'in_progress' ? 'in progress' : item.status %></span></td>
             <td class="col-assignee"><%= item.assignee_name || '—' %></td>
             <td class="col-date"><%= item.created_at.split('T')[0] %></td>
           </tr>

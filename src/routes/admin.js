@@ -11,7 +11,7 @@ router.get('/', (req, res) => {
   const stats = {
     users: db.prepare('SELECT COUNT(*) as count FROM users').get().count,
     projects: db.prepare('SELECT COUNT(*) as count FROM projects').get().count,
-    openBugs: db.prepare("SELECT COUNT(*) as count FROM bugs WHERE status = 'open'").get().count,
+    openBugs: db.prepare("SELECT COUNT(*) as count FROM bugs WHERE status != 'closed'").get().count,
     totalBugs: db.prepare('SELECT COUNT(*) as count FROM bugs').get().count,
     newSubmissions: db.prepare("SELECT COUNT(*) as count FROM public_submissions WHERE status = 'new'").get().count,
   };

@@ -10,9 +10,9 @@ router.get('/', (req, res) => {
   const projects = db.prepare(`
     SELECT p.*,
       c.name as category_name, c.sort_order as category_sort,
-      (SELECT COUNT(*) FROM bugs WHERE project_id = p.id AND type = 'bug' AND status = 'open') as open_bugs,
-      (SELECT COUNT(*) FROM bugs WHERE project_id = p.id AND type = 'feature' AND status = 'open') as open_features,
-      (SELECT COUNT(*) FROM bugs WHERE project_id = p.id AND type = 'todo' AND status = 'open') as open_todos
+      (SELECT COUNT(*) FROM bugs WHERE project_id = p.id AND type = 'bug' AND status != 'closed') as open_bugs,
+      (SELECT COUNT(*) FROM bugs WHERE project_id = p.id AND type = 'feature' AND status != 'closed') as open_features,
+      (SELECT COUNT(*) FROM bugs WHERE project_id = p.id AND type = 'todo' AND status != 'closed') as open_todos
     FROM projects p
     LEFT JOIN categories c ON p.category_id = c.id
     WHERE p.active = 1 ${isLoggedIn ? '' : 'AND p.public = 1'}
@@ -79,7 +79,7 @@ router.get('/:slug', (req, res) => {
   }
 
   const showStatus = req.query.show === 'closed' ? 'closed' : 'open';
-  const statusFilter = `AND b.status = '${showStatus}'`;
+  const statusFilter = showStatus === 'closed' ? "AND b.status = 'closed'" : "AND b.status != 'closed'";
 
   const itemQuery = `
     SELECT b.*,
@@ -97,7 +97,7 @@ router.get('/:slug', (req, res) => {
   const bugs = db.prepare(itemQuery).all(project.id, 'bug');
 
   const countQuery = `SELECT
-    SUM(CASE WHEN status = 'open' THEN 1 ELSE 0 END) as open_count,
+    SUM(CASE WHEN status != 'closed' THEN 1 ELSE 0 END) as open_count,
     SUM(CASE WHEN status = 'closed' THEN 1 ELSE 0 END) as closed_count
     FROM bugs WHERE project_id = ? AND type = ?`;
 

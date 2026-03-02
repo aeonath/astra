@@ -138,7 +138,7 @@ router.get('/:id', (req, res) => {
   if (prefix && bug.display_number) {
     displayId = `${prefix}-${String(bug.display_number).padStart(3, '0')}`;
   } else if (bug.type === 'todo') {
-    const openTodos = db.prepare("SELECT id FROM bugs WHERE project_id = ? AND type = 'todo' AND status = 'open' ORDER BY created_at").all(bug.project_id);
+    const openTodos = db.prepare("SELECT id FROM bugs WHERE project_id = ? AND type = 'todo' AND status != 'closed' ORDER BY created_at").all(bug.project_id);
     const idx = openTodos.findIndex(t => t.id === bug.id);
     displayId = idx >= 0 ? `Task ${idx + 1}` : 'Task';
   } else {
@@ -156,7 +156,7 @@ router.post('/:id', (req, res) => {
   }
 
   const { title, description, status, priority, assignee_id } = req.body;
-  const validStatuses = ['open', 'closed'];
+  const validStatuses = ['open', 'in_progress', 'closed'];
   const newStatus = validStatuses.includes(status) ? status : bug.status;
 
   db.prepare(`

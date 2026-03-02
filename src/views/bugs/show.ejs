@@ -92,8 +92,8 @@
       <div class="form-group">
         <label for="status">Status</label>
         <select id="status" name="status">
-          <% ['open', 'closed'].forEach(s => { %>
-            <option value="<%= s %>" <%= bug.status === s ? 'selected' : '' %>><%= s %></option>
+          <% ['open', 'in_progress', 'closed'].forEach(s => { %>
+            <option value="<%= s %>" <%= bug.status === s ? 'selected' : '' %>><%= s === 'in_progress' ? 'in progress' : s %></option>
           <% }) %>
         </select>
       </div>

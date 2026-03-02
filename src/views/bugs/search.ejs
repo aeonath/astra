@@ -43,7 +43,7 @@
           <td><a href="/bugs/<%= item.id %>"><%= item.title %></a></td>
           <td class="col-priority"><span class="badge badge-type-<%= item.type %>"><%= item.type === 'feature' ? 'Feature' : item.type === 'todo' ? 'Todo' : 'Bug' %></span></td>
           <td class="col-priority"><span class="badge badge-<%= item.priority %>"><%= item.priority %></span></td>
-          <td class="col-status"><span class="badge badge-status-<%= item.status %>"><%= item.status %></span></td>
+          <td class="col-status"><span class="badge badge-status-<%= item.status %>"><%= item.status === 'in_progress' ? 'in progress' : item.status %></span></td>
           <td class="col-assignee"><a href="/projects/<%= item.project_slug %>"><%= item.project_name %></a></td>
           <td class="col-date"><%= item.created_at.split('T')[0] %></td>
         </tr>
