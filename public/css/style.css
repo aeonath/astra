@@ -439,7 +439,6 @@ input:focus, textarea:focus, select:focus {
 .task-number-heading { font-size: 1.1rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 1.5rem; }
 .bug-layout { display: grid; grid-template-columns: 1fr 280px; gap: 1.5rem; }
 .bug-main { min-width: 0; }
-.detail-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 0.25rem; font-weight: 500; }
 .bug-title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
 .bug-title-row h1 { font-size: 1.3rem; font-weight: 600; line-height: 1.4; }
 .bug-description p { white-space: pre-wrap; }

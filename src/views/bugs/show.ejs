@@ -13,7 +13,7 @@
 <div class="bug-layout">
   <div class="bug-main">
     <% if (bug.type !== 'todo') { %>
-      <h3 class="detail-label">Description</h3>
+      <h2>Description:</h2>
     <% } %>
     <div class="bug-title-row">
       <h1 id="bug-title-display"><%= bug.title %></h1>
@@ -22,7 +22,7 @@
 
     <div id="bug-display">
       <% if (bug.type !== 'todo') { %>
-      <h3 class="detail-label">Additional Notes</h3>
+      <h2>Additional Notes:</h2>
       <div class="bug-description card">
         <% if (bug.description) { %>
           <p id="bug-desc-text"><%= bug.description %></p>
@@ -64,7 +64,7 @@
     </form>
 
     <div class="comments-section">
-      <h2>Comments (<%= comments.length %>)</h2>
+      <h2>Comments: (<%= comments.length %>)</h2>
 
       <% if (comments.length === 0) { %>
         <p class="text-muted">No comments yet.</p>
