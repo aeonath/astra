@@ -514,6 +514,8 @@ div.project-summary-card { cursor: default; }
 .stat-feature .stat-num { color: var(--purple); }
 .stat-todo { color: var(--teal); }
 .stat-todo .stat-num { color: var(--teal); }
+.stat-todo-warn { color: #CC8400; }
+.stat-todo-warn .stat-num { color: #CC8400; }
 
 /* === Public Actions (landing page bottom buttons) === */
 .public-actions { display: flex; justify-content: center; gap: 1rem; margin-top: 2.5rem; padding-bottom: 1rem; }
