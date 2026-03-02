@@ -508,6 +508,8 @@ div.project-summary-card { cursor: default; }
 .summary-todos .summary-label { color: var(--teal); }
 .stat-bug { color: var(--danger); }
 .stat-bug .stat-num { color: var(--danger); }
+.stat-bug-green { color: #4CAF50; }
+.stat-bug-green .stat-num { color: #4CAF50; }
 .stat-feature { color: var(--purple); }
 .stat-feature .stat-num { color: var(--purple); }
 .stat-todo { color: var(--teal); }
