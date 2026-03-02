@@ -23,7 +23,7 @@
               <p class="project-desc"><%= project.description %></p>
             <% } %>
             <div class="summary-stats">
-              <div class="summary-stat summary-bugs">
+              <div class="summary-stat <%= project.open_bugs > 0 ? 'summary-bugs-red' : 'summary-bugs-green' %>">
                 <span class="summary-num"><%= project.open_bugs %></span>
                 <span class="summary-label">Open Bugs</span>
               </div>
@@ -55,7 +55,7 @@
             <p class="project-desc"><%= project.description %></p>
           <% } %>
           <div class="summary-stats">
-            <div class="summary-stat summary-bugs">
+            <div class="summary-stat <%= project.open_bugs > 0 ? 'summary-bugs-red' : 'summary-bugs-green' %>">
               <span class="summary-num"><%= project.open_bugs %></span>
               <span class="summary-label">Open Bugs</span>
             </div>

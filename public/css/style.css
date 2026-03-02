@@ -492,9 +492,12 @@ div.project-summary-card { cursor: default; }
 .summary-stat { text-align: center; flex: 1; padding: 0.5rem 0; border-radius: var(--radius); }
 .summary-num { display: block; font-size: 1.4rem; font-weight: 700; }
 .summary-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; }
-.summary-bugs { background: rgba(248,81,73,0.08); }
-.summary-bugs .summary-num { color: var(--danger); }
-.summary-bugs .summary-label { color: var(--danger); }
+.summary-bugs-red { background: rgba(248,81,73,0.08); }
+.summary-bugs-red .summary-num { color: var(--danger); }
+.summary-bugs-red .summary-label { color: var(--danger); }
+.summary-bugs-green { background: rgba(76,175,80,0.08); }
+.summary-bugs-green .summary-num { color: #4CAF50; }
+.summary-bugs-green .summary-label { color: #4CAF50; }
 .summary-features { background: rgba(188,140,255,0.08); }
 .summary-features .summary-num { color: var(--purple); }
 .summary-features .summary-label { color: var(--purple); }
