@@ -54,4 +54,21 @@ document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('password').placeholder = '';
     });
   }
+
+  // Remove user modal
+  var modal = document.getElementById('remove-user-modal');
+  document.querySelectorAll('.remove-user-btn').forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      document.getElementById('remove-user-name').textContent = btn.dataset.displayName;
+      document.getElementById('remove-user-form').action = '/admin/users/' + btn.dataset.userId + '/delete';
+      modal.style.display = 'flex';
+    });
+  });
+  document.getElementById('close-remove-modal').addEventListener('click', function () {
+    modal.style.display = 'none';
+  });
+  modal.addEventListener('click', function (e) {
+    if (e.target === modal) modal.style.display = 'none';
+  });
 });

@@ -169,18 +169,31 @@ router.post('/users', async (req, res) => {
   res.redirect('/admin/users');
 });
 
-router.post('/users/:id/toggle', (req, res) => {
+router.post('/users/:id/delete', (req, res) => {
   const user = db.prepare('SELECT * FROM users WHERE id = ?').get(req.params.id);
-  if (!user) {
+  if (!user) return res.redirect('/admin/users');
+
+  if (user.role === 'admin') {
+    req.session.flash = { type: 'error', message: 'Admin accounts cannot be removed.' };
     return res.redirect('/admin/users');
   }
 
-  if (user.role === 'admin') {
-    req.session.flash = { type: 'error', message: 'Admin accounts cannot be disabled.' };
-  } else {
-    db.prepare(`UPDATE users SET active = ?, updated_at = datetime('now') WHERE id = ?`).run(user.active ? 0 : 1, user.id);
-    req.session.flash = { type: 'success', message: `User "${user.username}" ${user.active ? 'disabled' : 'enabled'}.` };
+  const bugCount = db.prepare('SELECT COUNT(*) as count FROM bugs WHERE reporter_id = ?').get(user.id).count;
+  const commentCount = db.prepare('SELECT COUNT(*) as count FROM comments WHERE user_id = ?').get(user.id).count;
+
+  if (bugCount > 0 || commentCount > 0) {
+    const parts = [];
+    if (bugCount > 0) parts.push(`${bugCount} reported bug(s)`);
+    if (commentCount > 0) parts.push(`${commentCount} comment(s)`);
+    req.session.flash = { type: 'error', message: `Cannot remove "${user.username}" — they have ${parts.join(' and ')}. Reassign those first.` };
+    return res.redirect('/admin/users');
   }
+
+  db.prepare('UPDATE bugs SET assignee_id = NULL WHERE assignee_id = ?').run(user.id);
+  db.prepare('UPDATE projects SET default_assignee_id = NULL WHERE default_assignee_id = ?').run(user.id);
+  db.prepare('DELETE FROM users WHERE id = ?').run(user.id);
+
+  req.session.flash = { type: 'success', message: `User "${user.username}" removed.` };
   res.redirect('/admin/users');
 });
 

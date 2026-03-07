@@ -453,6 +453,13 @@ th.sort-desc::after { content: ' ↓'; font-size: 0.75em; opacity: 0.8; }
   margin-bottom: 1rem;
 }
 
+/* === Modal === */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+.modal { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; max-width: 400px; width: 90%; }
+.modal h3 { margin: 0 0 0.75rem; font-size: 1.1rem; }
+.modal p { margin: 0 0 1.25rem; color: var(--text-secondary); line-height: 1.5; }
+.modal-actions { display: flex; gap: 0.5rem; }
+
 /* === Profile === */
 .profile-stack { display: flex; flex-direction: column; gap: 1.5rem; max-width: 480px; margin: 0 auto; }
 .profile-stack .page-title { font-size: 1.5rem; font-weight: 600; margin: 0; }
