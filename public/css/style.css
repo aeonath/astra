@@ -9,7 +9,7 @@
   --bg-hover: #30363d;
   --border: #30363d;
   --border-light: #21262d;
-  --text-primary: #cccccc;
+  --text-primary: #e6edf3;
   --text-secondary: #8b949e;
   --text-muted: #6e7681;
   --accent: #58a6ff;
@@ -450,9 +450,12 @@ input:focus, textarea:focus, select:focus {
 
 .card-editable { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
 .card-edit-btn { flex-shrink: 0; }
-.bug-is-closed .bug-main > h2 { color: var(--text-primary); }
-.bug-is-closed #bug-title-display { color: var(--text-primary); }
-.bug-is-closed #bug-desc-text { color: var(--text-primary); }
+.bug-is-closed .bug-main > h2,
+.bug-is-closed #bug-title-display,
+.bug-is-closed #bug-desc-text,
+.bug-is-closed .comments-section h2,
+.bug-is-closed .comment-header,
+.bug-is-closed .comment p { color: #555555; }
 .bug-is-closed .card-edit-btn { display: none; }
 .bug-is-closed .comment-edit-btn { display: none; }
 .bug-sidebar { }
