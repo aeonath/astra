@@ -2,7 +2,6 @@
 (function () {
   var panel  = document.getElementById('advanced-panel');
   var toggle = document.getElementById('advanced-toggle');
-  var hint   = document.getElementById('advanced-hint');
   var state  = document.getElementById('search-state');
   var open   = state && state.dataset.advancedOpen === '1';
 
@@ -25,13 +24,6 @@
     toggle.addEventListener('click', function (e) {
       e.preventDefault();
       open ? hide() : show();
-    });
-  }
-  if (hint) {
-    hint.addEventListener('click', function (e) {
-      e.preventDefault();
-      show();
-      if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     });
   }
 })();
