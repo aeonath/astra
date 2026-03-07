@@ -158,7 +158,7 @@ router.get('/:id', (req, res) => {
 
 // POST /bugs/:id — update bug
 router.post('/:id', (req, res) => {
-  const bug = db.prepare('SELECT * FROM bugs WHERE id = ?').get(req.params.id);
+  const bug = db.prepare('SELECT b.*, p.slug as project_slug FROM bugs b JOIN projects p ON p.id = b.project_id WHERE b.id = ?').get(req.params.id);
   if (!bug) {
     req.session.flash = { type: 'error', message: 'Bug not found.' };
     return res.redirect('/projects');
@@ -185,6 +185,9 @@ router.post('/:id', (req, res) => {
   );
 
   req.session.flash = { type: 'success', message: 'Updated.' };
+  if (newStatus === 'closed' && bug.status !== 'closed') {
+    return res.redirect(`/projects/${bug.project_slug}`);
+  }
   res.redirect(`/bugs/${bug.id}`);
 });
 
