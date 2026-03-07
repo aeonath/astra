@@ -300,6 +300,9 @@ th.sort-desc::after { content: ' ↓'; font-size: 0.75em; opacity: 0.8; }
 .table .col-date { width: 100px; color: var(--text-muted); }
 .table .actions { white-space: nowrap; }
 .table .row-muted td { opacity: 0.5; }
+.table tbody tr.row-critical td a,
+.table tbody tr.row-critical td { color: var(--critical); font-weight: 700; }
+.bug-priority-critical #bug-title-display p { color: var(--critical); }
 
 .reset-pw-form { display: inline-flex; gap: 0.25rem; align-items: center; }
 

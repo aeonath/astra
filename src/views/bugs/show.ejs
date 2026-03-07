@@ -13,7 +13,7 @@
 <h2 class="task-number-heading"><%= displayId %></h2>
 <% } %>
 
-<div class="bug-layout<%= bug.status === 'closed' ? ' bug-is-closed' : '' %>">
+<div class="bug-layout<%= bug.status === 'closed' ? ' bug-is-closed' : '' %><%= bug.priority === 'critical' ? ' bug-priority-critical' : '' %>">
   <div class="bug-main">
     <h2 style="margin-bottom: 0.75rem;"><%= bug.type === 'todo' ? 'Task:' : 'Description:' %></h2>
 

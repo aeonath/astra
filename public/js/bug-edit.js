@@ -50,6 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
       priorityBadge.classList.remove.apply(priorityBadge.classList, priorityClasses);
       priorityBadge.classList.add('badge-' + this.value);
       priorityBadge.textContent = this.value;
+      if (bugLayout) bugLayout.classList.toggle('bug-priority-critical', this.value === 'critical');
     });
   }
 

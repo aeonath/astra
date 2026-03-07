@@ -51,7 +51,7 @@
       </thead>
       <tbody>
         <% todos.forEach((item, idx) => { %>
-          <tr class="clickable-row" data-href="/bugs/<%= item.id %>">
+          <tr class="clickable-row<%= item.priority === 'critical' ? ' row-critical' : '' %>" data-href="/bugs/<%= item.id %>">
             <% if (showStatus === 'open') { %><td class="col-todo-num" data-col="id" data-sort="<%= idx + 1 %>">#<%= idx + 1 %></td><% } %>
             <td><a href="/bugs/<%= item.id %>"><%= item.title %></a></td>
             <td class="col-priority" data-col="priority" data-sort="<%= item.priority %>"><span class="badge badge-<%= item.priority %>"><%= item.priority %></span></td>
@@ -90,7 +90,7 @@
       </thead>
       <tbody>
         <% features.forEach(item => { %>
-          <tr<% if (currentUser) { %> class="clickable-row" data-href="/bugs/<%= item.id %>"<% } %>>
+          <tr<% if (currentUser) { %> class="clickable-row<%= item.priority === 'critical' ? ' row-critical' : '' %>" data-href="/bugs/<%= item.id %>"<% } %>>
             <td class="col-id" data-col="id" data-sort="<%= item.display_number || 0 %>">REQ-<%= String(item.display_number || 0).padStart(3, '0') %></td>
             <td><% if (currentUser) { %><a href="/bugs/<%= item.id %>"><%= item.title %></a><% } else { %><%= item.title %><% } %></td>
             <td class="col-priority" data-col="priority" data-sort="<%= item.priority %>"><span class="badge badge-<%= item.priority %>"><%= item.priority %></span></td>
@@ -128,7 +128,7 @@
       </thead>
       <tbody>
         <% bugs.forEach(item => { %>
-          <tr<% if (currentUser) { %> class="clickable-row" data-href="/bugs/<%= item.id %>"<% } %>>
+          <tr<% if (currentUser) { %> class="clickable-row<%= item.priority === 'critical' ? ' row-critical' : '' %>" data-href="/bugs/<%= item.id %>"<% } %>>
             <td class="col-id" data-col="id" data-sort="<%= item.display_number || 0 %>">BUG-<%= String(item.display_number || 0).padStart(3, '0') %></td>
             <td><% if (currentUser) { %><a href="/bugs/<%= item.id %>"><%= item.title %></a><% } else { %><%= item.title %><% } %></td>
             <td class="col-priority" data-col="priority" data-sort="<%= item.priority %>"><span class="badge badge-<%= item.priority %>"><%= item.priority %></span></td>
