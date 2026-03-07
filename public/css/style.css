@@ -102,12 +102,16 @@ a:hover { color: var(--accent-hover); }
 
 /* === Footer === */
 .footer {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 1.5rem;
   color: var(--text-muted);
   font-size: 0.8rem;
   border-top: 1px solid var(--border-light);
+  position: relative;
 }
+.footer-version { position: absolute; right: 1.5rem; }
 
 /* === Alerts === */
 .alert {

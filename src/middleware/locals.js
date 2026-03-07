@@ -1,5 +1,6 @@
 // Copyright (c) 2026 MiraNova Studios
 const db = require('../db');
+const { version: appVersion } = require('../../package.json');
 
 // Inject common locals into all views
 module.exports = function locals(req, res, next) {
@@ -23,6 +24,7 @@ module.exports = function locals(req, res, next) {
     siteSettings[row.key] = row.value;
   }
   res.locals.siteSettings = siteSettings;
+  res.locals.appVersion = appVersion;
 
   next();
 };
