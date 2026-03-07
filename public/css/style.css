@@ -448,7 +448,7 @@ input:focus, textarea:focus, select:focus {
 .bug-sidebar { }
 .sidebar-form h3 { margin-bottom: 1rem; font-size: 1rem; color: #e6edf3; }
 .sidebar-form select { color: #e6edf3; }
-.bug-title-row h2, #bug-display h2 { color: #e6edf3; }
+.bug-main > h2 { color: #e6edf3; }
 #bug-title-display { color: #e6edf3; font-weight: 600; }
 #bug-desc-text { color: #e6edf3; }
 .sidebar-meta { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); }
