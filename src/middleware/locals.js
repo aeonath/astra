@@ -26,7 +26,6 @@ module.exports = function locals(req, res, next) {
   }
   res.locals.siteSettings = siteSettings;
   res.locals.appVersion = appVersion;
-  res.locals.recaptchaSiteKey = process.env.RECAPTCHA_SITE_KEY || '';
 
   next();
 };
