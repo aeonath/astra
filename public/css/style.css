@@ -67,8 +67,8 @@ a:hover { color: var(--accent-hover); }
   color: var(--text-secondary);
   font-size: 0.9rem;
 }
-.nav-links a:hover { color: var(--text-primary); background: var(--bg-tertiary); }
-.nav-links a.active { color: var(--text-primary); background: var(--bg-tertiary); }
+.nav-links a:hover { color: var(--text-primary); }
+.nav-links a.active { color: var(--text-primary); }
 
 .nav-main { display: flex; align-items: center; gap: 1rem; }
 .project-tabs-container { display: flex; align-items: center; gap: 1rem; }
