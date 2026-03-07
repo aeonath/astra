@@ -41,7 +41,7 @@
     <table class="table" id="todos-table">
       <thead>
         <tr>
-          <% if (showStatus === 'open') { %><th class="col-todo-num">NUM</th><% } %>
+          <% if (showStatus === 'open') { %><th class="col-todo-num" data-sort="id">NUM</th><% } %>
           <th>Task</th>
           <th class="col-priority" data-sort="priority">Priority</th>
           <th class="col-status" data-sort="status">Status</th>
@@ -52,7 +52,7 @@
       <tbody>
         <% todos.forEach((item, idx) => { %>
           <tr class="clickable-row" data-href="/bugs/<%= item.id %>">
-            <% if (showStatus === 'open') { %><td class="col-todo-num"><%= idx + 1 %>.</td><% } %>
+            <% if (showStatus === 'open') { %><td class="col-todo-num" data-col="id" data-sort="<%= idx + 1 %>">#<%= idx + 1 %></td><% } %>
             <td><a href="/bugs/<%= item.id %>"><%= item.title %></a></td>
             <td class="col-priority" data-col="priority" data-sort="<%= item.priority %>"><span class="badge badge-<%= item.priority %>"><%= item.priority %></span></td>
             <td class="col-status" data-col="status" data-sort="<%= item.status %>"><span class="badge badge-status-<%= item.status %>"><%= item.status === 'in_progress' ? 'in progress' : item.status %></span></td>
