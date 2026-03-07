@@ -12,7 +12,15 @@ try {
 const PORT = process.env.PORT || 9000;
 const HOST = process.env.HOST || 'localhost';
 
-app.listen(PORT, HOST, () => {
+const server = app.listen(PORT, HOST, () => {
   console.log(`Astra is running at http://${HOST}:${PORT}`);
   console.log(`Database: ${process.env.DB_PATH}`);
+});
+
+server.on('error', (err) => {
+  console.error('Server error:', err.message);
+});
+
+server.on('close', () => {
+  console.log('Server closed unexpectedly.');
 });
