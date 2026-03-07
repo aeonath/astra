@@ -67,45 +67,85 @@ router.post('/', (req, res) => {
   res.redirect(`/bugs/${result.lastInsertRowid}`);
 });
 
-// GET /bugs/search — search bugs, features, and todos
+// GET /bugs/search — advanced search with filters
 router.get('/search', (req, res) => {
-  const q = (req.query.q || '').trim();
+  const q          = (req.query.q        || '').trim();
+  const typeFilter = (req.query.type     || '').trim();
+  const statusFilter = (req.query.status || '').trim();
+  const priorityFilter = (req.query.priority || '').trim();
   const projectSlug = (req.query.project || '').trim();
+  const assigneeId  = (req.query.assignee || '').trim();
+  const dateFrom    = (req.query.date_from || '').trim();
+  const dateTo      = (req.query.date_to   || '').trim();
+
+  const hasAnyFilter = q || typeFilter || statusFilter || priorityFilter || projectSlug || assigneeId || dateFrom || dateTo;
+
+  const projects = db.prepare('SELECT id, name, slug FROM projects WHERE active = 1 ORDER BY name').all();
+  const users    = db.prepare('SELECT id, display_name FROM users WHERE active = 1 ORDER BY display_name').all();
+
   let results = [];
-  let projectName = '';
-  if (q) {
-    const pattern = '%' + q + '%';
-    if (projectSlug) {
-      const proj = db.prepare('SELECT id, name FROM projects WHERE slug = ? AND active = 1').get(projectSlug);
-      if (proj) {
-        projectName = proj.name;
-        results = db.prepare(`
-          SELECT b.id, b.title, b.type, b.status, b.priority, b.display_number, b.created_at,
-            p.name as project_name, p.slug as project_slug,
-            u.display_name as assignee_name
-          FROM bugs b
-          JOIN projects p ON b.project_id = p.id
-          LEFT JOIN users u ON b.assignee_id = u.id
-          WHERE b.project_id = ? AND (b.title LIKE ? OR b.description LIKE ?)
-          ORDER BY b.updated_at DESC
-          LIMIT 100
-        `).all(proj.id, pattern, pattern);
-      }
-    } else {
-      results = db.prepare(`
-        SELECT b.id, b.title, b.type, b.status, b.priority, b.display_number, b.created_at,
-          p.name as project_name, p.slug as project_slug,
-          u.display_name as assignee_name
-        FROM bugs b
-        JOIN projects p ON b.project_id = p.id
-        LEFT JOIN users u ON b.assignee_id = u.id
-        WHERE (b.title LIKE ? OR b.description LIKE ?)
-        ORDER BY b.updated_at DESC
-        LIMIT 100
-      `).all(pattern, pattern);
+  if (hasAnyFilter) {
+    const conditions = ['1=1'];
+    const params = [];
+
+    if (q) {
+      conditions.push('(b.title LIKE ? OR b.description LIKE ?)');
+      params.push('%' + q + '%', '%' + q + '%');
     }
+    if (typeFilter && ['bug','feature','todo'].includes(typeFilter)) {
+      conditions.push('b.type = ?');
+      params.push(typeFilter);
+    }
+    if (statusFilter === 'open') {
+      conditions.push("b.status = 'open'");
+    } else if (statusFilter === 'in_progress') {
+      conditions.push("b.status = 'in_progress'");
+    } else if (statusFilter === 'closed') {
+      conditions.push("b.status = 'closed'");
+    }
+    if (priorityFilter && ['critical','high','medium','low'].includes(priorityFilter)) {
+      conditions.push('b.priority = ?');
+      params.push(priorityFilter);
+    }
+    if (projectSlug) {
+      conditions.push('p.slug = ?');
+      params.push(projectSlug);
+    }
+    if (assigneeId === 'unassigned') {
+      conditions.push('b.assignee_id IS NULL');
+    } else if (assigneeId) {
+      conditions.push('b.assignee_id = ?');
+      params.push(assigneeId);
+    }
+    if (dateFrom) {
+      conditions.push('DATE(b.created_at) >= ?');
+      params.push(dateFrom);
+    }
+    if (dateTo) {
+      conditions.push('DATE(b.created_at) <= ?');
+      params.push(dateTo);
+    }
+
+    results = db.prepare(`
+      SELECT b.id, b.title, b.type, b.status, b.priority, b.display_number, b.created_at,
+        p.name as project_name, p.slug as project_slug,
+        u1.display_name as assignee_name,
+        u2.display_name as reporter_name
+      FROM bugs b
+      JOIN projects p ON b.project_id = p.id
+      LEFT JOIN users u1 ON b.assignee_id = u1.id
+      LEFT JOIN users u2 ON b.reporter_id = u2.id
+      WHERE ${conditions.join(' AND ')}
+      ORDER BY b.updated_at DESC
+      LIMIT 200
+    `).all(...params);
   }
-  res.render('bugs/search', { title: 'Search Results', q, results, projectSlug, projectName });
+
+  res.render('bugs/search', {
+    title: hasAnyFilter ? 'Search Results' : 'Advanced Search',
+    q, typeFilter, statusFilter, priorityFilter, projectSlug, assigneeId, dateFrom, dateTo,
+    hasAnyFilter, results, projects, users,
+  });
 });
 
 // GET /bugs/:id — view bug
