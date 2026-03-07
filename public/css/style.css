@@ -477,6 +477,16 @@ input:focus, textarea:focus, select:focus {
 .comment p { white-space: pre-wrap; }
 .comment-form { margin-top: 1rem; }
 
+/* === File Attachments === */
+.files-section { margin-top: 1.5rem; }
+.files-section h2 { font-size: 1.1rem; margin-bottom: 1rem; color: #e6edf3; }
+.file-item { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 0.5rem; padding: 0.5rem 0.75rem; }
+.file-name { color: var(--accent); font-size: 0.9rem; word-break: break-all; }
+.file-meta { font-size: 0.8rem; white-space: nowrap; }
+.file-upload-form { margin-top: 0.75rem; }
+.file-upload-row { display: flex; align-items: center; gap: 0.75rem; }
+.file-upload-row input[type="file"] { font-size: 0.85rem; color: var(--text-secondary); background: none; border: none; padding: 0; width: auto; }
+
 /* === Breadcrumb === */
 .breadcrumb { display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; margin-bottom: 0.25rem; }
 .breadcrumb span:not(.badge) { color: var(--text-muted); }

@@ -1,7 +1,12 @@
 // Copyright (c) 2026 MiraNova Studios
 const express = require('express');
+const path = require('path');
+const fs = require('fs');
+const multer = require('multer');
 const db = require('../db');
 const router = express.Router();
+
+const upload = multer({ storage: multer.memoryStorage() });
 
 // GET /bugs/new?project=:slug&type=bug|feature|todo — new item form
 router.get('/new', (req, res) => {
@@ -132,6 +137,10 @@ router.get('/:id', (req, res) => {
 
   const users = db.prepare('SELECT id, display_name FROM users WHERE active = 1 ORDER BY display_name').all();
 
+  const files = bug.type === 'bug'
+    ? db.prepare('SELECT f.*, u.display_name as uploader_name FROM bug_files f LEFT JOIN users u ON f.uploaded_by = u.id WHERE f.bug_id = ? ORDER BY f.uploaded_at ASC').all(bug.id)
+    : [];
+
   const prefixes = { bug: 'BUG', feature: 'REQ' };
   const prefix = prefixes[bug.type];
   let displayId;
@@ -144,7 +153,7 @@ router.get('/:id', (req, res) => {
   } else {
     displayId = `#${bug.id}`;
   }
-  res.render('bugs/show', { title: displayId, bug, comments, users, displayId });
+  res.render('bugs/show', { title: displayId, bug, comments, users, displayId, files });
 });
 
 // POST /bugs/:id — update bug
@@ -238,6 +247,79 @@ router.post('/:id/comment', (req, res) => {
 
   req.session.flash = { type: 'success', message: 'Comment added.' };
   res.redirect(`/bugs/${req.params.id}`);
+});
+
+// POST /bugs/:id/files — attach a file to a bug
+router.post('/:id/files', upload.single('file'), (req, res) => {
+  if (!process.env.FILES_DIR) {
+    req.session.flash = { type: 'error', message: 'File storage is not configured on this server.' };
+    return res.redirect(`/bugs/${req.params.id}`);
+  }
+
+  if (!req.file) {
+    req.session.flash = { type: 'error', message: 'No file selected.' };
+    return res.redirect(`/bugs/${req.params.id}`);
+  }
+
+  const bug = db.prepare(`
+    SELECT b.*, p.slug as project_slug FROM bugs b
+    JOIN projects p ON b.project_id = p.id
+    WHERE b.id = ?
+  `).get(req.params.id);
+
+  if (!bug || bug.type !== 'bug') {
+    req.session.flash = { type: 'error', message: 'Bug not found.' };
+    return res.redirect('/projects');
+  }
+
+  const filename = path.basename(req.file.originalname);
+
+  const existing = db.prepare('SELECT id FROM bug_files WHERE bug_id = ? AND filename = ?').get(bug.id, filename);
+  if (existing) {
+    req.session.flash = { type: 'error', message: `A file named "${filename}" is already attached to this bug.` };
+    return res.redirect(`/bugs/${bug.id}`);
+  }
+
+  const dir = path.join(process.env.FILES_DIR, bug.project_slug, String(bug.id));
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(dir, filename), req.file.buffer);
+
+  db.prepare('INSERT INTO bug_files (bug_id, filename, size, uploaded_by) VALUES (?, ?, ?, ?)').run(
+    bug.id, filename, req.file.size, req.session.userId
+  );
+
+  req.session.flash = { type: 'success', message: `"${filename}" attached.` };
+  res.redirect(`/bugs/${bug.id}`);
+});
+
+// GET /bugs/:id/files/:filename — download an attached file
+router.get('/:id/files/:filename', (req, res) => {
+  const bug = db.prepare(`
+    SELECT b.*, p.slug as project_slug FROM bugs b
+    JOIN projects p ON b.project_id = p.id
+    WHERE b.id = ?
+  `).get(req.params.id);
+
+  if (!bug) {
+    req.session.flash = { type: 'error', message: 'Bug not found.' };
+    return res.redirect('/projects');
+  }
+
+  const filename = path.basename(req.params.filename);
+
+  const fileRecord = db.prepare('SELECT * FROM bug_files WHERE bug_id = ? AND filename = ?').get(bug.id, filename);
+  if (!fileRecord) {
+    req.session.flash = { type: 'error', message: 'File not found.' };
+    return res.redirect(`/bugs/${bug.id}`);
+  }
+
+  const filePath = path.join(process.env.FILES_DIR, bug.project_slug, String(bug.id), filename);
+  if (!fs.existsSync(filePath)) {
+    req.session.flash = { type: 'error', message: `"${filename}" is no longer available on disk.` };
+    return res.redirect(`/bugs/${bug.id}`);
+  }
+
+  res.download(filePath, filename);
 });
 
 module.exports = router;

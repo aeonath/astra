@@ -4,3 +4,4 @@ data/*.db
 *.log
 .claude/
 data/
+files/

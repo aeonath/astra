@@ -112,6 +112,30 @@
         <button type="submit" class="btn btn-primary btn-sm">Add Comment</button>
       </form>
     </div>
+
+    <% if (bug.type === 'bug') { %>
+    <div class="files-section">
+      <h2>Attachments: (<%= files.length %>)</h2>
+
+      <% if (files.length === 0) { %>
+        <p class="text-muted" style="margin-bottom: 1rem;">No attachments yet.</p>
+      <% } else { %>
+        <% files.forEach(f => { %>
+          <div class="file-item card">
+            <a href="/bugs/<%= bug.id %>/files/<%= encodeURIComponent(f.filename) %>" class="file-name"><%= f.filename %></a>
+            <span class="file-meta text-muted"><%= f.size ? (f.size / 1024).toFixed(1) + ' KB' : '' %><%= f.uploader_name ? ' · ' + f.uploader_name : '' %> · <%= f.uploaded_at.split('T')[0] %></span>
+          </div>
+        <% }) %>
+      <% } %>
+
+      <form action="/bugs/<%= bug.id %>/files" method="POST" enctype="multipart/form-data" class="file-upload-form">
+        <div class="file-upload-row">
+          <input type="file" name="file" id="file-input" required>
+          <button type="submit" class="btn btn-sm btn-primary">Attach</button>
+        </div>
+      </form>
+    </div>
+    <% } %>
   </div>
 
   <aside class="bug-sidebar">
