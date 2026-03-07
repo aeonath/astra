@@ -19,6 +19,21 @@ document.addEventListener('DOMContentLoaded', function () {
   makeToggle('description-display', 'description-edit-form', 'description-edit-btn', 'description-cancel-btn');
   makeToggle('notes-display', 'notes-edit-form', 'notes-edit-btn', 'notes-cancel-btn');
 
+  // Closed-state: dim headings/text, hide edit buttons, disable priority+assignee
+  var statusSelect = document.getElementById('status');
+  var bugLayout = document.querySelector('.bug-layout');
+  var prioritySelect = document.getElementById('priority');
+  var assigneeSelect = document.getElementById('assignee_id');
+
+  if (statusSelect && bugLayout) {
+    statusSelect.addEventListener('change', function () {
+      var isClosed = this.value === 'closed';
+      bugLayout.classList.toggle('bug-is-closed', isClosed);
+      if (prioritySelect) prioritySelect.disabled = isClosed;
+      if (assigneeSelect) assigneeSelect.disabled = isClosed;
+    });
+  }
+
   // Comment inline edit toggle
   document.querySelectorAll('.comment-edit-btn').forEach(function (btn) {
     btn.addEventListener('click', function () {

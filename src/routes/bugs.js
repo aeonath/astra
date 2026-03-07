@@ -159,6 +159,10 @@ router.post('/:id', (req, res) => {
   const validStatuses = ['open', 'in_progress', 'closed'];
   const newStatus = validStatuses.includes(status) ? status : bug.status;
 
+  // When closing, preserve existing priority and assignee — they can't be changed while closed
+  const newPriority = newStatus === 'closed' ? bug.priority : (priority || bug.priority);
+  const newAssigneeId = newStatus === 'closed' ? bug.assignee_id : (assignee_id || null);
+
   db.prepare(`
     UPDATE bugs SET title = ?, description = ?, status = ?, priority = ?, assignee_id = ?, updated_at = datetime('now')
     WHERE id = ?
@@ -166,8 +170,8 @@ router.post('/:id', (req, res) => {
     title || bug.title,
     description ?? bug.description,
     newStatus,
-    priority || bug.priority,
-    assignee_id || null,
+    newPriority,
+    newAssigneeId,
     bug.id
   );
 

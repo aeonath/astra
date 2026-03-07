@@ -10,7 +10,7 @@
 <h2 class="task-number-heading"><%= displayId %></h2>
 <% } %>
 
-<div class="bug-layout">
+<div class="bug-layout<%= bug.status === 'closed' ? ' bug-is-closed' : '' %>">
   <div class="bug-main">
     <h2 style="margin-bottom: 0.75rem;"><%= bug.type === 'todo' ? 'Task:' : 'Description:' %></h2>
 
@@ -126,7 +126,7 @@
 
       <div class="form-group">
         <label for="priority">Priority</label>
-        <select id="priority" name="priority">
+        <select id="priority" name="priority" <%= bug.status === 'closed' ? 'disabled' : '' %>>
           <% ['low', 'medium', 'high', 'critical'].forEach(p => { %>
             <option value="<%= p %>" <%= bug.priority === p ? 'selected' : '' %>><%= p %></option>
           <% }) %>
@@ -135,7 +135,7 @@
 
       <div class="form-group">
         <label for="assignee_id">Assignee</label>
-        <select id="assignee_id" name="assignee_id">
+        <select id="assignee_id" name="assignee_id" <%= bug.status === 'closed' ? 'disabled' : '' %>>
           <option value="">Unassigned</option>
           <% users.forEach(u => { %>
             <option value="<%= u.id %>" <%= bug.assignee_id === u.id ? 'selected' : '' %>><%= u.display_name %></option>
