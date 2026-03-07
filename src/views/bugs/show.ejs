@@ -151,7 +151,7 @@
       <button type="submit" class="btn btn-primary btn-block">Update</button>
 
       <div class="sidebar-meta">
-        <p><strong>Type:</strong> <span class="badge badge-type-<%= bug.type %>"><%= bug.type === 'feature' ? 'Feature' : bug.type === 'todo' ? 'Todo' : 'Bug' %></span></p>
+        <p><strong>Type:</strong> <span class="badge badge-type-<%= bug.type %>"><%= bug.type === 'feature' ? 'Feature Request' : bug.type === 'todo' ? 'Todo' : 'Bug' %></span></p>
         <p><strong>ID:</strong> <%= displayId %></p>
         <p><strong>Reporter:</strong> <%= bug.reporter_name %></p>
         <p><strong>Created:</strong> <%= bug.created_at %></p>
