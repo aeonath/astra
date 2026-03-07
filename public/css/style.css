@@ -480,6 +480,8 @@ th.sort-desc::after { content: ' ↓'; font-size: 0.75em; opacity: 0.8; }
   transition: border-color 0.15s, background 0.15s;
 }
 .project-card:hover { border-color: var(--accent); background: var(--bg-tertiary); color: var(--text-primary); }
+.project-card-static { cursor: default; }
+.project-card-static:hover { border-color: var(--border); background: var(--bg-secondary); }
 .project-card h2 { font-size: 1.1rem; margin-bottom: 0.4rem; color: var(--text-primary); }
 .project-desc { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.75rem; }
 .project-stats { display: flex; gap: 1rem; }

@@ -97,11 +97,15 @@ router.post('/submit', async (req, res) => {
   res.redirect('/');
 });
 
-// GET /projects/:slug — show project detail with todos, features, and bugs
+// GET /projects/:slug — show project detail with todos, features, and bugs (login required)
 router.get('/:slug', (req, res) => {
-  const isLoggedIn = !!req.session.userId;
+  if (!req.session.userId) {
+    req.session.flash = { type: 'error', message: 'Please log in to view project details.' };
+    return res.redirect('/login');
+  }
+  const isLoggedIn = true;
   const project = db.prepare('SELECT * FROM projects WHERE slug = ? AND active = 1').get(req.params.slug);
-  if (!project || (!project.public && !isLoggedIn)) {
+  if (!project) {
     req.session.flash = { type: 'error', message: 'Project not found.' };
     return res.redirect('/projects');
   }
