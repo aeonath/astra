@@ -230,6 +230,13 @@ router.post('/:id/comment/:commentId/delete', (req, res) => {
 
 // POST /bugs/:id/comment — add comment
 router.post('/:id/comment', (req, res) => {
+  const bug = db.prepare('SELECT status FROM bugs WHERE id = ?').get(req.params.id);
+  if (!bug) return res.redirect('/projects');
+  if (bug.status === 'closed') {
+    req.session.flash = { type: 'error', message: 'Cannot add comments to a closed item.' };
+    return res.redirect(`/bugs/${req.params.id}`);
+  }
+
   const { content } = req.body;
   if (!content || !content.trim()) {
     req.session.flash = { type: 'error', message: 'Comment cannot be empty.' };
