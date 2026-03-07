@@ -45,12 +45,34 @@ router.get('/submit/projects', (req, res) => {
 });
 
 // POST /projects/submit — process public submission
-router.post('/submit', (req, res) => {
+router.post('/submit', async (req, res) => {
   const { type, project_id, name, email, title, description } = req.body;
   const validTypes = ['bug', 'feature'];
   if (!validTypes.includes(type) || !project_id || !name || !title) {
     req.session.flash = { type: 'error', message: 'Please fill in all required fields.' };
     return res.redirect(`/projects/submit?type=${type || 'bug'}`);
+  }
+
+  // Verify reCAPTCHA if configured
+  const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+  if (secretKey) {
+    const token = req.body['g-recaptcha-response'];
+    if (!token) {
+      req.session.flash = { type: 'error', message: 'Please complete the reCAPTCHA verification.' };
+      return res.redirect(`/projects/submit?type=${type}`);
+    }
+    try {
+      const params = new URLSearchParams({ secret: secretKey, response: token });
+      const verify = await fetch(`https://www.google.com/recaptcha/api/siteverify`, { method: 'POST', body: params });
+      const result = await verify.json();
+      if (!result.success) {
+        req.session.flash = { type: 'error', message: 'reCAPTCHA verification failed. Please try again.' };
+        return res.redirect(`/projects/submit?type=${type}`);
+      }
+    } catch (err) {
+      req.session.flash = { type: 'error', message: 'Could not verify reCAPTCHA. Please try again.' };
+      return res.redirect(`/projects/submit?type=${type}`);
+    }
   }
 
   const project = db.prepare('SELECT id FROM projects WHERE id = ? AND active = 1 AND public = 1').get(project_id);

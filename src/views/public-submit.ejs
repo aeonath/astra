@@ -46,6 +46,12 @@
       <label for="description">Details <span class="text-muted">(optional)</span></label>
       <textarea id="description" name="description" rows="5" placeholder="<%= type === 'feature' ? 'Provide any additional details about the feature request...' : 'Steps to reproduce, expected behavior, what happened instead...' %>"></textarea>
     </div>
+    <% if (recaptchaSiteKey) { %>
+    <div class="form-group recaptcha-container">
+      <div class="g-recaptcha" data-sitekey="<%= recaptchaSiteKey %>" data-theme="dark" data-callback="onRecaptchaSuccess"></div>
+      <div id="recaptcha-error" class="recaptcha-error"></div>
+    </div>
+    <% } %>
     <div class="form-actions">
       <button type="submit" class="btn <%= type === 'feature' ? 'btn-feature' : 'btn-primary' %>">Submit</button>
       <a href="/" class="btn btn-ghost">Cancel</a>
@@ -55,6 +61,10 @@
 
 <input type="hidden" id="preselect-category" value="<%= preselect.categoryId %>">
 <input type="hidden" id="preselect-project" value="<%= preselect.projectId %>">
+<% if (recaptchaSiteKey) { %>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script src="/js/public-submit-recaptcha.js"></script>
+<% } %>
 <script src="/js/public-submit.js"></script>
 
 <%- include('partials/footer') %>

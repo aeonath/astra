@@ -15,7 +15,8 @@ app.use(helmet({
     directives: {
       defaultSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
-      scriptSrc: ["'self'"],
+      scriptSrc: ["'self'", "https://www.google.com/recaptcha/", "https://www.gstatic.com/recaptcha/"],
+      frameSrc: ["https://www.google.com/recaptcha/", "https://recaptcha.google.com/"],
       imgSrc: ["'self'", "data:"],
     },
   },
