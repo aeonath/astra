@@ -75,12 +75,8 @@
               <label class="perm-toggle" title="<%= user.can_manage_submissions ? 'Revoke submissions access' : 'Grant submissions access' %>">
                 <input type="checkbox" <%= user.can_manage_submissions ? 'checked' : '' %> onchange="this.form.submit()">
                 <span class="perm-toggle-track"></span>
-                Submissions
+                Manage Submissions
               </label>
-            </form>
-            <form action="/admin/users/<%= user.id %>/reset-password" method="POST" class="inline-form reset-pw-form">
-              <input type="password" name="password" placeholder="New password" required class="input-sm">
-              <button type="submit" class="btn btn-sm btn-ghost">Reset PW</button>
             </form>
           <% } %>
         </td>

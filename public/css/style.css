@@ -339,7 +339,7 @@ th.sort-desc::after { content: ' ↓'; font-size: 0.75em; opacity: 0.8; }
 .table .col-status { width: 110px; }
 .table .col-assignee { width: 130px; }
 .table .col-date { width: 100px; color: var(--text-muted); }
-.table .actions { white-space: nowrap; }
+.table .actions { white-space: nowrap; display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
 .table .row-muted td { opacity: 0.5; }
 .table tbody tr.row-critical td a,
 .table tbody tr.row-critical td { color: var(--critical); font-weight: 700; }

@@ -138,6 +138,12 @@ router.post('/users', async (req, res) => {
 
     db.prepare(`UPDATE users SET display_name = ?, email = ?, role = ?, updated_at = datetime('now') WHERE id = ?`)
       .run(display_name, email, role === 'admin' ? 'admin' : 'user', user.id);
+
+    if (password) {
+      const hash = await bcrypt.hash(password, 12);
+      db.prepare(`UPDATE users SET password_hash = ?, updated_at = datetime('now') WHERE id = ?`).run(hash, user.id);
+    }
+
     req.session.flash = { type: 'success', message: `User "${user.username}" updated.` };
     return res.redirect('/admin/users');
   }
