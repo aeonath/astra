@@ -454,7 +454,8 @@ input:focus, textarea:focus, select:focus {
 
 /* === Comments === */
 .comments-section { margin-top: 1.5rem; }
-.comments-section h2 { font-size: 1.1rem; margin-bottom: 1rem; }
+.comments-section h2 { font-size: 1.1rem; margin-bottom: 1rem; color: #e6edf3; }
+.comment p { color: #e6edf3; }
 .comment-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem; }
 .comment-header .text-muted { font-size: 0.8rem; }
 .comment-actions { display: flex; align-items: center; gap: 0.25rem; }
