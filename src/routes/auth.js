@@ -30,7 +30,7 @@ router.post('/login', async (req, res) => {
   req.session.userId = user.id;
   req.session.userRole = user.role;
   req.session.flash = { type: 'success', message: `Welcome back, ${user.display_name}.` };
-  res.redirect('/projects');
+  res.redirect(user.role === 'admin' ? '/admin' : '/projects');
 });
 
 // POST /logout
