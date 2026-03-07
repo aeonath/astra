@@ -1,15 +1,17 @@
 // Copyright (c) 2026 MiraNova Studios
 (function () {
-  var panel  = document.getElementById('advanced-panel');
-  var toggle = document.getElementById('advanced-toggle');
+  var panel    = document.getElementById('advanced-panel');
+  var toggle   = document.getElementById('advanced-toggle');
   var advInput = document.getElementById('adv-input');
-  var open   = advInput && advInput.value === '1';
+  var qInput   = document.querySelector('#search-form input[name="q"]');
+  var open     = advInput && advInput.value === '1';
 
   function show() {
     if (!panel) return;
     panel.style.display = '';
     if (toggle) toggle.textContent = 'Advanced \u25b4';
     if (advInput) advInput.value = '1';
+    if (qInput) qInput.value = '';
     open = true;
   }
   function hide() {
