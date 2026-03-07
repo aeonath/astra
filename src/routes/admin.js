@@ -351,4 +351,42 @@ router.post('/submissions/:id/status', (req, res) => {
   res.redirect('/admin/submissions');
 });
 
+router.post('/submissions/:id/import', (req, res) => {
+  const sub = db.prepare('SELECT s.*, p.default_assignee_id FROM public_submissions s JOIN projects p ON p.id = s.project_id WHERE s.id = ?').get(req.params.id);
+  if (!sub) {
+    req.session.flash = { type: 'error', message: 'Submission not found.' };
+    return res.redirect('/admin/submissions');
+  }
+  if (sub.imported_bug_id) {
+    req.session.flash = { type: 'error', message: 'Already imported.' };
+    return res.redirect('/admin/submissions');
+  }
+
+  const max = db.prepare('SELECT MAX(display_number) as max FROM bugs WHERE project_id = ? AND type = ?').get(sub.project_id, sub.type);
+  const displayNumber = (max.max || 0) + 1;
+
+  const result = db.prepare(`
+    INSERT INTO bugs (project_id, reporter_id, assignee_id, title, description, priority, type, display_number)
+    VALUES (?, ?, ?, ?, ?, 'medium', ?, ?)
+  `).run(sub.project_id, req.session.userId, sub.default_assignee_id || null, sub.title, sub.description || null, sub.type, displayNumber);
+
+  const bugId = result.lastInsertRowid;
+
+  const commentLines = ['**Imported from public submission**', ''];
+  commentLines.push(`Submitter: ${sub.name}${sub.email ? ' <' + sub.email + '>' : ''}`);
+  commentLines.push(`Original title: ${sub.title}`);
+  if (sub.description) {
+    commentLines.push('');
+    commentLines.push('Original details:');
+    commentLines.push(sub.description);
+  }
+
+  db.prepare('INSERT INTO comments (bug_id, user_id, content) VALUES (?, ?, ?)').run(bugId, req.session.userId, commentLines.join('\n'));
+  db.prepare('UPDATE public_submissions SET imported_bug_id = ?, status = ? WHERE id = ?').run(bugId, 'reviewed', sub.id);
+
+  const prefix = sub.type === 'bug' ? 'BUG' : 'REQ';
+  req.session.flash = { type: 'success', message: `${prefix}-${String(displayNumber).padStart(3, '0')} created from submission.` };
+  res.redirect(`/bugs/${bugId}`);
+});
+
 module.exports = router;

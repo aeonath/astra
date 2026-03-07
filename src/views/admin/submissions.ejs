@@ -41,6 +41,13 @@
         <td><span class="badge badge-status-<%= sub.status === 'new' ? 'open' : 'closed' %>"><%= sub.status %></span></td>
         <td class="col-date"><%= sub.created_at %></td>
         <td class="actions no-row-click">
+          <% if (sub.imported_bug_id) { %>
+            <a href="/bugs/<%= sub.imported_bug_id %>" class="btn btn-sm btn-ghost">View</a>
+          <% } else { %>
+            <form action="/admin/submissions/<%= sub.id %>/import" method="POST" class="inline-form">
+              <button type="submit" class="btn btn-sm btn-primary">Import</button>
+            </form>
+          <% } %>
           <% if (sub.status === 'new') { %>
             <form action="/admin/submissions/<%= sub.id %>/status" method="POST" class="inline-form">
               <input type="hidden" name="status" value="reviewed">
