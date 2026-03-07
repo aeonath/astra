@@ -6,6 +6,7 @@
   <title>Astra<%= siteSettings.tagline ? ' | ' + siteSettings.tagline : '' %></title>
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="stylesheet" href="/css/style.css">
+  <% if (currentUser) { %><meta name="astra-user-id" content="<%= currentUser.id %>"><% } %>
   <script src="/js/project-tabs.js"></script>
 </head>
 <body>

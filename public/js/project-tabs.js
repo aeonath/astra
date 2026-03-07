@@ -1,6 +1,21 @@
 // Copyright (c) 2026 MiraNova Studios
 (function () {
   var STORAGE_KEY = 'astra_open_tabs';
+  var USER_KEY = 'astra_user_id';
+
+  function clearTabsIfUserChanged() {
+    var meta = document.querySelector('meta[name="astra-user-id"]');
+    var currentUserId = meta ? meta.getAttribute('content') : null;
+    var storedUserId = localStorage.getItem(USER_KEY);
+    if (currentUserId !== storedUserId) {
+      localStorage.removeItem(STORAGE_KEY);
+      if (currentUserId) {
+        localStorage.setItem(USER_KEY, currentUserId);
+      } else {
+        localStorage.removeItem(USER_KEY);
+      }
+    }
+  }
 
   function getTabs() {
     try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
@@ -51,6 +66,7 @@
   }
 
   document.addEventListener('DOMContentLoaded', function () {
+    clearTabsIfUserChanged();
     var el = document.getElementById('current-project');
     if (el && el.dataset.slug) {
       var tabs = getTabs();
