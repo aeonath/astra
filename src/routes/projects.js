@@ -1,6 +1,7 @@
 // Copyright (c) 2026 MiraNova Studios
 const express = require('express');
 const db = require('../db');
+const notifications = require('../notifications');
 const router = express.Router();
 
 // GET /projects — list all active projects grouped by category
@@ -81,7 +82,15 @@ router.post('/submit', async (req, res) => {
     return res.redirect(`/projects/submit?type=${type}`);
   }
 
+  const projectRow = db.prepare('SELECT name FROM projects WHERE id = ?').get(project_id);
   db.prepare('INSERT INTO public_submissions (type, project_id, name, email, title, description) VALUES (?, ?, ?, ?, ?, ?)').run(type, project_id, name.trim(), email ? email.trim() : null, title.trim(), description ? description.trim() : null);
+
+  notifications.broadcast('new-submission', {
+    type,
+    title: title.trim(),
+    submitter: name.trim(),
+    project: projectRow ? projectRow.name : '',
+  });
 
   const label = type === 'feature' ? 'feature request' : 'bug report';
   req.session.flash = { type: 'success', message: `Your ${label} has been submitted and will be reviewed by our team. Thank you!` };

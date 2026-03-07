@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const Database = require('better-sqlite3');
 const path = require('path');
 const db = require('../db');
+const notifications = require('../notifications');
 const router = express.Router();
 
 // --- Dashboard ---
@@ -385,6 +386,26 @@ router.post('/submissions/:id/import', (req, res) => {
   const prefix = sub.type === 'bug' ? 'BUG' : 'REQ';
   req.session.flash = { type: 'success', message: `${prefix}-${String(displayNumber).padStart(3, '0')} created from submission.` };
   res.redirect(`/bugs/${bugId}`);
+});
+
+// --- SSE Notification Stream ---
+router.get('/notifications/stream', (req, res) => {
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.flushHeaders();
+
+  notifications.addClient(res);
+
+  // Heartbeat every 25s to keep the connection alive through proxies
+  const heartbeat = setInterval(() => {
+    try { res.write(':heartbeat\n\n'); } catch (e) {}
+  }, 25000);
+
+  req.on('close', () => {
+    clearInterval(heartbeat);
+    notifications.removeClient(res);
+  });
 });
 
 module.exports = router;

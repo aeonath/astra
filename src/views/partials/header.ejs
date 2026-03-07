@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="/css/style.css">
   <% if (currentUser) { %><meta name="astra-user-id" content="<%= currentUser.id %>"><% } %>
   <script src="/js/project-tabs.js"></script>
+  <% if (canManageSubmissions) { %><script src="/js/admin-notifications.js"></script><% } %>
 </head>
 <body>
   <% if (currentUser) { %>
@@ -19,7 +20,7 @@
       <div class="nav-links">
         <a href="/projects" class="<%= currentPath === '/projects' ? 'active' : '' %>">Projects</a>
         <% if (canManageSubmissions) { %>
-          <a href="/submissions" class="<%= currentPath.startsWith('/submissions') ? 'active' : '' %>">Submissions</a>
+          <a href="/submissions" class="<%= currentPath.startsWith('/submissions') ? 'active' : '' %> nav-submissions">Submissions <span id="submissions-badge" class="submissions-badge" style="display:none;"></span></a>
         <% } %>
         <% if (isAdmin) { %>
           <a href="/admin" class="<%= currentPath.startsWith('/admin') ? 'active' : '' %>">Admin</a>
