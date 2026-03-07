@@ -186,7 +186,7 @@
   </aside>
 </div>
 
-<script>if (window.__openProjectTab) window.__openProjectTab(<%- JSON.stringify(bug.project_slug) %>, <%- JSON.stringify(bug.project_name) %>);</script>
+<div id="current-project" data-slug="<%= bug.project_slug %>" data-name="<%= bug.project_name %>" hidden></div>
 <script src="/js/bug-edit.js"></script>
 
 <%- include('../partials/footer') %>

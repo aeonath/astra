@@ -50,21 +50,20 @@
     });
   }
 
-  window.__openProjectTab = function (slug, name) {
-    var tabs = getTabs();
-    var existing = tabs.find(function (t) { return t.slug === slug; });
-    if (!existing) {
-      tabs.push({ slug: slug, name: name });
-      saveTabs(tabs);
-    } else if (existing.name !== name) {
-      existing.name = name;
-      saveTabs(tabs);
-    }
-    window.__currentProjectSlug = slug;
-    renderTabs();
-  };
-
   document.addEventListener('DOMContentLoaded', function () {
+    var el = document.getElementById('current-project');
+    if (el && el.dataset.slug) {
+      var tabs = getTabs();
+      var existing = tabs.find(function (t) { return t.slug === el.dataset.slug; });
+      if (!existing) {
+        tabs.push({ slug: el.dataset.slug, name: el.dataset.name });
+        saveTabs(tabs);
+      } else if (existing.name !== el.dataset.name) {
+        existing.name = el.dataset.name;
+        saveTabs(tabs);
+      }
+      window.__currentProjectSlug = el.dataset.slug;
+    }
     renderTabs();
   });
 })();
