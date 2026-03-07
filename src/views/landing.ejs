@@ -5,7 +5,7 @@
   <p class="text-muted"><%= siteSettings.tagline || '' %></p>
 </div>
 
-<% const canAccessProjects = currentUser || siteSettings.public_project_access === '1'; %>
+<% const canAccessProjects = !!currentUser; %>
 <% if (projects.length === 0) { %>
   <div class="empty-state">
     <p>No projects yet.</p>
