@@ -103,7 +103,8 @@ a:hover { color: var(--accent-hover); }
   align-items: center;
   gap: 0.75rem;
 }
-.user-name { color: var(--text-secondary); font-size: 0.9rem; }
+.user-name { color: var(--text-secondary); font-size: 0.9rem; text-decoration: none; }
+.user-name:hover { color: var(--text-primary); }
 .nav-search { display: flex; align-items: center; gap: 0.25rem; }
 .nav-search-input { background: var(--bg-tertiary); border: 1px solid var(--border); color: var(--text-primary); padding: 0.25rem 0.5rem; border-radius: var(--radius); font-size: 0.85rem; width: 160px; }
 .nav-search-input:focus { outline: none; border-color: var(--accent); }
@@ -443,6 +444,11 @@ th.sort-desc::after { content: ' ↓'; font-size: 0.75em; opacity: 0.8; }
   padding: 1rem;
   margin-bottom: 1rem;
 }
+
+/* === Profile === */
+.profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
+@media (max-width: 640px) { .profile-grid { grid-template-columns: 1fr; } }
+.card-title { font-size: 1rem; font-weight: 600; margin: 0 0 1rem; color: var(--text-secondary); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
 
 /* === Project Grid === */
 .category-heading { font-size: 1.2rem; font-weight: 600; margin: 1.5rem 0 0.75rem; color: var(--text-secondary); border-bottom: 1px solid var(--border); padding-bottom: 0.4rem; }

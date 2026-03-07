@@ -36,7 +36,7 @@
         <% } %>
         <button type="submit" class="btn btn-sm btn-ghost nav-search-btn">Search</button>
       </form>
-      <span class="user-name"><%= currentUser.display_name %></span>
+      <a href="/profile" class="user-name"><%= currentUser.display_name %></a>
       <form action="/logout" method="POST" class="inline-form">
         <button type="submit" class="btn btn-sm btn-ghost">Logout</button>
       </form>
