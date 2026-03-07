@@ -73,9 +73,7 @@
   </form>
 </div>
 
-<% if (!hasAnyFilter) { %>
-  <p class="text-muted">No results. <a href="#" id="advanced-hint">Try Advanced Search</a> to filter by status, priority, project, and more.</p>
-<% } else if (results.length === 0) { %>
+<% if (results.length === 0 && hasAnyFilter) { %>
   <p class="text-muted">No results for <% if (q) { %>"<strong><%= q %></strong>"<% } %><% if (hasAdvancedFilter) { %> with the selected filters<% } %>.</p>
 <% } else { %>
   <%
