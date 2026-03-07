@@ -444,7 +444,9 @@ input:focus, textarea:focus, select:focus {
 .bug-description p { white-space: pre-wrap; }
 
 .bug-sidebar { }
-.sidebar-form h3 { margin-bottom: 1rem; font-size: 1rem; }
+.sidebar-form h3 { margin-bottom: 1rem; font-size: 1rem; color: #e6edf3; }
+.sidebar-form select { color: #e6edf3; }
+#bug-title-display, #bug-desc-text { color: #e6edf3; }
 .sidebar-meta { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); }
 .sidebar-meta p { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.3rem; }
 
