@@ -6,6 +6,7 @@ const { version: appVersion } = require('../../package.json');
 module.exports = function locals(req, res, next) {
   res.locals.currentUser = null;
   res.locals.isAdmin = false;
+  res.locals.canManageSubmissions = false;
   res.locals.currentPath = req.path;
 
   if (req.session.userId) {
