@@ -1,21 +1,23 @@
 // Copyright (c) 2026 MiraNova Studios
 document.addEventListener('DOMContentLoaded', function () {
-  var editBtn = document.getElementById('edit-btn');
-  var cancelBtn = document.getElementById('cancel-edit-btn');
-  var displayEl = document.getElementById('bug-display');
-  var formEl = document.getElementById('bug-edit-form');
+  function makeToggle(displayId, formId, editBtnId, cancelBtnId) {
+    var display = document.getElementById(displayId);
+    var form = document.getElementById(formId);
+    var editBtn = document.getElementById(editBtnId);
+    var cancelBtn = document.getElementById(cancelBtnId);
+    if (!display || !form || !editBtn || !cancelBtn) return;
+    editBtn.addEventListener('click', function () {
+      display.style.display = 'none';
+      form.style.display = '';
+    });
+    cancelBtn.addEventListener('click', function () {
+      display.style.display = '';
+      form.style.display = 'none';
+    });
+  }
 
-  editBtn.addEventListener('click', function () {
-    displayEl.style.display = 'none';
-    formEl.style.display = '';
-    editBtn.style.display = 'none';
-  });
-
-  cancelBtn.addEventListener('click', function () {
-    displayEl.style.display = '';
-    formEl.style.display = 'none';
-    editBtn.style.display = '';
-  });
+  makeToggle('description-display', 'description-edit-form', 'description-edit-btn', 'description-cancel-btn');
+  makeToggle('notes-display', 'notes-edit-form', 'notes-edit-btn', 'notes-cancel-btn');
 
   // Comment inline edit toggle
   document.querySelectorAll('.comment-edit-btn').forEach(function (btn) {

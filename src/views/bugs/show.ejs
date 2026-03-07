@@ -12,61 +12,57 @@
 
 <div class="bug-layout">
   <div class="bug-main">
-    <div class="bug-title-row">
-      <% if (bug.type === 'todo') { %>
-        <h2>Task:</h2>
-      <% } else { %>
-        <h2>Description:</h2>
-      <% } %>
-      <button type="button" class="btn btn-sm btn-ghost" id="edit-btn">Edit</button>
+    <h2 style="margin-bottom: 0.75rem;"><%= bug.type === 'todo' ? 'Task:' : 'Description:' %></h2>
+
+    <div class="card card-editable" id="description-display" style="margin-bottom: 1.25rem;">
+      <p id="bug-title-display"><%= bug.title %></p>
+      <button type="button" class="btn btn-sm btn-ghost card-edit-btn" id="description-edit-btn">Edit</button>
     </div>
 
-    <div id="bug-display">
-      <div class="card" style="margin-bottom: 1.25rem;">
-        <p id="bug-title-display"><%= bug.title %></p>
+    <form action="/bugs/<%= bug.id %>" method="POST" id="description-edit-form" class="card" style="display:none; margin-bottom: 1.25rem;">
+      <div class="form-group">
+        <% if (bug.type === 'todo') { %>
+          <textarea name="title" rows="2" required><%= bug.title %></textarea>
+        <% } else { %>
+          <input type="text" name="title" value="<%= bug.title %>" required>
+        <% } %>
+      </div>
+      <input type="hidden" name="description" value="<%= bug.description || '' %>">
+      <input type="hidden" name="status" value="<%= bug.status %>">
+      <input type="hidden" name="priority" value="<%= bug.priority %>">
+      <input type="hidden" name="assignee_id" value="<%= bug.assignee_id || '' %>">
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn-sm">Save</button>
+        <button type="button" class="btn btn-ghost btn-sm" id="description-cancel-btn">Cancel</button>
+      </div>
+    </form>
+
+    <% if (bug.type !== 'todo') { %>
+      <h2 style="margin-bottom: 0.75rem;">Additional Notes:</h2>
+
+      <div class="card card-editable" id="notes-display" style="margin-bottom: 1.25rem;">
+        <% if (bug.description) { %>
+          <p id="bug-desc-text"><%= bug.description %></p>
+        <% } else { %>
+          <p id="bug-desc-text" class="text-muted">No additional notes.</p>
+        <% } %>
+        <button type="button" class="btn btn-sm btn-ghost card-edit-btn" id="notes-edit-btn">Edit</button>
       </div>
 
-      <% if (bug.type !== 'todo') { %>
-        <h2 style="margin-bottom: 0.75rem;">Additional Notes:</h2>
-        <div class="card" style="margin-bottom: 1.25rem;">
-          <% if (bug.description) { %>
-            <p id="bug-desc-text"><%= bug.description %></p>
-          <% } else { %>
-            <p id="bug-desc-text" class="text-muted">No additional notes.</p>
-          <% } %>
-        </div>
-      <% } %>
-    </div>
-
-    <form action="/bugs/<%= bug.id %>" method="POST" id="bug-edit-form" style="display:none;">
-      <div class="card" style="margin-bottom:1rem;">
-        <% if (bug.type === 'todo') { %>
+      <form action="/bugs/<%= bug.id %>" method="POST" id="notes-edit-form" class="card" style="display:none; margin-bottom: 1.25rem;">
         <div class="form-group">
-          <label for="edit-title">Task</label>
-          <textarea id="edit-title" name="title" rows="2" required><%= bug.title %></textarea>
+          <textarea name="description" rows="6"><%= bug.description || '' %></textarea>
         </div>
-        <% } else { %>
-        <div class="form-group">
-          <label for="edit-title">Description</label>
-          <input type="text" id="edit-title" name="title" value="<%= bug.title %>" required>
-        </div>
-        <div class="form-group">
-          <label for="edit-description">Additional Notes</label>
-          <textarea id="edit-description" name="description" rows="6"><%= bug.description || '' %></textarea>
-        </div>
-        <% } %>
+        <input type="hidden" name="title" value="<%= bug.title %>">
         <input type="hidden" name="status" value="<%= bug.status %>">
         <input type="hidden" name="priority" value="<%= bug.priority %>">
         <input type="hidden" name="assignee_id" value="<%= bug.assignee_id || '' %>">
-        <% if (bug.type === 'todo') { %>
-        <input type="hidden" name="description" value="<%= bug.description || '' %>">
-        <% } %>
         <div class="form-actions">
           <button type="submit" class="btn btn-primary btn-sm">Save</button>
-          <button type="button" class="btn btn-ghost btn-sm" id="cancel-edit-btn">Cancel</button>
+          <button type="button" class="btn btn-ghost btn-sm" id="notes-cancel-btn">Cancel</button>
         </div>
-      </div>
-    </form>
+      </form>
+    <% } %>
 
     <div class="comments-section">
       <h2>Comments: (<%= comments.length %>)</h2>
