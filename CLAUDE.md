@@ -52,4 +52,4 @@ No test framework is configured yet.
 ## After Every Change
 
 1. **Changelog:** Write a changelog entry to `changelog/YYYYMMDD-HHMM-CHANGELOG.md` summarizing what was changed and why.
-2. **Commit:** Run `git add .` and `git commit -m "brief summary"` as **two separate Bash tool calls** — NEVER chain with `&&` or `;` or `cd ... &&`. Each git command must be its own standalone Bash tool call. Chaining triggers permission prompts every time. Do not skip this step.
+2. **Commit:** Run `git add` and `git commit` as **two separate Bash tool calls** — NEVER chain with `&&` or `;`. Use `git -C /c/Work/astra add ...` and `git -C /c/Work/astra commit ...` to avoid needing `cd`. Each git command must be its own standalone Bash tool call. Chaining triggers permission prompts every time. Do not skip this step.
