@@ -131,7 +131,7 @@ a:hover { color: var(--accent-hover); }
 .public-header + main.container { padding-top: 3.5rem; }
 .public-header-left { display: flex; align-items: center; gap: 0.75rem; }
 .public-brand { font-size: 1.2rem; font-weight: 700; color: var(--text-primary); letter-spacing: 0.5px; text-decoration: none; }
-.public-brand:hover { color: var(--accent); }
+.public-brand:hover { color: var(--text-primary); }
 
 /* === Container === */
 .container {
