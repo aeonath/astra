@@ -19,18 +19,37 @@ document.addEventListener('DOMContentLoaded', function () {
   makeToggle('description-display', 'description-edit-form', 'description-edit-btn', 'description-cancel-btn');
   makeToggle('notes-display', 'notes-edit-form', 'notes-edit-btn', 'notes-cancel-btn');
 
-  // Closed-state: dim headings/text, hide edit buttons, disable priority+assignee
+  // Status/priority badges and closed-state lockdown
   var statusSelect = document.getElementById('status');
-  var bugLayout = document.querySelector('.bug-layout');
   var prioritySelect = document.getElementById('priority');
   var assigneeSelect = document.getElementById('assignee_id');
+  var bugLayout = document.querySelector('.bug-layout');
+  var statusBadge = document.getElementById('status-badge');
+  var priorityBadge = document.getElementById('priority-badge');
+
+  var statusClasses = ['badge-status-open', 'badge-status-in_progress', 'badge-status-closed', 'badge-status-resolved', 'badge-status-wontfix'];
+  var priorityClasses = ['badge-low', 'badge-medium', 'badge-high', 'badge-critical'];
 
   if (statusSelect && bugLayout) {
     statusSelect.addEventListener('change', function () {
-      var isClosed = this.value === 'closed';
+      var val = this.value;
+      var isClosed = val === 'closed';
       bugLayout.classList.toggle('bug-is-closed', isClosed);
       if (prioritySelect) prioritySelect.disabled = isClosed;
       if (assigneeSelect) assigneeSelect.disabled = isClosed;
+      if (statusBadge) {
+        statusBadge.classList.remove.apply(statusBadge.classList, statusClasses);
+        statusBadge.classList.add('badge-status-' + val);
+        statusBadge.textContent = val === 'in_progress' ? 'in progress' : val;
+      }
+    });
+  }
+
+  if (prioritySelect && priorityBadge) {
+    prioritySelect.addEventListener('change', function () {
+      priorityBadge.classList.remove.apply(priorityBadge.classList, priorityClasses);
+      priorityBadge.classList.add('badge-' + this.value);
+      priorityBadge.textContent = this.value;
     });
   }
 

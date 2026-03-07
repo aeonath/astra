@@ -4,6 +4,8 @@
   <a href="/projects/<%= bug.project_slug %>">Project &mdash; <%= bug.project_name %></a>
   <span>&rsaquo;</span>
   <span><%= displayId %></span>
+  <span id="status-badge" class="badge badge-status-<%= bug.status %>"><%= bug.status === 'in_progress' ? 'in progress' : bug.status %></span>
+  <span id="priority-badge" class="badge badge-<%= bug.priority %>"><%= bug.priority %></span>
 </div>
 
 <% if (bug.type === 'todo') { %>
