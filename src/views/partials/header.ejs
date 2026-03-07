@@ -19,9 +19,6 @@
     <div class="nav-main">
       <div class="nav-links">
         <% if (!isAdmin) { %><a href="/projects" class="<%= currentPath === '/projects' ? 'active' : '' %>">Projects</a><% } %>
-        <% if (canManageSubmissions) { %>
-          <a href="/submissions" class="<%= currentPath.startsWith('/submissions') ? 'active' : '' %> nav-submissions">Submissions <span id="submissions-badge" class="submissions-badge" style="display:none;"></span></a>
-        <% } %>
         <% if (isAdmin) { %>
           <a href="/admin" class="<%= currentPath.startsWith('/admin') ? 'active' : '' %>">Admin</a>
         <% } %>
