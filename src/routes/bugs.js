@@ -78,7 +78,8 @@ router.get('/search', (req, res) => {
   const dateFrom    = (req.query.date_from || '').trim();
   const dateTo      = (req.query.date_to   || '').trim();
 
-  const hasAnyFilter = q || typeFilter || statusFilter || priorityFilter || projectSlug || assigneeId || dateFrom || dateTo;
+  const hasAdvancedFilter = typeFilter || statusFilter || priorityFilter || projectSlug || assigneeId || dateFrom || dateTo;
+  const hasAnyFilter = q || hasAdvancedFilter;
 
   const projects = db.prepare('SELECT id, name, slug FROM projects WHERE active = 1 ORDER BY name').all();
   const users    = db.prepare('SELECT id, display_name FROM users WHERE active = 1 ORDER BY display_name').all();
@@ -142,9 +143,9 @@ router.get('/search', (req, res) => {
   }
 
   res.render('bugs/search', {
-    title: hasAnyFilter ? 'Search Results' : 'Advanced Search',
+    title: 'Search',
     q, typeFilter, statusFilter, priorityFilter, projectSlug, assigneeId, dateFrom, dateTo,
-    hasAnyFilter, results, projects, users,
+    hasAnyFilter, hasAdvancedFilter, results, projects, users,
   });
 });
 
