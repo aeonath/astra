@@ -275,7 +275,8 @@ input:focus, textarea:focus, select:focus {
   letter-spacing: 0.5px;
 }
 .table tbody tr:hover { background: var(--bg-secondary); }
-.table tbody td a { color: var(--text-primary); text-decoration: none; }
+.table tbody td { color: #e6edf3; }
+.table tbody td a { color: #e6edf3; text-decoration: none; }
 .clickable-row { cursor: pointer; }
 .clickable-row:hover { background: var(--bg-tertiary); }
 .table .col-id { width: 80px; color: var(--text-muted); white-space: nowrap; font-size: 0.8rem; }
