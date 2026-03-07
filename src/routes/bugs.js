@@ -75,6 +75,7 @@ router.get('/search', (req, res) => {
   const priorityFilter = (req.query.priority || '').trim();
   const projectSlug = (req.query.project || '').trim();
   const assigneeId  = (req.query.assignee || '').trim();
+  const advOpen     = req.query.adv === '1';
 
   const hasAdvancedFilter = typeFilter || statusFilter || priorityFilter || projectSlug || assigneeId;
   const hasAnyFilter = q || hasAdvancedFilter;
@@ -134,7 +135,7 @@ router.get('/search', (req, res) => {
   res.render('bugs/search', {
     title: 'Search',
     q, typeFilter, statusFilter, priorityFilter, projectSlug, assigneeId,
-    hasAnyFilter, hasAdvancedFilter, results, projects, users,
+    hasAnyFilter, hasAdvancedFilter, advOpen, results, projects, users,
   });
 });
 

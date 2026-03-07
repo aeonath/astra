@@ -6,6 +6,7 @@
 
 <div class="advanced-search-card">
   <form action="/bugs/search" method="GET" id="search-form">
+    <input type="hidden" name="adv" id="adv-input" value="<%= advOpen ? '1' : '0' %>">
     <div class="search-row search-row-main">
       <div class="form-group search-text-group">
         <input type="text" name="q" value="<%= q %>" placeholder="Search title and description..." autofocus>
