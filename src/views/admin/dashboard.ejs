@@ -1,38 +1,12 @@
 <%- include('../partials/header') %>
 
-<div class="page-header">
-  <h1>Admin Dashboard</h1>
-</div>
-
-<div class="stats-grid">
-  <div class="stat-card">
-    <div class="stat-number"><%= stats.users %></div>
-    <div class="stat-label">Users</div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-number"><%= stats.projects %></div>
-    <div class="stat-label">Projects</div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-number"><%= stats.openBugs %></div>
-    <div class="stat-label">Open Bugs</div>
-  </div>
-  <div class="stat-card">
-    <div class="stat-number"><%= stats.totalBugs %></div>
-    <div class="stat-label">Total Bugs</div>
-  </div>
-  <a href="/admin/submissions" class="stat-card stat-card-link">
-    <div class="stat-number"><%= stats.newSubmissions %></div>
-    <div class="stat-label">New Submissions</div>
-  </a>
-</div>
-
-<div class="admin-links">
-  <a href="/admin/projects" class="btn btn-primary">Manage Projects</a>
-  <a href="/admin/categories" class="btn btn-primary">Manage Categories</a>
-  <a href="/admin/users" class="btn btn-primary">Manage Users</a>
-  <a href="/admin/submissions" class="btn btn-primary">Submissions</a>
-  <a href="/admin/settings" class="btn btn-primary">Site Settings</a>
+<div class="admin-menu">
+  <h1>Admin</h1>
+  <a href="/admin/projects" class="btn btn-primary btn-block">Manage Projects</a>
+  <a href="/admin/categories" class="btn btn-primary btn-block">Manage Categories</a>
+  <a href="/admin/users" class="btn btn-primary btn-block">Manage Users</a>
+  <a href="/admin/submissions" class="btn btn-primary btn-block">Submissions</a>
+  <a href="/admin/settings" class="btn btn-primary btn-block">Site Settings</a>
 </div>
 
 <%- include('../partials/footer') %>

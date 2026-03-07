@@ -9,14 +9,7 @@ const router = express.Router();
 
 // --- Dashboard ---
 router.get('/', (req, res) => {
-  const stats = {
-    users: db.prepare('SELECT COUNT(*) as count FROM users').get().count,
-    projects: db.prepare('SELECT COUNT(*) as count FROM projects').get().count,
-    openBugs: db.prepare("SELECT COUNT(*) as count FROM bugs WHERE status != 'closed'").get().count,
-    totalBugs: db.prepare('SELECT COUNT(*) as count FROM bugs').get().count,
-    newSubmissions: db.prepare("SELECT COUNT(*) as count FROM public_submissions WHERE status = 'new'").get().count,
-  };
-  res.render('admin/dashboard', { title: 'Admin Dashboard', stats });
+  res.render('admin/dashboard', { title: 'Admin' });
 });
 
 // --- Projects Management ---
