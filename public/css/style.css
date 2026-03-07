@@ -447,6 +447,7 @@ th.sort-desc::after { content: ' ↓'; font-size: 0.75em; opacity: 0.8; }
 
 /* === Profile === */
 .profile-stack { display: flex; flex-direction: column; gap: 1.5rem; max-width: 480px; margin: 0 auto; }
+.profile-stack .page-title { font-size: 1.5rem; font-weight: 600; margin: 0; }
 .card-title { font-size: 1rem; font-weight: 600; margin: 0 0 1rem; color: var(--text-secondary); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
 
 /* === Project Grid === */
