@@ -75,10 +75,8 @@ router.get('/search', (req, res) => {
   const priorityFilter = (req.query.priority || '').trim();
   const projectSlug = (req.query.project || '').trim();
   const assigneeId  = (req.query.assignee || '').trim();
-  const dateFrom    = (req.query.date_from || '').trim();
-  const dateTo      = (req.query.date_to   || '').trim();
 
-  const hasAdvancedFilter = typeFilter || statusFilter || priorityFilter || projectSlug || assigneeId || dateFrom || dateTo;
+  const hasAdvancedFilter = typeFilter || statusFilter || priorityFilter || projectSlug || assigneeId;
   const hasAnyFilter = q || hasAdvancedFilter;
 
   const projects = db.prepare('SELECT id, name, slug FROM projects WHERE active = 1 ORDER BY name').all();
@@ -118,15 +116,6 @@ router.get('/search', (req, res) => {
       conditions.push('b.assignee_id = ?');
       params.push(assigneeId);
     }
-    if (dateFrom) {
-      conditions.push('DATE(b.created_at) >= ?');
-      params.push(dateFrom);
-    }
-    if (dateTo) {
-      conditions.push('DATE(b.created_at) <= ?');
-      params.push(dateTo);
-    }
-
     results = db.prepare(`
       SELECT b.id, b.title, b.type, b.status, b.priority, b.display_number, b.created_at,
         p.name as project_name, p.slug as project_slug,
@@ -144,7 +133,7 @@ router.get('/search', (req, res) => {
 
   res.render('bugs/search', {
     title: 'Search',
-    q, typeFilter, statusFilter, priorityFilter, projectSlug, assigneeId, dateFrom, dateTo,
+    q, typeFilter, statusFilter, priorityFilter, projectSlug, assigneeId,
     hasAnyFilter, hasAdvancedFilter, results, projects, users,
   });
 });

@@ -70,14 +70,8 @@
             <% }) %>
           </select>
         </div>
-        <div class="form-group">
-          <label>Created after</label>
-          <input type="date" name="date_from" value="<%= dateFrom %>">
-        </div>
-        <div class="form-group">
-          <label>Created before</label>
-          <input type="date" name="date_to" value="<%= dateTo %>">
-        </div>
+        <div class="form-group"></div>
+        <div class="form-group"></div>
         <div class="form-group"></div>
       </div>
     </div>
@@ -97,8 +91,6 @@
     if (projectSlug)    { const p = projects.find(p => p.slug === projectSlug); if (p) filterParts.push(p.name); }
     if (assigneeId === 'unassigned') filterParts.push('Unassigned');
     else if (assigneeId) { const u = users.find(u => String(u.id) === assigneeId); if (u) filterParts.push(u.display_name); }
-    if (dateFrom)       filterParts.push('after ' + dateFrom);
-    if (dateTo)         filterParts.push('before ' + dateTo);
   %>
   <div class="search-summary">
     <span><strong><%= results.length %></strong> result<%= results.length !== 1 ? 's' : '' %><% if (q) { %> for "<%= q %>"<% } %></span>
