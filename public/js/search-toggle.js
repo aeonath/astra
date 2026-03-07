@@ -2,8 +2,7 @@
 (function () {
   var panel  = document.getElementById('advanced-panel');
   var toggle = document.getElementById('advanced-toggle');
-  var state  = document.getElementById('search-state');
-  var open   = state && state.dataset.advancedOpen === '1';
+  var open   = false;
 
   function show() {
     if (!panel) return;
@@ -17,8 +16,6 @@
     if (toggle) toggle.textContent = 'Advanced \u25be';
     open = false;
   }
-
-  if (open) show();
 
   if (toggle) {
     toggle.addEventListener('click', function (e) {
