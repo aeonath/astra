@@ -69,10 +69,12 @@
 <div class="section-block section-feature">
   <div class="section-header">
     <h2>Feature Requests</h2>
+    <% if (currentUser) { %>
     <span class="section-counts">
       <a href="?show=open" class="count-tab<%= showStatus === 'open' ? ' count-tab-active' : '' %>"><%= featureCounts.open %> open</a>
       <a href="?show=closed" class="count-tab<%= showStatus === 'closed' ? ' count-tab-active' : '' %>"><%= featureCounts.closed %> closed</a>
     </span>
+    <% } %>
   </div>
   <% if (features.length === 0) { %>
     <div class="empty-state"><p>No <%= showStatus %> feature requests.</p></div>
@@ -107,10 +109,12 @@
 <div class="section-block section-bug">
   <div class="section-header">
     <h2>Bugs</h2>
+    <% if (currentUser) { %>
     <span class="section-counts">
       <a href="?show=open" class="count-tab<%= showStatus === 'open' ? ' count-tab-active' : '' %> <%= bugCounts.open > 0 ? 'count-bugs-red' : 'count-bugs-green' %>"><%= bugCounts.open %> open</a>
       <a href="?show=closed" class="count-tab<%= showStatus === 'closed' ? ' count-tab-active' : '' %>"><%= bugCounts.closed %> closed</a>
     </span>
+    <% } %>
   </div>
   <% if (bugs.length === 0) { %>
     <div class="empty-state"><p>No <%= showStatus %> bugs.</p></div>

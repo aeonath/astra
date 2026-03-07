@@ -91,16 +91,14 @@ router.post('/submit', async (req, res) => {
 // GET /projects/:slug — show project detail with todos, features, and bugs
 router.get('/:slug', (req, res) => {
   const isLoggedIn = !!req.session.userId;
-  if (!isLoggedIn && res.locals.siteSettings.public_project_access !== '1') {
-    return res.redirect('/');
-  }
   const project = db.prepare('SELECT * FROM projects WHERE slug = ? AND active = 1').get(req.params.slug);
   if (!project || (!project.public && !isLoggedIn)) {
     req.session.flash = { type: 'error', message: 'Project not found.' };
     return res.redirect('/projects');
   }
 
-  const showStatus = req.query.show === 'closed' ? 'closed' : 'open';
+  // Public users always see open items only
+  const showStatus = isLoggedIn && req.query.show === 'closed' ? 'closed' : 'open';
   const statusFilter = showStatus === 'closed' ? "AND b.status = 'closed'" : "AND b.status != 'closed'";
 
   const itemQuery = `
