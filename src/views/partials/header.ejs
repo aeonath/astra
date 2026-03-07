@@ -22,8 +22,8 @@
       <% if (isAdmin) { %>
         <a href="/admin" class="<%= currentPath.startsWith('/admin') ? 'active' : '' %>">Admin</a>
       <% } %>
+      <div id="project-tabs" class="project-tabs-container"></div>
     </div>
-    <div id="project-tabs" class="project-tabs-container"></div>
     <div class="nav-user">
       <form action="/bugs/search" method="GET" class="nav-search">
         <input type="text" name="q" placeholder="Search..." class="nav-search-input">
