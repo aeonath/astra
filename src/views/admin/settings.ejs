@@ -19,6 +19,16 @@
         <input type="checkbox" name="public_project_access" <%= settings.public_project_access === '1' ? 'checked' : '' %>> Allow public access to project details (when off, visitors see the project list but cannot open individual projects)
       </label>
     </div>
+    <div class="form-group">
+      <label class="checkbox-label">
+        <input type="checkbox" name="show_report_bug_button" <%= settings.show_report_bug_button !== '0' ? 'checked' : '' %>> Show "Report a Bug" button on public pages
+      </label>
+    </div>
+    <div class="form-group">
+      <label class="checkbox-label">
+        <input type="checkbox" name="show_request_feature_button" <%= settings.show_request_feature_button !== '0' ? 'checked' : '' %>> Show "Request a Feature" button on public pages
+      </label>
+    </div>
     <div class="form-actions">
       <button type="submit" class="btn btn-primary">Save Settings</button>
     </div>

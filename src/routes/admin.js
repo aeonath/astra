@@ -309,10 +309,14 @@ router.get('/settings', (req, res) => {
 router.post('/settings', (req, res) => {
   const { tagline, footer_text } = req.body;
   const publicProjectAccess = req.body.public_project_access === 'on' ? '1' : '0';
+  const showReportBug = req.body.show_report_bug_button === 'on' ? '1' : '0';
+  const showRequestFeature = req.body.show_request_feature_button === 'on' ? '1' : '0';
   const update = db.prepare('UPDATE site_settings SET value = ? WHERE key = ?');
   update.run(tagline || '', 'tagline');
   update.run(footer_text || '', 'footer_text');
   update.run(publicProjectAccess, 'public_project_access');
+  update.run(showReportBug, 'show_report_bug_button');
+  update.run(showRequestFeature, 'show_request_feature_button');
   req.session.flash = { type: 'success', message: 'Site settings updated.' };
   res.redirect('/admin/settings');
 });
