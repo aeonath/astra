@@ -43,10 +43,10 @@
         <tr>
           <% if (showStatus === 'open') { %><th class="col-todo-num" data-sort="id">NUM</th><% } %>
           <th>Task</th>
-          <th class="col-priority" data-sort="priority">Priority</th>
-          <th class="col-status" data-sort="status">Status</th>
-          <th class="col-assignee">Assignee</th>
-          <th class="col-date" data-sort="created">Created</th>
+          <% if (siteSettings.table_col_priority !== '0') { %><th class="col-priority" data-sort="priority">Priority</th><% } %>
+          <% if (siteSettings.table_col_status !== '0') { %><th class="col-status" data-sort="status">Status</th><% } %>
+          <% if (siteSettings.table_col_assignee !== '0') { %><th class="col-assignee">Assignee</th><% } %>
+          <% if (siteSettings.table_col_created !== '0') { %><th class="col-date" data-sort="created">Created</th><% } %>
         </tr>
       </thead>
       <tbody>
@@ -54,10 +54,10 @@
           <tr class="clickable-row<%= item.priority === 'critical' ? ' row-critical' : '' %>" data-href="/bugs/<%= item.id %>">
             <% if (showStatus === 'open') { %><td class="col-todo-num" data-col="id" data-sort="<%= idx + 1 %>">#<%= idx + 1 %></td><% } %>
             <td><a href="/bugs/<%= item.id %>"><%= item.title %></a></td>
-            <td class="col-priority" data-col="priority" data-sort="<%= item.priority %>"><span class="badge badge-<%= item.priority %>"><%= item.priority %></span></td>
-            <td class="col-status" data-col="status" data-sort="<%= item.status %>"><span class="badge badge-status-<%= item.status %>"><%= item.status === 'in_progress' ? 'in progress' : item.status %></span></td>
-            <td class="col-assignee"><%= item.assignee_name || '—' %></td>
-            <td class="col-date" data-col="created" data-sort="<%= item.created_at %>"><%= item.created_at.split('T')[0] %></td>
+            <% if (siteSettings.table_col_priority !== '0') { %><td class="col-priority" data-col="priority" data-sort="<%= item.priority %>"><span class="badge badge-<%= item.priority %>"><%= item.priority %></span></td><% } %>
+            <% if (siteSettings.table_col_status !== '0') { %><td class="col-status" data-col="status" data-sort="<%= item.status %>"><span class="badge badge-status-<%= item.status %>"><%= item.status === 'in_progress' ? 'in progress' : item.status %></span></td><% } %>
+            <% if (siteSettings.table_col_assignee !== '0') { %><td class="col-assignee"><%= item.assignee_name || '—' %></td><% } %>
+            <% if (siteSettings.table_col_created !== '0') { %><td class="col-date" data-col="created" data-sort="<%= item.created_at %>"><%= item.created_at.split('T')[0] %></td><% } %>
           </tr>
         <% }) %>
       </tbody>
@@ -82,10 +82,10 @@
         <tr>
           <th class="col-id" data-sort="id">REQ ID</th>
           <th>Title</th>
-          <th class="col-priority" data-sort="priority">Priority</th>
-          <th class="col-status" data-sort="status">Status</th>
-          <th class="col-assignee">Assignee</th>
-          <th class="col-date" data-sort="created">Created</th>
+          <% if (siteSettings.table_col_priority !== '0') { %><th class="col-priority" data-sort="priority">Priority</th><% } %>
+          <% if (siteSettings.table_col_status !== '0') { %><th class="col-status" data-sort="status">Status</th><% } %>
+          <% if (siteSettings.table_col_assignee !== '0') { %><th class="col-assignee">Assignee</th><% } %>
+          <% if (siteSettings.table_col_created !== '0') { %><th class="col-date" data-sort="created">Created</th><% } %>
         </tr>
       </thead>
       <tbody>
@@ -93,10 +93,10 @@
           <tr<% if (currentUser) { %> class="clickable-row<%= item.priority === 'critical' ? ' row-critical' : '' %>" data-href="/bugs/<%= item.id %>"<% } %>>
             <td class="col-id" data-col="id" data-sort="<%= item.display_number || 0 %>">REQ-<%= String(item.display_number || 0).padStart(3, '0') %></td>
             <td><% if (currentUser) { %><a href="/bugs/<%= item.id %>"><%= item.title %></a><% } else { %><%= item.title %><% } %></td>
-            <td class="col-priority" data-col="priority" data-sort="<%= item.priority %>"><span class="badge badge-<%= item.priority %>"><%= item.priority %></span></td>
-            <td class="col-status" data-col="status" data-sort="<%= item.status %>"><span class="badge badge-status-<%= item.status %>"><%= item.status === 'in_progress' ? 'in progress' : item.status %></span></td>
-            <td class="col-assignee"><%= item.assignee_name || '—' %></td>
-            <td class="col-date" data-col="created" data-sort="<%= item.created_at %>"><%= item.created_at.split('T')[0] %></td>
+            <% if (siteSettings.table_col_priority !== '0') { %><td class="col-priority" data-col="priority" data-sort="<%= item.priority %>"><span class="badge badge-<%= item.priority %>"><%= item.priority %></span></td><% } %>
+            <% if (siteSettings.table_col_status !== '0') { %><td class="col-status" data-col="status" data-sort="<%= item.status %>"><span class="badge badge-status-<%= item.status %>"><%= item.status === 'in_progress' ? 'in progress' : item.status %></span></td><% } %>
+            <% if (siteSettings.table_col_assignee !== '0') { %><td class="col-assignee"><%= item.assignee_name || '—' %></td><% } %>
+            <% if (siteSettings.table_col_created !== '0') { %><td class="col-date" data-col="created" data-sort="<%= item.created_at %>"><%= item.created_at.split('T')[0] %></td><% } %>
           </tr>
         <% }) %>
       </tbody>
@@ -120,10 +120,10 @@
         <tr>
           <th class="col-id" data-sort="id">BUG ID</th>
           <th>Title</th>
-          <th class="col-priority" data-sort="priority">Priority</th>
-          <th class="col-status" data-sort="status">Status</th>
-          <th class="col-assignee">Assignee</th>
-          <th class="col-date" data-sort="created">Created</th>
+          <% if (siteSettings.table_col_priority !== '0') { %><th class="col-priority" data-sort="priority">Priority</th><% } %>
+          <% if (siteSettings.table_col_status !== '0') { %><th class="col-status" data-sort="status">Status</th><% } %>
+          <% if (siteSettings.table_col_assignee !== '0') { %><th class="col-assignee">Assignee</th><% } %>
+          <% if (siteSettings.table_col_created !== '0') { %><th class="col-date" data-sort="created">Created</th><% } %>
         </tr>
       </thead>
       <tbody>
@@ -131,10 +131,10 @@
           <tr<% if (currentUser) { %> class="clickable-row<%= item.priority === 'critical' ? ' row-critical' : '' %>" data-href="/bugs/<%= item.id %>"<% } %>>
             <td class="col-id" data-col="id" data-sort="<%= item.display_number || 0 %>">BUG-<%= String(item.display_number || 0).padStart(3, '0') %></td>
             <td><% if (currentUser) { %><a href="/bugs/<%= item.id %>"><%= item.title %></a><% } else { %><%= item.title %><% } %></td>
-            <td class="col-priority" data-col="priority" data-sort="<%= item.priority %>"><span class="badge badge-<%= item.priority %>"><%= item.priority %></span></td>
-            <td class="col-status" data-col="status" data-sort="<%= item.status %>"><span class="badge badge-status-<%= item.status %>"><%= item.status === 'in_progress' ? 'in progress' : item.status %></span></td>
-            <td class="col-assignee"><%= item.assignee_name || '—' %></td>
-            <td class="col-date" data-col="created" data-sort="<%= item.created_at %>"><%= item.created_at.split('T')[0] %></td>
+            <% if (siteSettings.table_col_priority !== '0') { %><td class="col-priority" data-col="priority" data-sort="<%= item.priority %>"><span class="badge badge-<%= item.priority %>"><%= item.priority %></span></td><% } %>
+            <% if (siteSettings.table_col_status !== '0') { %><td class="col-status" data-col="status" data-sort="<%= item.status %>"><span class="badge badge-status-<%= item.status %>"><%= item.status === 'in_progress' ? 'in progress' : item.status %></span></td><% } %>
+            <% if (siteSettings.table_col_assignee !== '0') { %><td class="col-assignee"><%= item.assignee_name || '—' %></td><% } %>
+            <% if (siteSettings.table_col_created !== '0') { %><td class="col-date" data-col="created" data-sort="<%= item.created_at %>"><%= item.created_at.split('T')[0] %></td><% } %>
           </tr>
         <% }) %>
       </tbody>

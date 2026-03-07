@@ -29,6 +29,22 @@
         <input type="checkbox" name="show_request_feature_button" <%= settings.show_request_feature_button !== '0' ? 'checked' : '' %>> Show "Request a Feature" button on public pages
       </label>
     </div>
+    <div class="form-group">
+      <label class="form-label" style="margin-bottom:0.5rem; display:block; font-weight:600;">Table Columns</label>
+      <p class="text-muted" style="font-size:0.85rem; margin-bottom:0.75rem;">Choose which columns are visible in the bugs, feature requests, and todos tables.</p>
+      <label class="checkbox-label">
+        <input type="checkbox" name="table_col_priority" <%= settings.table_col_priority !== '0' ? 'checked' : '' %>> Priority
+      </label>
+      <label class="checkbox-label">
+        <input type="checkbox" name="table_col_status" <%= settings.table_col_status !== '0' ? 'checked' : '' %>> Status
+      </label>
+      <label class="checkbox-label">
+        <input type="checkbox" name="table_col_assignee" <%= settings.table_col_assignee !== '0' ? 'checked' : '' %>> Assignee
+      </label>
+      <label class="checkbox-label">
+        <input type="checkbox" name="table_col_created" <%= settings.table_col_created !== '0' ? 'checked' : '' %>> Created
+      </label>
+    </div>
     <div class="form-actions">
       <button type="submit" class="btn btn-primary">Save Settings</button>
     </div>
