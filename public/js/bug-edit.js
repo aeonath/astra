@@ -16,4 +16,23 @@ document.addEventListener('DOMContentLoaded', function () {
     formEl.style.display = 'none';
     editBtn.style.display = '';
   });
+
+  // Comment inline edit toggle
+  document.querySelectorAll('.comment-edit-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var id = this.dataset.commentId;
+      document.getElementById('comment-display-' + id).style.display = 'none';
+      document.getElementById('comment-edit-form-' + id).style.display = '';
+      this.style.display = 'none';
+    });
+  });
+
+  document.querySelectorAll('.comment-cancel-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var id = this.dataset.commentId;
+      document.getElementById('comment-display-' + id).style.display = '';
+      document.getElementById('comment-edit-form-' + id).style.display = 'none';
+      document.querySelector('.comment-edit-btn[data-comment-id="' + id + '"]').style.display = '';
+    });
+  });
 });

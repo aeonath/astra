@@ -175,6 +175,46 @@ router.post('/:id', (req, res) => {
   res.redirect(`/bugs/${bug.id}`);
 });
 
+// POST /bugs/:id/comment/:commentId/edit — edit a comment
+router.post('/:id/comment/:commentId/edit', (req, res) => {
+  const { content } = req.body;
+  if (!content || !content.trim()) {
+    req.session.flash = { type: 'error', message: 'Comment cannot be empty.' };
+    return res.redirect(`/bugs/${req.params.id}`);
+  }
+
+  const comment = db.prepare('SELECT * FROM comments WHERE id = ? AND bug_id = ?').get(req.params.commentId, req.params.id);
+  if (!comment) {
+    req.session.flash = { type: 'error', message: 'Comment not found.' };
+    return res.redirect(`/bugs/${req.params.id}`);
+  }
+
+  db.prepare('UPDATE comments SET content = ? WHERE id = ?').run(content.trim(), comment.id);
+  db.prepare("UPDATE bugs SET updated_at = datetime('now') WHERE id = ?").run(req.params.id);
+
+  req.session.flash = { type: 'success', message: 'Comment updated.' };
+  res.redirect(`/bugs/${req.params.id}`);
+});
+
+// POST /bugs/:id/comment/:commentId/delete — delete a comment (admin only)
+router.post('/:id/comment/:commentId/delete', (req, res) => {
+  if (req.session.userRole !== 'admin') {
+    req.session.flash = { type: 'error', message: 'Access denied.' };
+    return res.redirect(`/bugs/${req.params.id}`);
+  }
+
+  const comment = db.prepare('SELECT * FROM comments WHERE id = ? AND bug_id = ?').get(req.params.commentId, req.params.id);
+  if (!comment) {
+    req.session.flash = { type: 'error', message: 'Comment not found.' };
+    return res.redirect(`/bugs/${req.params.id}`);
+  }
+
+  db.prepare('DELETE FROM comments WHERE id = ?').run(comment.id);
+
+  req.session.flash = { type: 'success', message: 'Comment deleted.' };
+  res.redirect(`/bugs/${req.params.id}`);
+});
+
 // POST /bugs/:id/comment — add comment
 router.post('/:id/comment', (req, res) => {
   const { content } = req.body;

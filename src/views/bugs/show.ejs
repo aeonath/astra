@@ -78,10 +78,31 @@
       <% comments.forEach(comment => { %>
         <div class="comment card">
           <div class="comment-header">
-            <strong><%= comment.author_name %></strong>
-            <span class="text-muted"><%= comment.created_at %></span>
+            <div>
+              <strong><%= comment.author_name %></strong>
+              <span class="text-muted"><%= comment.created_at %></span>
+            </div>
+            <div class="comment-actions">
+              <button type="button" class="btn btn-sm btn-ghost comment-edit-btn" data-comment-id="<%= comment.id %>">Edit</button>
+              <% if (isAdmin) { %>
+                <form action="/bugs/<%= bug.id %>/comment/<%= comment.id %>/delete" method="POST" class="inline-form">
+                  <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this comment?')">Delete</button>
+                </form>
+              <% } %>
+            </div>
           </div>
-          <p><%= comment.content %></p>
+          <div id="comment-display-<%= comment.id %>">
+            <p><%= comment.content %></p>
+          </div>
+          <form id="comment-edit-form-<%= comment.id %>" action="/bugs/<%= bug.id %>/comment/<%= comment.id %>/edit" method="POST" style="display:none;">
+            <div class="form-group" style="margin-top:0.5rem;">
+              <textarea name="content" rows="3" required><%= comment.content %></textarea>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary btn-sm">Save</button>
+              <button type="button" class="btn btn-ghost btn-sm comment-cancel-btn" data-comment-id="<%= comment.id %>">Cancel</button>
+            </div>
+          </form>
         </div>
       <% }) %>
 
