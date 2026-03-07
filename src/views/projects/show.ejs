@@ -44,6 +44,7 @@
           <% if (showStatus === 'open') { %><th class="col-todo-num">Task ID</th><% } %>
           <th>Task</th>
           <th class="col-priority">Priority</th>
+          <th class="col-status">Status</th>
           <th class="col-assignee">Assignee</th>
           <th class="col-date">Created</th>
         </tr>
@@ -54,6 +55,7 @@
             <% if (showStatus === 'open') { %><td class="col-todo-num"><%= idx + 1 %>.</td><% } %>
             <td><a href="/bugs/<%= item.id %>"><%= item.title %></a></td>
             <td class="col-priority"><span class="badge badge-<%= item.priority %>"><%= item.priority %></span></td>
+            <td class="col-status"><span class="badge badge-status-<%= item.status %>"><%= item.status === 'in_progress' ? 'in progress' : item.status %></span></td>
             <td class="col-assignee"><%= item.assignee_name || '—' %></td>
             <td class="col-date"><%= item.created_at.split('T')[0] %></td>
           </tr>
