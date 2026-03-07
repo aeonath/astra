@@ -654,7 +654,8 @@ div.project-summary-card { cursor: default; }
 .submission-detail-content p { margin: 0.3rem 0; }
 .submission-detail-text { white-space: pre-wrap; color: var(--text-secondary); }
 
-.recaptcha-container { margin-bottom: 0.5rem; background: #222; border-radius: var(--radius); display: inline-block; padding: 2px; }
+.recaptcha-container { margin-bottom: 0.5rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius); display: inline-block; padding: 0.75rem; }
+.recaptcha-container iframe { border-radius: 4px; }
 .recaptcha-error { color: var(--danger); font-size: 0.85rem; margin-top: 0.4rem; display: none; }
 
 .submit-notice {
