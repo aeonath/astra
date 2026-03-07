@@ -41,7 +41,15 @@
         <td><span class="badge badge-status-<%= sub.status === 'new' ? 'open' : 'closed' %>"><%= sub.status %></span></td>
         <td class="col-date"><%= sub.created_at %></td>
         <td class="actions no-row-click">
-          <% if (sub.status === 'new') { %>
+          <% if (sub.imported_bug_id) { %>
+            <% const impPrefix = sub.type === 'bug' ? 'BUG' : 'REQ'; %>
+            <a href="/bugs/<%= sub.imported_bug_id %>" class="btn btn-sm btn-ghost"><%= impPrefix %>-<%= String(sub.imported_display_number).padStart(3, '0') %></a>
+          <% } else { %>
+            <form action="/submissions/<%= sub.id %>/import" method="POST" class="inline-form">
+              <button type="submit" class="btn btn-sm btn-primary">Import</button>
+            </form>
+          <% } %>
+          <% if (sub.status === 'new' && !sub.imported_bug_id) { %>
             <form action="/submissions/<%= sub.id %>/status" method="POST" class="inline-form">
               <input type="hidden" name="status" value="reviewed">
               <button type="submit" class="btn btn-sm btn-ghost">Review</button>
@@ -50,12 +58,12 @@
               <input type="hidden" name="status" value="dismissed">
               <button type="submit" class="btn btn-sm btn-danger">Dismiss</button>
             </form>
-          <% } else if (sub.status === 'reviewed') { %>
+          <% } else if (sub.status === 'reviewed' && !sub.imported_bug_id) { %>
             <form action="/submissions/<%= sub.id %>/status" method="POST" class="inline-form">
               <input type="hidden" name="status" value="dismissed">
               <button type="submit" class="btn btn-sm btn-danger">Dismiss</button>
             </form>
-          <% } else { %>
+          <% } else if (sub.status === 'dismissed' && !sub.imported_bug_id) { %>
             <form action="/submissions/<%= sub.id %>/status" method="POST" class="inline-form">
               <input type="hidden" name="status" value="new">
               <button type="submit" class="btn btn-sm btn-ghost">Reopen</button>

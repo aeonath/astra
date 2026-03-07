@@ -17,12 +17,56 @@ router.use(requireSubmissionsAccess);
 // GET /submissions — list all submissions
 router.get('/', (req, res) => {
   const submissions = db.prepare(`
-    SELECT s.*, p.name as project_name
+    SELECT s.*, p.name as project_name, b.display_number as imported_display_number
     FROM public_submissions s
     JOIN projects p ON s.project_id = p.id
+    LEFT JOIN bugs b ON s.imported_bug_id = b.id
     ORDER BY s.created_at DESC
   `).all();
   res.render('submissions', { title: 'Submissions', submissions });
+});
+
+// POST /submissions/:id/import — create a bug/feature from this submission
+router.post('/:id/import', (req, res) => {
+  const sub = db.prepare('SELECT * FROM public_submissions WHERE id = ?').get(req.params.id);
+  if (!sub) {
+    req.session.flash = { type: 'error', message: 'Submission not found.' };
+    return res.redirect('/submissions');
+  }
+  if (sub.imported_bug_id) {
+    req.session.flash = { type: 'error', message: 'Already imported.' };
+    return res.redirect('/submissions');
+  }
+
+  const project = db.prepare('SELECT * FROM projects WHERE id = ? AND active = 1').get(sub.project_id);
+  if (!project) {
+    req.session.flash = { type: 'error', message: 'Project not found or inactive.' };
+    return res.redirect('/submissions');
+  }
+
+  const max = db.prepare('SELECT MAX(display_number) as max FROM bugs WHERE project_id = ? AND type = ?').get(sub.project_id, sub.type);
+  const displayNumber = (max.max || 0) + 1;
+
+  const result = db.prepare(`
+    INSERT INTO bugs (project_id, reporter_id, assignee_id, title, description, priority, type, display_number)
+    VALUES (?, ?, ?, ?, ?, 'medium', ?, ?)
+  `).run(
+    sub.project_id,
+    req.session.userId,
+    project.default_assignee_id || null,
+    sub.title,
+    sub.description || null,
+    sub.type,
+    displayNumber
+  );
+
+  db.prepare('UPDATE public_submissions SET imported_bug_id = ?, status = ? WHERE id = ?').run(
+    result.lastInsertRowid, 'reviewed', sub.id
+  );
+
+  const prefix = sub.type === 'bug' ? 'BUG' : 'REQ';
+  req.session.flash = { type: 'success', message: `Imported as ${prefix}-${String(displayNumber).padStart(3, '0')}.` };
+  res.redirect(`/bugs/${result.lastInsertRowid}`);
 });
 
 // POST /submissions/:id/status — update submission status
