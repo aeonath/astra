@@ -13,27 +13,25 @@
 <div class="bug-layout">
   <div class="bug-main">
     <% if (bug.type !== 'todo') { %>
-      <br/>
-      <h2>Description:</h2>
-      <br/>
+      <h2 style="margin-bottom: 0.75rem;">Description:</h2>
     <% } %>
-    <div class="bug-title-row">
-      <h1 id="bug-title-display">-- <%= bug.title %></h1>
-      <button type="button" class="btn btn-sm btn-ghost" id="edit-btn">Edit</button>
-    </div>
 
-    <div id="bug-display">
-      <% if (bug.type !== 'todo') { %>
-      <br/>
-      <h2>Additional Notes:</h2>
-      <br/>
-      <div class="bug-description card">
-        <% if (bug.description) { %>
-          <p id="bug-desc-text"><%= bug.description %></p>
-        <% } else { %>
-          <p id="bug-desc-text" class="text-muted">No additional notes.</p>
-        <% } %>
+    <div id="bug-display" class="card" style="margin-bottom: 1rem;">
+      <div class="bug-title-row">
+        <h1 id="bug-title-display"><%= bug.title %></h1>
+        <button type="button" class="btn btn-sm btn-ghost" id="edit-btn">Edit</button>
       </div>
+      <% if (bug.type !== 'todo') { %>
+        <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border);">
+          <h2 style="font-size: 1rem; margin-bottom: 0.5rem;">Additional Notes:</h2>
+          <div class="bug-description">
+            <% if (bug.description) { %>
+              <p id="bug-desc-text"><%= bug.description %></p>
+            <% } else { %>
+              <p id="bug-desc-text" class="text-muted">No additional notes.</p>
+            <% } %>
+          </div>
+        </div>
       <% } %>
     </div>
 
