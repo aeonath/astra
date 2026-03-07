@@ -471,7 +471,7 @@ input:focus, textarea:focus, select:focus {
 
 /* === Breadcrumb === */
 .breadcrumb { display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; margin-bottom: 0.25rem; }
-.breadcrumb span { color: var(--text-muted); }
+.breadcrumb span:not(.badge) { color: var(--text-muted); }
 
 /* === Login === */
 .login-wrapper {
