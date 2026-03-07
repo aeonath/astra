@@ -279,7 +279,7 @@ input:focus, textarea:focus, select:focus {
 .table tbody td a { color: #e6edf3; text-decoration: none; }
 .clickable-row { cursor: pointer; }
 .clickable-row:hover { background: var(--bg-tertiary); }
-th[data-sort] { cursor: pointer; user-select: none; }
+th[data-sort] { cursor: pointer; user-select: none; white-space: nowrap; }
 th[data-sort]:hover { color: var(--text-primary); }
 th.sort-asc::after { content: ' ↑'; font-size: 0.75em; opacity: 0.8; }
 th.sort-desc::after { content: ' ↓'; font-size: 0.75em; opacity: 0.8; }
