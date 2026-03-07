@@ -14,14 +14,16 @@
     <div class="nav-brand">
       <span>&#9733; Astra</span>
     </div>
-    <div class="nav-links">
-      <a href="/projects" class="<%= currentPath === '/projects' ? 'active' : '' %>">Projects</a>
-      <% if (canManageSubmissions) { %>
-        <a href="/submissions" class="<%= currentPath.startsWith('/submissions') ? 'active' : '' %>">Submissions</a>
-      <% } %>
-      <% if (isAdmin) { %>
-        <a href="/admin" class="<%= currentPath.startsWith('/admin') ? 'active' : '' %>">Admin</a>
-      <% } %>
+    <div class="nav-main">
+      <div class="nav-links">
+        <a href="/projects" class="<%= currentPath === '/projects' ? 'active' : '' %>">Projects</a>
+        <% if (canManageSubmissions) { %>
+          <a href="/submissions" class="<%= currentPath.startsWith('/submissions') ? 'active' : '' %>">Submissions</a>
+        <% } %>
+        <% if (isAdmin) { %>
+          <a href="/admin" class="<%= currentPath.startsWith('/admin') ? 'active' : '' %>">Admin</a>
+        <% } %>
+      </div>
       <div id="project-tabs" class="project-tabs-container"></div>
     </div>
     <div class="nav-user">
