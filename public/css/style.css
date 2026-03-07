@@ -455,7 +455,7 @@ input:focus, textarea:focus, select:focus {
 .bug-is-closed #bug-desc-text,
 .bug-is-closed .comments-section h2,
 .bug-is-closed .comment-header,
-.bug-is-closed .comment p { color: #6b4d96; }
+.bug-is-closed .comment p { color: #555555; }
 .bug-is-closed .card-edit-btn { display: none; }
 .bug-is-closed .comment-edit-btn { display: none; }
 .bug-sidebar { }
