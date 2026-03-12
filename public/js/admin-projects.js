@@ -44,7 +44,6 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('default_assignee_id').value = '';
     document.getElementById('homepage_url').value = '';
     document.getElementById('github_url').value = '';
-    document.getElementById('github_private').checked = false;
     internallyVisibleCb.checked = true;
     publicCb.checked = true;
     updatePublicVisibility();
@@ -78,7 +77,6 @@ document.addEventListener('DOMContentLoaded', function () {
       var isPublic = row.dataset.public;
       var homepageUrl = row.dataset.homepageUrl;
       var githubUrl = row.dataset.githubUrl;
-      var githubPrivate = row.dataset.githubPrivate;
 
       document.getElementById('form-title').textContent = 'Edit Project';
       document.getElementById('form-submit').textContent = 'Save Changes';
@@ -90,7 +88,6 @@ document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('default_assignee_id').value = defaultAssigneeId;
       document.getElementById('homepage_url').value = homepageUrl;
       document.getElementById('github_url').value = githubUrl.replace('https://github.com/', '');
-      document.getElementById('github_private').checked = githubPrivate === '1';
       internallyVisibleCb.checked = isInternallyVisible === '1';
       publicCb.checked = isPublic === '1';
       updatePublicVisibility();
