@@ -729,4 +729,58 @@ div.project-summary-card { cursor: default; }
   .public-header-left { flex-wrap: wrap; gap: 0.5rem; }
   .page-header { flex-direction: column; gap: 0.75rem; }
   .btn-group { flex-wrap: wrap; }
+
+  /* Mobile card layout for bug/feature/todo tables */
+  #bugs-table thead,
+  #features-table thead,
+  #todos-table thead { display: none; }
+
+  #bugs-table tbody tr,
+  #features-table tbody tr,
+  #todos-table tbody tr {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  #bugs-table tbody td,
+  #features-table tbody td,
+  #todos-table tbody td {
+    padding: 0;
+    border-bottom: none;
+  }
+
+  /* Metadata cells (id, priority, status, assignee, date) shown inline first row */
+  #bugs-table tbody .col-id,
+  #features-table tbody .col-id,
+  #todos-table tbody .col-todo-num,
+  #bugs-table tbody .col-priority,
+  #features-table tbody .col-priority,
+  #todos-table tbody .col-priority,
+  #bugs-table tbody .col-status,
+  #features-table tbody .col-status,
+  #todos-table tbody .col-status,
+  #bugs-table tbody .col-assignee,
+  #features-table tbody .col-assignee,
+  #todos-table tbody .col-assignee,
+  #bugs-table tbody .col-date,
+  #features-table tbody .col-date,
+  #todos-table tbody .col-date {
+    order: -1;
+    width: auto;
+    font-size: 0.78rem;
+  }
+
+  /* Title cell takes full width on its own line */
+  #bugs-table tbody td:not(.col-id):not(.col-priority):not(.col-status):not(.col-assignee):not(.col-date),
+  #features-table tbody td:not(.col-id):not(.col-priority):not(.col-status):not(.col-assignee):not(.col-date),
+  #todos-table tbody td:not(.col-todo-num):not(.col-priority):not(.col-status):not(.col-assignee):not(.col-date) {
+    width: 100%;
+    order: 1;
+    font-size: 0.9rem;
+    margin-top: 0.15rem;
+  }
 }
