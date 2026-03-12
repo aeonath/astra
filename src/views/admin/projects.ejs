@@ -7,6 +7,7 @@
 
 <div class="form-card" id="project-form-card" style="display:none;">
   <h2 id="form-title">Add Project</h2>
+  <div id="archived-notice" class="alert alert-error" style="display:none;">This project is archived. Reactivate it to make changes.</div>
   <form action="<%= basePath %>" method="POST" id="project-form">
     <input type="hidden" id="edit-id" name="edit_id" value="">
     <div class="form-row">
@@ -62,11 +63,20 @@
         <input type="checkbox" id="public" name="public" checked> <span class="checkbox-text">Publicly visible</span>
       </label>
     </div>
-    <div class="form-actions">
+    <div class="form-actions" id="active-actions">
       <button type="submit" class="btn btn-primary" id="form-submit">Create Project</button>
       <button type="button" class="btn btn-ghost" id="cancel-edit">Cancel</button>
+      <button type="button" class="btn btn-ghost" id="archive-btn" style="display:none;">Archive</button>
+      <button type="button" class="btn btn-danger" id="delete-project-btn" style="display:none;">Delete</button>
     </div>
   </form>
+  <div class="form-actions" id="archived-actions" style="display:none;">
+    <form id="reactivate-form" method="POST" class="inline-form">
+      <button type="submit" class="btn btn-primary">Reactivate</button>
+    </form>
+    <button type="button" class="btn btn-ghost" id="cancel-archived">Cancel</button>
+    <button type="button" class="btn btn-danger" id="delete-archived-btn">Delete</button>
+  </div>
 </div>
 
 <table class="table">
@@ -77,7 +87,6 @@
       <th>Default Assignee</th>
       <th>Visibility</th>
       <th>Status</th>
-      <th>Actions</th>
     </tr>
   </thead>
   <tbody>
@@ -90,9 +99,9 @@
           data-default-assignee-id="<%= project.default_assignee_id || '' %>"
           data-homepage-url="<%= project.homepage_url || '' %>"
           data-github-url="<%= project.github_url || '' %>"
-          data-github-private="<%= project.github_private %>"
           data-internally-visible="<%= project.internally_visible %>"
-          data-public="<%= project.public %>">
+          data-public="<%= project.public %>"
+          data-active="<%= project.active %>">
         <td><%= project.name %></td>
         <td><%= project.category_name || '—' %></td>
         <td><%= project.assignee_name || '—' %></td>
@@ -101,17 +110,6 @@
           <% if (project.internally_visible && project.public) { %><span class="badge badge-status-open">Public</span><% } %>
         </td>
         <td><span class="badge badge-status-<%= project.active ? 'open' : 'closed' %>"><%= project.active ? 'Active' : 'Archived' %></span></td>
-        <td class="actions no-row-click">
-          <form action="<%= basePath %>/<%= project.id %>/visibility" method="POST" class="inline-form">
-            <button type="submit" class="btn btn-sm btn-ghost"><%= project.public ? 'Make Private' : 'Make Public' %></button>
-          </form>
-          <form action="<%= basePath %>/<%= project.id %>/toggle" method="POST" class="inline-form">
-            <button type="submit" class="btn btn-sm btn-ghost"><%= project.active ? 'Archive' : 'Restore' %></button>
-          </form>
-          <form action="<%= basePath %>/<%= project.id %>/delete" method="POST" class="inline-form" onsubmit="return confirm('Delete this project?')">
-            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-          </form>
-        </td>
       </tr>
     <% }) %>
   </tbody>
@@ -121,6 +119,35 @@
   <button type="button" class="btn btn-primary" id="add-project-btn">Add Project</button>
 </div>
 
+<div id="delete-project-modal" class="modal-overlay" style="display:none;">
+  <div class="modal">
+    <h3>Delete Project</h3>
+    <p>Are you sure you want to delete <strong id="delete-project-name"></strong>? This cannot be undone.</p>
+    <form id="delete-project-form" method="POST">
+      <div class="modal-actions">
+        <button type="submit" class="btn btn-danger">Yes, Delete</button>
+        <button type="button" class="btn btn-ghost" id="close-delete-modal">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="archive-project-modal" class="modal-overlay" style="display:none;">
+  <div class="modal">
+    <h3>Archive Project</h3>
+    <p>Are you sure you want to archive <strong id="archive-project-name"></strong>?</p>
+    <form id="archive-project-form" method="POST">
+      <div class="modal-actions">
+        <button type="submit" class="btn btn-primary">Yes, Archive</button>
+        <button type="button" class="btn btn-ghost" id="close-archive-modal">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  var projectBasePath = '<%= basePath %>';
+</script>
 <script src="/js/admin-projects.js"></script>
 
 <%- include('../partials/footer') %>

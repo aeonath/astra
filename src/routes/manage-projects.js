@@ -79,16 +79,6 @@ router.post('/', (req, res) => {
   res.redirect('/manage/projects');
 });
 
-// POST /manage/projects/:id/visibility — toggle public flag
-router.post('/:id/visibility', (req, res) => {
-  const project = db.prepare('SELECT * FROM projects WHERE id = ?').get(req.params.id);
-  if (project) {
-    db.prepare(`UPDATE projects SET public = ?, updated_at = datetime('now') WHERE id = ?`).run(project.public ? 0 : 1, project.id);
-    req.session.flash = { type: 'success', message: `Project "${project.name}" is now ${project.public ? 'private' : 'public'}.` };
-  }
-  res.redirect('/manage/projects');
-});
-
 // POST /manage/projects/:id/toggle — toggle active flag
 router.post('/:id/toggle', (req, res) => {
   const project = db.prepare('SELECT * FROM projects WHERE id = ?').get(req.params.id);
