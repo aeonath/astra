@@ -447,7 +447,7 @@ th.sort-desc::after { content: ' ↓'; font-size: 0.75em; opacity: 0.8; }
   line-height: 1.5;
 }
 .notes-editor {
-  font-family: 'Courier New', Courier, monospace !important;
+  font-family: 'Source Code Pro', monospace !important;
   font-size: 0.9rem;
   line-height: 1.5;
   resize: vertical;
