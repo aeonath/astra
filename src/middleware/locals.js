@@ -14,7 +14,7 @@ module.exports = function locals(req, res, next) {
     if (user) {
       res.locals.currentUser = user;
       res.locals.isAdmin = user.role === 'admin';
-      res.locals.canManageSubmissions = user.role === 'admin' || user.can_manage_submissions === 1;
+      res.locals.canManageSubmissions = user.role === 'admin' || !!user.can_manage_submissions;
     }
   }
 
