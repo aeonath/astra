@@ -1,5 +1,7 @@
 // Copyright (c) 2026 MiraNova Studios
 document.addEventListener('DOMContentLoaded', function () {
+  var scriptTag = document.querySelector('script[data-base-path]');
+  var projectBasePath = scriptTag ? scriptTag.getAttribute('data-base-path') : '/admin/projects';
   var formCard = document.getElementById('project-form-card');
   var projectForm = document.getElementById('project-form');
   var table = document.querySelector('.table');
