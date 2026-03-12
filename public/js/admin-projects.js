@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function () {
       var description = row.dataset.description;
       var categoryId = row.dataset.categoryId;
       var defaultAssigneeId = row.dataset.defaultAssigneeId;
-      var isInternallyVisible = row.dataset.internallyVisible;
+      var isInternallyVisible = row.dataset.internallyVisible || '1';
       var isPublic = row.dataset.public;
       var homepageUrl = row.dataset.homepageUrl;
       var githubUrl = row.dataset.githubUrl;
