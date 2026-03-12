@@ -2,19 +2,6 @@
    Astra Bug Tracker — Dark Space Theme
    ============================================ */
 
-@font-face {
-  font-family: 'Source Code Pro';
-  font-style: normal;
-  font-weight: 400;
-  src: url('/fonts/SourceCodePro-Regular.ttf') format('truetype');
-}
-@font-face {
-  font-family: 'Source Code Pro';
-  font-style: normal;
-  font-weight: 700;
-  src: url('/fonts/SourceCodePro-Bold.ttf') format('truetype');
-}
-
 :root {
   --bg-primary: #0d1117;
   --bg-secondary: #161b22;
@@ -442,7 +429,6 @@ th.sort-desc::after { content: ' ↓'; font-size: 0.75em; opacity: 0.8; }
   min-height: 4rem;
 }
 .notes-content {
-  font-family: 'Source Code Pro', monospace;
   font-size: 0.9rem;
   color: var(--text-primary);
   white-space: pre-wrap;
@@ -451,7 +437,6 @@ th.sort-desc::after { content: ' ↓'; font-size: 0.75em; opacity: 0.8; }
   line-height: 1.5;
 }
 .notes-editor {
-  font-family: 'Source Code Pro', monospace !important;
   font-size: 0.9rem;
   line-height: 1.5;
   resize: vertical;
