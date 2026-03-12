@@ -20,9 +20,6 @@
         <% catProjects.forEach(project => { %>
           <% if (currentUser) { %>
           <a href="/projects/<%= project.slug %>" class="project-card">
-          <% } else { %>
-          <div class="project-card project-card-static">
-          <% } %>
             <h2><%= project.name %></h2>
             <% if (project.description) { %>
               <p class="project-desc"><%= project.description %></p>
@@ -34,15 +31,22 @@
               <span class="stat stat-feature">
                 <span class="stat-num"><%= project.open_features %></span> feature requests
               </span>
-              <% if (currentUser) { %>
               <span class="stat <%= project.open_todos > 0 ? 'stat-todo-warn' : 'stat-todo' %>">
                 <span class="stat-num"><%= project.open_todos %></span> open todos
               </span>
-              <% } %>
             </div>
-          <% if (currentUser) { %>
           </a>
           <% } else { %>
+          <div class="project-card project-card-static">
+            <h2><%= project.name %></h2>
+            <div class="project-stats">
+              <span class="stat <%= project.open_bugs > 0 ? 'stat-bug' : 'stat-bug-green' %>">
+                <span class="stat-num"><%= project.open_bugs %></span> open bugs
+              </span>
+              <span class="stat stat-feature">
+                <span class="stat-num"><%= project.open_features %></span> feature requests
+              </span>
+            </div>
           </div>
           <% } %>
         <% }) %>
@@ -57,9 +61,6 @@
       <% uncategorized.forEach(project => { %>
         <% if (currentUser) { %>
         <a href="/projects/<%= project.slug %>" class="project-card">
-        <% } else { %>
-        <div class="project-card project-card-static">
-        <% } %>
           <h2><%= project.name %></h2>
           <% if (project.description) { %>
             <p class="project-desc"><%= project.description %></p>
@@ -71,15 +72,22 @@
             <span class="stat stat-feature">
               <span class="stat-num"><%= project.open_features %></span> feature requests
             </span>
-            <% if (currentUser) { %>
-            <span class="stat stat-todo">
+            <span class="stat <%= project.open_todos > 0 ? 'stat-todo-warn' : 'stat-todo' %>">
               <span class="stat-num"><%= project.open_todos %></span> open todos
             </span>
-            <% } %>
           </div>
-        <% if (currentUser) { %>
         </a>
         <% } else { %>
+        <div class="project-card project-card-static">
+          <h2><%= project.name %></h2>
+          <div class="project-stats">
+            <span class="stat <%= project.open_bugs > 0 ? 'stat-bug' : 'stat-bug-green' %>">
+              <span class="stat-num"><%= project.open_bugs %></span> open bugs
+            </span>
+            <span class="stat stat-feature">
+              <span class="stat-num"><%= project.open_features %></span> feature requests
+            </span>
+          </div>
         </div>
         <% } %>
       <% }) %>

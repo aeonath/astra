@@ -32,7 +32,8 @@ router.post('/projects', (req, res) => {
   if (github_url && !github_url.startsWith('http')) {
     github_url = 'https://github.com/' + github_url;
   }
-  const isPublic = req.body.public === 'on' ? 1 : 0;
+  const internallyVisible = req.body.internally_visible === 'on' ? 1 : 0;
+  const isPublic = internallyVisible && req.body.public === 'on' ? 1 : 0;
   const githubPrivate = req.body.github_private === 'on' ? 1 : 0;
 
   // Edit existing project
@@ -48,8 +49,8 @@ router.post('/projects', (req, res) => {
       return res.redirect('/admin/projects');
     }
 
-    db.prepare(`UPDATE projects SET description = ?, public = ?, default_assignee_id = ?, category_id = ?, homepage_url = ?, github_url = ?, github_private = ?, updated_at = datetime('now') WHERE id = ?`)
-      .run(description || null, isPublic, default_assignee_id || null, category_id || null, homepage_url || null, github_url || null, githubPrivate, project.id);
+    db.prepare(`UPDATE projects SET description = ?, internally_visible = ?, public = ?, default_assignee_id = ?, category_id = ?, homepage_url = ?, github_url = ?, github_private = ?, updated_at = datetime('now') WHERE id = ?`)
+      .run(description || null, internallyVisible, isPublic, default_assignee_id || null, category_id || null, homepage_url || null, github_url || null, githubPrivate, project.id);
     req.session.flash = { type: 'success', message: `Project "${project.name}" updated.` };
     return res.redirect('/admin/projects');
   }
@@ -63,7 +64,7 @@ router.post('/projects', (req, res) => {
   }
 
   try {
-    db.prepare('INSERT INTO projects (name, slug, description, public, default_assignee_id, category_id, homepage_url, github_url, github_private) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)').run(name, slug, description || null, isPublic, default_assignee_id || null, category_id || null, homepage_url || null, github_url || null, githubPrivate);
+    db.prepare('INSERT INTO projects (name, slug, description, internally_visible, public, default_assignee_id, category_id, homepage_url, github_url, github_private) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)').run(name, slug, description || null, internallyVisible, isPublic, default_assignee_id || null, category_id || null, homepage_url || null, github_url || null, githubPrivate);
     req.session.flash = { type: 'success', message: `Project "${name}" created.` };
   } catch (err) {
     if (err.message.includes('UNIQUE')) {

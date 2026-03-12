@@ -3,6 +3,25 @@ document.addEventListener('DOMContentLoaded', function () {
   var formCard = document.getElementById('project-form-card');
   var table = document.querySelector('.table');
   var addBtn = document.getElementById('add-project-btn');
+  var internallyVisibleCb = document.getElementById('internally_visible');
+  var publicGroup = document.getElementById('public-group');
+  var publicCb = document.getElementById('public');
+
+  function updatePublicVisibility() {
+    if (internallyVisibleCb.checked) {
+      publicGroup.style.display = '';
+    } else {
+      publicGroup.style.display = 'none';
+      publicCb.checked = false;
+    }
+  }
+
+  internallyVisibleCb.addEventListener('change', function () {
+    if (internallyVisibleCb.checked) {
+      publicCb.checked = true;
+    }
+    updatePublicVisibility();
+  });
 
   function showForm() {
     formCard.style.display = '';
@@ -26,7 +45,9 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('homepage_url').value = '';
     document.getElementById('github_url').value = '';
     document.getElementById('github_private').checked = false;
-    document.getElementById('public').checked = true;
+    internallyVisibleCb.checked = true;
+    publicCb.checked = true;
+    updatePublicVisibility();
   }
 
   // Add Project button — show form above table
@@ -53,6 +74,7 @@ document.addEventListener('DOMContentLoaded', function () {
       var description = row.dataset.description;
       var categoryId = row.dataset.categoryId;
       var defaultAssigneeId = row.dataset.defaultAssigneeId;
+      var isInternallyVisible = row.dataset.internallyVisible;
       var isPublic = row.dataset.public;
       var homepageUrl = row.dataset.homepageUrl;
       var githubUrl = row.dataset.githubUrl;
@@ -69,7 +91,9 @@ document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('homepage_url').value = homepageUrl;
       document.getElementById('github_url').value = githubUrl.replace('https://github.com/', '');
       document.getElementById('github_private').checked = githubPrivate === '1';
-      document.getElementById('public').checked = isPublic === '1';
+      internallyVisibleCb.checked = isInternallyVisible === '1';
+      publicCb.checked = isPublic === '1';
+      updatePublicVisibility();
 
       formCard.style.marginTop = '';
       table.insertAdjacentElement('beforebegin', formCard);

@@ -58,7 +58,12 @@
     </div>
     <div class="form-group">
       <label class="checkbox-label">
-        <input type="checkbox" id="public" name="public" checked> Publicly visible
+        <input type="checkbox" id="internally_visible" name="internally_visible" checked> <span class="checkbox-text">Internally visible</span>
+      </label>
+    </div>
+    <div class="form-group" id="public-group">
+      <label class="checkbox-label">
+        <input type="checkbox" id="public" name="public" checked> <span class="checkbox-text">Publicly visible</span>
       </label>
     </div>
     <div class="form-actions">
@@ -90,11 +95,15 @@
           data-homepage-url="<%= project.homepage_url || '' %>"
           data-github-url="<%= project.github_url || '' %>"
           data-github-private="<%= project.github_private %>"
+          data-internally-visible="<%= project.internally_visible %>"
           data-public="<%= project.public %>">
         <td><%= project.name %></td>
         <td><%= project.category_name || '—' %></td>
         <td><%= project.assignee_name || '—' %></td>
-        <td><span class="badge badge-status-<%= project.public ? 'open' : 'closed' %>"><%= project.public ? 'Public' : 'Private' %></span></td>
+        <td>
+          <span class="badge badge-status-<%= project.internally_visible ? 'open' : 'closed' %>"><%= project.internally_visible ? 'Internal' : 'Hidden' %></span>
+          <% if (project.internally_visible && project.public) { %><span class="badge badge-status-open">Public</span><% } %>
+        </td>
         <td><span class="badge badge-status-<%= project.active ? 'open' : 'closed' %>"><%= project.active ? 'Active' : 'Archived' %></span></td>
         <td class="actions no-row-click">
           <form action="/admin/projects/<%= project.id %>/visibility" method="POST" class="inline-form">
