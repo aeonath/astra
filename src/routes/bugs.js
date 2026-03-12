@@ -196,7 +196,7 @@ router.post('/:id', (req, res) => {
     return res.redirect('/projects');
   }
 
-  const { title, description, status, priority, assignee_id, project_id } = req.body;
+  const { title, description, status, priority, assignee_id, project_id, pending_comment } = req.body;
   const validStatuses = ['open', 'in_progress', 'closed'];
   const newStatus = validStatuses.includes(status) ? status : bug.status;
 
@@ -217,6 +217,10 @@ router.post('/:id', (req, res) => {
     newProjectId,
     bug.id
   );
+
+  if (pending_comment && pending_comment.trim()) {
+    db.prepare('INSERT INTO comments (bug_id, user_id, content, created_at) VALUES (?, ?, ?, datetime(\'now\'))').run(bug.id, req.session.user.id, pending_comment.trim());
+  }
 
   req.session.flash = { type: 'success', message: 'Updated.' };
   if (newStatus === 'closed' && bug.status !== 'closed') {

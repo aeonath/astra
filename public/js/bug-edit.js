@@ -30,6 +30,8 @@ document.addEventListener('DOMContentLoaded', function () {
   var statusClasses = ['badge-status-open', 'badge-status-in_progress', 'badge-status-closed', 'badge-status-resolved', 'badge-status-wontfix'];
   var priorityClasses = ['badge-low', 'badge-medium', 'badge-high', 'badge-critical'];
 
+  var projectSelect = document.getElementById('project_id');
+
   if (statusSelect && bugLayout) {
     statusSelect.addEventListener('change', function () {
       var val = this.value;
@@ -37,10 +39,23 @@ document.addEventListener('DOMContentLoaded', function () {
       bugLayout.classList.toggle('bug-is-closed', isClosed);
       if (prioritySelect) prioritySelect.disabled = isClosed;
       if (assigneeSelect) assigneeSelect.disabled = isClosed;
+      if (projectSelect) projectSelect.disabled = isClosed;
       if (statusBadge) {
         statusBadge.classList.remove.apply(statusBadge.classList, statusClasses);
         statusBadge.classList.add('badge-status-' + val);
         statusBadge.textContent = val === 'in_progress' ? 'in progress' : val;
+      }
+    });
+  }
+
+  // Copy comment textarea into sidebar form before submit
+  var sidebarForm = document.querySelector('.sidebar-form');
+  if (sidebarForm) {
+    sidebarForm.addEventListener('submit', function () {
+      var commentTextarea = document.querySelector('.comment-form textarea[name="content"]');
+      var pendingComment = document.getElementById('pending-comment');
+      if (commentTextarea && pendingComment && commentTextarea.value.trim()) {
+        pendingComment.value = commentTextarea.value.trim();
       }
     });
   }
