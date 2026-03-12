@@ -195,7 +195,7 @@ router.post('/users/:id/toggle-submissions', (req, res) => {
   if (!user) {
     return res.redirect('/admin/users');
   }
-  const newVal = user.can_manage_submissions ? 0 : 1;
+  const newVal = req.body.value === '1' ? 1 : 0;
   db.prepare(`UPDATE users SET can_manage_submissions = ?, updated_at = datetime('now') WHERE id = ?`).run(newVal, user.id);
   req.session.flash = { type: 'success', message: `Submissions access ${newVal ? 'granted to' : 'revoked from'} "${user.username}".` };
   res.redirect('/admin/users');

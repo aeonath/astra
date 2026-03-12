@@ -72,6 +72,7 @@
               data-user-id="<%= user.id %>"
               data-display-name="<%= user.display_name %>">Remove</button>
             <form action="/admin/users/<%= user.id %>/toggle-submissions" method="POST" class="inline-form">
+              <input type="hidden" name="value" value="<%= user.can_manage_submissions ? '0' : '1' %>">
               <label class="perm-toggle" title="<%= user.can_manage_submissions ? 'Revoke submissions access' : 'Grant submissions access' %>">
                 <input type="checkbox" <%= user.can_manage_submissions ? 'checked' : '' %> onchange="this.form.submit()">
                 <span class="perm-toggle-track"></span>
