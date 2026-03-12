@@ -311,7 +311,7 @@ input:focus, textarea:focus, select:focus {
 
 .form-actions { display: flex; gap: 0.75rem; margin-top: 0.5rem; }
 .form-group-checkbox { display: flex; align-items: center; padding-top: 1.5rem; }
-.checkbox-label { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.9rem; }
+.checkbox-label { display: flex; align-items: center; gap: 0.75rem; cursor: pointer; font-size: 0.9rem; }
 .checkbox-label input[type="checkbox"] { width: auto; }
 
 /* Permission toggle switch */
