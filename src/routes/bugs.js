@@ -184,7 +184,8 @@ router.get('/:id', (req, res) => {
   } else {
     displayId = `#${bug.id}`;
   }
-  res.render('bugs/show', { title: displayId, bug, comments, users, displayId, files });
+  const projects = db.prepare('SELECT id, name FROM projects WHERE active = 1 ORDER BY name').all();
+  res.render('bugs/show', { title: displayId, bug, comments, users, displayId, files, projects });
 });
 
 // POST /bugs/:id — update bug
@@ -195,16 +196,17 @@ router.post('/:id', (req, res) => {
     return res.redirect('/projects');
   }
 
-  const { title, description, status, priority, assignee_id } = req.body;
+  const { title, description, status, priority, assignee_id, project_id } = req.body;
   const validStatuses = ['open', 'in_progress', 'closed'];
   const newStatus = validStatuses.includes(status) ? status : bug.status;
 
   // When closing, preserve existing priority and assignee — they can't be changed while closed
   const newPriority = newStatus === 'closed' ? bug.priority : (priority || bug.priority);
   const newAssigneeId = newStatus === 'closed' ? bug.assignee_id : (assignee_id || null);
+  const newProjectId = project_id ? parseInt(project_id, 10) : bug.project_id;
 
   db.prepare(`
-    UPDATE bugs SET title = ?, description = ?, status = ?, priority = ?, assignee_id = ?, updated_at = datetime('now')
+    UPDATE bugs SET title = ?, description = ?, status = ?, priority = ?, assignee_id = ?, project_id = ?, updated_at = datetime('now')
     WHERE id = ?
   `).run(
     title || bug.title,
@@ -212,12 +214,16 @@ router.post('/:id', (req, res) => {
     newStatus,
     newPriority,
     newAssigneeId,
+    newProjectId,
     bug.id
   );
 
   req.session.flash = { type: 'success', message: 'Updated.' };
   if (newStatus === 'closed' && bug.status !== 'closed') {
-    return res.redirect(`/projects/${bug.project_slug}`);
+    const slug = newProjectId !== bug.project_id
+      ? (db.prepare('SELECT slug FROM projects WHERE id = ?').get(newProjectId) || {}).slug || bug.project_slug
+      : bug.project_slug;
+    return res.redirect(`/projects/${slug}`);
   }
   res.redirect(`/bugs/${bug.id}`);
 });

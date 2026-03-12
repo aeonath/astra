@@ -161,6 +161,15 @@
       </div>
 
       <div class="form-group">
+        <label for="project_id">Project</label>
+        <select id="project_id" name="project_id" <%= bug.status === 'closed' ? 'disabled' : '' %>>
+          <% projects.forEach(p => { %>
+            <option value="<%= p.id %>" <%= bug.project_id === p.id ? 'selected' : '' %>><%= p.name %></option>
+          <% }) %>
+        </select>
+      </div>
+
+      <div class="form-group">
         <label for="assignee_id">Assignee</label>
         <select id="assignee_id" name="assignee_id" <%= bug.status === 'closed' ? 'disabled' : '' %>>
           <option value="">Unassigned</option>
