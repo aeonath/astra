@@ -219,7 +219,7 @@ router.post('/:id', (req, res) => {
   );
 
   if (pending_comment && pending_comment.trim()) {
-    db.prepare('INSERT INTO comments (bug_id, user_id, content, created_at) VALUES (?, ?, ?, datetime(\'now\'))').run(bug.id, req.session.user.id, pending_comment.trim());
+    db.prepare('INSERT INTO comments (bug_id, user_id, content, created_at) VALUES (?, ?, ?, datetime(\'now\'))').run(bug.id, req.session.userId, pending_comment.trim());
   }
 
   req.session.flash = { type: 'success', message: 'Updated.' };
