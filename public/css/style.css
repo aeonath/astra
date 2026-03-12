@@ -363,8 +363,8 @@ th.sort-desc::after { content: ' ↓'; font-size: 0.75em; opacity: 0.8; }
 .badge-high { background: rgba(248,81,73,0.15); color: var(--danger); }
 .badge-critical { background: rgba(255,123,114,0.2); color: var(--critical); border: 1px solid rgba(255,123,114,0.3); }
 
-.badge-status-open { background: rgba(63,185,80,0.15); color: var(--success); }
-.badge-status-in_progress { background: rgba(88,166,255,0.15); color: var(--accent); }
+.badge-status-open { background: rgba(88,166,255,0.15); color: var(--accent); }
+.badge-status-in_progress { background: rgba(63,185,80,0.15); color: var(--success); }
 .badge-status-resolved { background: rgba(188,140,255,0.15); color: var(--purple); }
 .badge-status-closed { background: rgba(139,148,158,0.15); color: var(--text-secondary); }
 .badge-status-wontfix { background: rgba(139,148,158,0.1); color: var(--text-muted); }
