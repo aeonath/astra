@@ -45,7 +45,7 @@
 
       <div class="card card-editable" id="notes-display" style="margin-bottom: 1.25rem;">
         <% if (bug.description) { %>
-          <p id="bug-desc-text"><%= bug.description %></p>
+          <p id="bug-desc-text" style="white-space: pre-wrap;"><%= bug.description %></p>
         <% } else { %>
           <p id="bug-desc-text" class="text-muted">No additional notes.</p>
         <% } %>
