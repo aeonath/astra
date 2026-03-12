@@ -313,7 +313,7 @@ input:focus, textarea:focus, select:focus {
 .form-group-checkbox { display: flex; align-items: center; padding-top: 1.5rem; }
 .checkbox-label { display: flex; align-items: center; cursor: pointer; font-size: 0.9rem; }
 .checkbox-label input[type="checkbox"] { width: auto; }
-.checkbox-text { margin-left: 1ex; }
+.checkbox-text { margin-left: 1ex; vertical-align: middle; }
 
 /* Permission toggle switch */
 .perm-toggle { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; color: var(--text-secondary); cursor: pointer; user-select: none; }
