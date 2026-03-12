@@ -129,8 +129,9 @@ router.post('/users', async (req, res) => {
       return res.redirect('/admin/users');
     }
 
-    db.prepare(`UPDATE users SET display_name = ?, email = ?, role = ?, updated_at = datetime('now') WHERE id = ?`)
-      .run(display_name, email, role === 'admin' ? 'admin' : 'user', user.id);
+    const canManageSubs = req.body.can_manage_submissions === '1' ? 1 : 0;
+    db.prepare(`UPDATE users SET display_name = ?, email = ?, role = ?, can_manage_submissions = ?, updated_at = datetime('now') WHERE id = ?`)
+      .run(display_name, email, role === 'admin' ? 'admin' : 'user', canManageSubs, user.id);
 
     if (password) {
       const hash = await bcrypt.hash(password, 12);
@@ -149,8 +150,9 @@ router.post('/users', async (req, res) => {
 
   try {
     const hash = await bcrypt.hash(password, 12);
-    db.prepare('INSERT INTO users (username, display_name, email, password_hash, role) VALUES (?, ?, ?, ?, ?)')
-      .run(username, display_name, email, hash, role === 'admin' ? 'admin' : 'user');
+    const canManageSubs = req.body.can_manage_submissions === '1' ? 1 : 0;
+    db.prepare('INSERT INTO users (username, display_name, email, password_hash, role, can_manage_submissions) VALUES (?, ?, ?, ?, ?, ?)')
+      .run(username, display_name, email, hash, role === 'admin' ? 'admin' : 'user', canManageSubs);
     req.session.flash = { type: 'success', message: `User "${username}" created.` };
   } catch (err) {
     if (err.message.includes('UNIQUE')) {
@@ -187,17 +189,6 @@ router.post('/users/:id/delete', (req, res) => {
   db.prepare('DELETE FROM users WHERE id = ?').run(user.id);
 
   req.session.flash = { type: 'success', message: `User "${user.username}" removed.` };
-  res.redirect('/admin/users');
-});
-
-router.post('/users/:id/toggle-submissions', (req, res) => {
-  const user = db.prepare('SELECT * FROM users WHERE id = ?').get(req.params.id);
-  if (!user) {
-    return res.redirect('/admin/users');
-  }
-  const newVal = req.body.value === '1' ? 1 : 0;
-  db.prepare(`UPDATE users SET can_manage_submissions = ?, updated_at = datetime('now') WHERE id = ?`).run(newVal, user.id);
-  req.session.flash = { type: 'success', message: `Submissions access ${newVal ? 'granted to' : 'revoked from'} "${user.username}".` };
   res.redirect('/admin/users');
 });
 

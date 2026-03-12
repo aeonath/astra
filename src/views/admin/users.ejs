@@ -28,16 +28,26 @@
         <input type="password" id="password" name="password" required autocomplete="new-password">
       </div>
     </div>
-    <div class="form-group">
-      <label for="role">Role</label>
-      <select id="role" name="role">
-        <option value="user">User</option>
-        <option value="admin">Admin</option>
-      </select>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="role">Role</label>
+        <select id="role" name="role">
+          <option value="user">User</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+      <div class="form-group" id="submissions-group">
+        <label class="perm-toggle">
+          <input type="checkbox" id="can_manage_submissions" name="can_manage_submissions" value="1">
+          <span class="perm-toggle-track"></span>
+          Manage Submissions
+        </label>
+      </div>
     </div>
     <div class="form-actions">
       <button type="submit" class="btn btn-primary" id="form-submit">Create User</button>
-      <button type="button" class="btn btn-danger" id="cancel-edit" style="display:none;">Cancel</button>
+      <button type="button" class="btn btn-ghost" id="cancel-edit" style="display:none;">Cancel</button>
+      <button type="button" class="btn btn-danger" id="remove-user-btn" style="display:none;">Remove User</button>
     </div>
   </form>
 </div>
@@ -50,7 +60,6 @@
       <th>Email</th>
       <th>Role</th>
       <th>Status</th>
-      <th>Actions</th>
     </tr>
   </thead>
   <tbody>
@@ -60,27 +69,13 @@
           data-username="<%= user.username %>"
           data-display-name="<%= user.display_name %>"
           data-email="<%= user.email %>"
-          data-role="<%= user.role %>">
+          data-role="<%= user.role %>"
+          data-can-manage-submissions="<%= user.can_manage_submissions ? '1' : '0' %>">
         <td><%= user.username %></td>
         <td><%= user.display_name %></td>
         <td><%= user.email %></td>
         <td><span class="badge"><%= user.role %></span></td>
         <td><span class="badge badge-status-<%= user.active ? 'open' : 'closed' %>"><%= user.active ? 'Active' : 'Disabled' %></span></td>
-        <td class="actions no-row-click">
-          <% if (user.role !== 'admin') { %>
-            <button type="button" class="btn btn-sm btn-danger remove-user-btn"
-              data-user-id="<%= user.id %>"
-              data-display-name="<%= user.display_name %>">Remove</button>
-            <form action="/admin/users/<%= user.id %>/toggle-submissions" method="POST" class="inline-form">
-              <input type="hidden" name="value" value="<%= user.can_manage_submissions ? '0' : '1' %>">
-              <label class="perm-toggle" title="<%= user.can_manage_submissions ? 'Revoke submissions access' : 'Grant submissions access' %>">
-                <input type="checkbox" <%= user.can_manage_submissions ? 'checked' : '' %> onchange="this.form.submit()">
-                <span class="perm-toggle-track"></span>
-                Manage Submissions
-              </label>
-            </form>
-          <% } %>
-        </td>
       </tr>
     <% }) %>
   </tbody>
