@@ -65,6 +65,7 @@ app.use('/admin', require('./middleware/auth').requireAdmin, require('./routes/a
 app.use('/projects', require('./routes/projects'));
 app.use('/bugs', require('./middleware/auth').requireLogin, require('./routes/bugs'));
 app.use('/submissions', require('./middleware/auth').requireLogin, require('./routes/submissions'));
+app.use('/manage/projects', require('./middleware/auth').requireLogin, require('./routes/manage-projects'));
 
 // Public landing page
 app.get('/', require('./routes/landing'));

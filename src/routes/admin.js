@@ -110,7 +110,7 @@ router.post('/projects/:id/delete', (req, res) => {
 
 // --- Users Management ---
 router.get('/users', (req, res) => {
-  const users = db.prepare('SELECT id, username, display_name, email, role, active, can_manage_submissions, created_at FROM users ORDER BY username').all();
+  const users = db.prepare('SELECT id, username, display_name, email, role, active, can_manage_submissions, can_manage_projects, created_at FROM users ORDER BY username').all();
   res.render('admin/users', { title: 'Manage Users', users });
 });
 
@@ -131,8 +131,9 @@ router.post('/users', async (req, res) => {
     }
 
     const canManageSubs = req.body.can_manage_submissions === '1' ? 1 : 0;
-    db.prepare(`UPDATE users SET display_name = ?, email = ?, role = ?, can_manage_submissions = ?, updated_at = datetime('now') WHERE id = ?`)
-      .run(display_name, email, role === 'admin' ? 'admin' : 'user', canManageSubs, user.id);
+    const canManageProjs = req.body.can_manage_projects === '1' ? 1 : 0;
+    db.prepare(`UPDATE users SET display_name = ?, email = ?, role = ?, can_manage_submissions = ?, can_manage_projects = ?, updated_at = datetime('now') WHERE id = ?`)
+      .run(display_name, email, role === 'admin' ? 'admin' : 'user', canManageSubs, canManageProjs, user.id);
 
     if (password) {
       const hash = await bcrypt.hash(password, 12);
@@ -152,8 +153,9 @@ router.post('/users', async (req, res) => {
   try {
     const hash = await bcrypt.hash(password, 12);
     const canManageSubs = req.body.can_manage_submissions === '1' ? 1 : 0;
-    db.prepare('INSERT INTO users (username, display_name, email, password_hash, role, can_manage_submissions) VALUES (?, ?, ?, ?, ?, ?)')
-      .run(username, display_name, email, hash, role === 'admin' ? 'admin' : 'user', canManageSubs);
+    const canManageProjs = req.body.can_manage_projects === '1' ? 1 : 0;
+    db.prepare('INSERT INTO users (username, display_name, email, password_hash, role, can_manage_submissions, can_manage_projects) VALUES (?, ?, ?, ?, ?, ?, ?)')
+      .run(username, display_name, email, hash, role === 'admin' ? 'admin' : 'user', canManageSubs, canManageProjs);
     req.session.flash = { type: 'success', message: `User "${username}" created.` };
   } catch (err) {
     if (err.message.includes('UNIQUE')) {

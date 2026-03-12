@@ -42,6 +42,12 @@
           <span class="checkbox-text">Manage Submissions</span>
         </label>
       </div>
+      <div class="form-group form-group-checkbox" id="projects-group">
+        <label class="checkbox-label">
+          <input type="checkbox" id="can_manage_projects" name="can_manage_projects" value="1">
+          <span class="checkbox-text">Manage Projects</span>
+        </label>
+      </div>
     </div>
     <div class="form-actions">
       <button type="submit" class="btn btn-primary" id="form-submit">Create User</button>
@@ -69,7 +75,8 @@
           data-display-name="<%= user.display_name %>"
           data-email="<%= user.email %>"
           data-role="<%= user.role %>"
-          data-can-manage-submissions="<%= user.can_manage_submissions ? '1' : '0' %>">
+          data-can-manage-submissions="<%= user.can_manage_submissions ? '1' : '0' %>"
+          data-can-manage-projects="<%= user.can_manage_projects ? '1' : '0' %>">
         <td><%= user.username %></td>
         <td><%= user.display_name %></td>
         <td><%= user.email %></td>

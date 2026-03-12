@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('password').value = '';
   document.getElementById('role').value = 'user';
   document.getElementById('can_manage_submissions').checked = false;
+  document.getElementById('can_manage_projects').checked = false;
 
   var removeBtn = document.getElementById('remove-user-btn');
   var cancelBtn = document.getElementById('cancel-edit');
@@ -22,7 +23,8 @@ document.addEventListener('DOMContentLoaded', function () {
       var username = row.dataset.username;
       var email = row.dataset.email;
       var role = row.dataset.role;
-      var canManage = row.dataset.canManageSubmissions === '1';
+      var canManageSubs = row.dataset.canManageSubmissions === '1';
+      var canManageProjs = row.dataset.canManageProjects === '1';
 
       document.getElementById('form-title').textContent = 'Edit User';
       document.getElementById('form-submit').textContent = 'Save Changes';
@@ -33,7 +35,8 @@ document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('display_name').value = editDisplayName;
       document.getElementById('email').value = email;
       document.getElementById('role').value = role;
-      document.getElementById('can_manage_submissions').checked = canManage;
+      document.getElementById('can_manage_submissions').checked = canManageSubs;
+      document.getElementById('can_manage_projects').checked = canManageProjs;
       document.getElementById('password').removeAttribute('required');
       document.getElementById('password').placeholder = 'Leave blank to keep current';
 
@@ -63,6 +66,7 @@ document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('email').value = '';
       document.getElementById('role').value = 'user';
       document.getElementById('can_manage_submissions').checked = false;
+      document.getElementById('can_manage_projects').checked = false;
       document.getElementById('password').value = '';
       document.getElementById('password').setAttribute('required', '');
       document.getElementById('password').placeholder = '';

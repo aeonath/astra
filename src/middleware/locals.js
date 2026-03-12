@@ -7,14 +7,16 @@ module.exports = function locals(req, res, next) {
   res.locals.currentUser = null;
   res.locals.isAdmin = false;
   res.locals.canManageSubmissions = false;
+  res.locals.canManageProjects = false;
   res.locals.currentPath = req.path;
 
   if (req.session.userId) {
-    const user = db.prepare('SELECT id, username, display_name, role, can_manage_submissions FROM users WHERE id = ?').get(req.session.userId);
+    const user = db.prepare('SELECT id, username, display_name, role, can_manage_submissions, can_manage_projects FROM users WHERE id = ?').get(req.session.userId);
     if (user) {
       res.locals.currentUser = user;
       res.locals.isAdmin = user.role === 'admin';
       res.locals.canManageSubmissions = user.role === 'admin' || !!user.can_manage_submissions;
+      res.locals.canManageProjects = user.role === 'admin' || !!user.can_manage_projects;
     }
   }
 

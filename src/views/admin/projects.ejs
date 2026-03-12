@@ -1,4 +1,5 @@
 <%- include('../partials/header') %>
+<% const basePath = currentPath.startsWith('/manage') ? '/manage/projects' : '/admin/projects'; %>
 
 <div class="page-header">
   <h1>Manage Projects</h1>
@@ -6,7 +7,7 @@
 
 <div class="form-card" id="project-form-card" style="display:none;">
   <h2 id="form-title">Add Project</h2>
-  <form action="/admin/projects" method="POST" id="project-form">
+  <form action="<%= basePath %>" method="POST" id="project-form">
     <input type="hidden" id="edit-id" name="edit_id" value="">
     <div class="form-row">
       <div class="form-group">
@@ -101,13 +102,13 @@
         </td>
         <td><span class="badge badge-status-<%= project.active ? 'open' : 'closed' %>"><%= project.active ? 'Active' : 'Archived' %></span></td>
         <td class="actions no-row-click">
-          <form action="/admin/projects/<%= project.id %>/visibility" method="POST" class="inline-form">
+          <form action="<%= basePath %>/<%= project.id %>/visibility" method="POST" class="inline-form">
             <button type="submit" class="btn btn-sm btn-ghost"><%= project.public ? 'Make Private' : 'Make Public' %></button>
           </form>
-          <form action="/admin/projects/<%= project.id %>/toggle" method="POST" class="inline-form">
+          <form action="<%= basePath %>/<%= project.id %>/toggle" method="POST" class="inline-form">
             <button type="submit" class="btn btn-sm btn-ghost"><%= project.active ? 'Archive' : 'Restore' %></button>
           </form>
-          <form action="/admin/projects/<%= project.id %>/delete" method="POST" class="inline-form" onsubmit="return confirm('Delete this project?')">
+          <form action="<%= basePath %>/<%= project.id %>/delete" method="POST" class="inline-form" onsubmit="return confirm('Delete this project?')">
             <button type="submit" class="btn btn-sm btn-danger">Delete</button>
           </form>
         </td>
