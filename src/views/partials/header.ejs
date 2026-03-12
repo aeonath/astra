@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="/css/style.css">
   <% if (currentUser) { %><meta name="astra-user-id" content="<%= currentUser.id %>"><% } %>
   <script src="/js/project-tabs.js"></script>
+  <script src="/js/user-dropdown.js"></script>
 </head>
 <body>
   <% if (currentUser) { %>
@@ -32,10 +33,18 @@
         <% } %>
         <button type="submit" class="btn btn-sm btn-ghost nav-search-btn">Search</button>
       </form>
-      <a href="/profile" class="user-name"><%= currentUser.display_name %></a>
-      <form action="/logout" method="POST" class="inline-form">
-        <button type="submit" class="btn btn-sm btn-ghost">Logout</button>
-      </form>
+      <div class="user-dropdown">
+        <button type="button" class="user-name user-dropdown-toggle"><%= currentUser.display_name %> &#9662;</button>
+        <div class="user-dropdown-menu">
+          <a href="/profile" class="user-dropdown-item">Profile</a>
+          <% if (canManageSubmissions) { %>
+            <a href="/submissions" class="user-dropdown-item">Submissions</a>
+          <% } %>
+          <form action="/logout" method="POST">
+            <button type="submit" class="user-dropdown-item user-dropdown-logout">Logout</button>
+          </form>
+        </div>
+      </div>
     </div>
   </nav>
   <% } else { %>
