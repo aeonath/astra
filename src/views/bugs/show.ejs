@@ -54,7 +54,7 @@
 
       <form action="/bugs/<%= bug.id %>" method="POST" id="notes-edit-form" class="card" style="display:none; margin-bottom: 1.25rem;">
         <div class="form-group">
-          <textarea name="description" rows="6"><%= bug.description || '' %></textarea>
+          <textarea name="description" rows="6" style="font-family: monospace;"><%= bug.description || '' %></textarea>
         </div>
         <input type="hidden" name="title" value="<%= bug.title %>">
         <input type="hidden" name="status" value="<%= bug.status %>">
