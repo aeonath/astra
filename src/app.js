@@ -62,6 +62,7 @@ app.use(require('./middleware/locals'));
 // Routes
 app.use('/', require('./routes/auth'));
 app.use('/admin', require('./middleware/auth').requireAdmin, require('./routes/admin'));
+app.use('/projects/summary', require('./middleware/auth').requireLogin, require('./routes/project-summary'));
 app.use('/projects', require('./routes/projects'));
 app.use('/bugs', require('./middleware/auth').requireLogin, require('./routes/bugs'));
 app.use('/submissions', require('./middleware/auth').requireLogin, require('./routes/submissions'));

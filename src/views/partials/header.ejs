@@ -37,6 +37,7 @@
         <button type="button" class="user-name user-dropdown-toggle"><%= currentUser.display_name %> &#9662;</button>
         <div class="user-dropdown-menu">
           <a href="/profile" class="user-dropdown-item">Profile</a>
+          <a href="/projects/summary" class="user-dropdown-item">Projects Summary</a>
           <% if (canManageProjects && !isAdmin) { %>
             <a href="/manage/projects" class="user-dropdown-item">Manage Projects</a>
           <% } %>

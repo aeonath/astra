@@ -1,0 +1,59 @@
+<%- include('../partials/header') %>
+
+<div class="page-header">
+  <h1>Projects Summary</h1>
+</div>
+
+<% if (projects.length === 0) { %>
+  <div class="empty-state">
+    <p>No active projects.</p>
+  </div>
+<% } else { %>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Project</th>
+        <th>Category</th>
+        <th>Assignee</th>
+        <th>Bugs</th>
+        <th>Features</th>
+        <th>Todos</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% projects.forEach(project => { %>
+        <tr>
+          <td><a href="/projects/<%= project.slug %>"><%= project.name %></a></td>
+          <td><%= project.category_name || '—' %></td>
+          <td><%= project.assignee_name || '—' %></td>
+          <td><span class="stat-num <%= project.open_bugs > 0 ? 'stat-bug' : '' %>"><%= project.open_bugs %></span></td>
+          <td><span class="stat-num"><%= project.open_features %></span></td>
+          <td><span class="stat-num <%= project.open_todos > 0 ? 'stat-todo-warn' : '' %>"><%= project.open_todos %></span></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+
+  <h2 class="category-heading" style="margin-top: 2rem;">Project Details</h2>
+
+  <% projects.forEach(project => { %>
+    <div class="section-block" style="margin-bottom: 1.5rem;">
+      <h3><a href="/projects/<%= project.slug %>"><%= project.name %></a></h3>
+      <% if (project.category_name) { %>
+        <span class="badge badge-status-open"><%= project.category_name %></span>
+      <% } %>
+      <% if (project.description) { %>
+        <p style="margin-top: 0.5rem;"><%= project.description %></p>
+      <% } else { %>
+        <p style="margin-top: 0.5rem; opacity: 0.5;">No description.</p>
+      <% } %>
+      <% if (project.homepage_url) { %>
+        <p><a href="<%= project.homepage_url %>" target="_blank"><%= project.homepage_url %></a></p>
+      <% } %>
+    </div>
+  <% }) %>
+
+<% } %>
+
+<%- include('../partials/footer') %>
