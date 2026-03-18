@@ -499,6 +499,26 @@ th.sort-desc::after { content: ' ↓'; font-size: 0.75em; opacity: 0.8; }
 .summary-card-header h2 { font-size: 1.1rem; margin: 0; }
 .summary-card-nickname { font-size: 0.85rem; color: var(--text-muted); font-style: italic; }
 .summary-card-edit-btn { margin-left: auto; }
+.summary-card-layout { display: flex; gap: 1.25rem; }
+.summary-card-left { flex: 1; min-width: 0; }
+.summary-card-right { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.summary-notes-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.4rem; }
+.summary-notes-header label { font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); }
+.summary-notes-status { font-size: 0.75rem; color: var(--text-muted); transition: opacity 0.3s; }
+.summary-notes-textarea {
+  flex: 1;
+  min-height: 80px;
+  resize: vertical;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.6rem;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  font-family: inherit;
+  line-height: 1.5;
+}
+.summary-notes-textarea:focus { border-color: var(--accent); outline: none; }
 .summary-card-field { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.35rem; line-height: 1.5; }
 .summary-card-field strong { color: var(--text-primary); }
 /* === Tags === */

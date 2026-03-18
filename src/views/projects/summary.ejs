@@ -13,75 +13,86 @@
   <div class="summary-cards">
     <% projects.forEach(project => { %>
       <div class="summary-card" id="card-<%= project.id %>">
-        <div class="summary-card-display" id="card-display-<%= project.id %>">
-          <div class="summary-card-header">
-            <h2><a href="/projects/<%= project.slug %>"><%= project.name %></a></h2>
-            <% if (project.nickname) { %>
-              <span class="summary-card-nickname">"<%= project.nickname %>"</span>
-            <% } %>
-            <button type="button" class="btn btn-sm btn-ghost summary-card-edit-btn" data-project-id="<%= project.id %>">Edit</button>
-          </div>
-          <div class="summary-card-body">
-            <% if (project.scope) { %>
-              <div class="summary-card-field"><strong>Scope:</strong> <%= project.scope %></div>
-            <% } %>
-            <% if (project.purpose) { %>
-              <div class="summary-card-field"><strong>Purpose:</strong> <%= project.purpose %></div>
-            <% } %>
-            <% if (project.project_status) { %>
-              <div class="summary-card-field"><strong>Status:</strong> <%= project.project_status %></div>
-            <% } %>
-            <% if (project.tags) { %>
-              <div class="tag-list">
-                <% project.tags.split(',').map(t => t.trim()).filter(Boolean).forEach(tag => { %>
-                  <span class="tag-pill"><%= tag %></span>
-                <% }) %>
+        <div class="summary-card-layout">
+          <div class="summary-card-left">
+            <div class="summary-card-display" id="card-display-<%= project.id %>">
+              <div class="summary-card-header">
+                <h2><a href="/projects/<%= project.slug %>"><%= project.name %></a></h2>
+                <% if (project.nickname) { %>
+                  <span class="summary-card-nickname">"<%= project.nickname %>"</span>
+                <% } %>
+                <button type="button" class="btn btn-sm btn-ghost summary-card-edit-btn" data-project-id="<%= project.id %>">Edit</button>
               </div>
-            <% } %>
-            <% if (!project.scope && !project.purpose && !project.project_status && !project.tags) { %>
-              <p class="text-muted">No project card details yet. Click Edit to add details.</p>
-            <% } %>
-          </div>
-        </div>
-        <div class="summary-card-form" id="card-form-<%= project.id %>" style="display:none;">
-          <form action="/projects/summary/<%= project.id %>/card" method="POST">
-            <input type="hidden" name="return_to" value="/projects/summary">
-            <div class="summary-card-header">
-              <h2><%= project.name %></h2>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="nickname-<%= project.id %>">Nickname</label>
-                <input type="text" id="nickname-<%= project.id %>" name="nickname" value="<%= project.nickname || '' %>" placeholder="e.g. Baby Chorus">
-              </div>
-              <div class="form-group">
-                <label for="scope-<%= project.id %>">Scope</label>
-                <input type="text" id="scope-<%= project.id %>" name="scope" value="<%= project.scope || '' %>" placeholder="e.g. Programming Language (Core Development)">
+              <div class="summary-card-body">
+                <% if (project.scope) { %>
+                  <div class="summary-card-field"><strong>Scope:</strong> <%= project.scope %></div>
+                <% } %>
+                <% if (project.purpose) { %>
+                  <div class="summary-card-field"><strong>Purpose:</strong> <%= project.purpose %></div>
+                <% } %>
+                <% if (project.project_status) { %>
+                  <div class="summary-card-field"><strong>Status:</strong> <%= project.project_status %></div>
+                <% } %>
+                <% if (project.tags) { %>
+                  <div class="tag-list">
+                    <% project.tags.split(',').map(t => t.trim()).filter(Boolean).forEach(tag => { %>
+                      <span class="tag-pill"><%= tag %></span>
+                    <% }) %>
+                  </div>
+                <% } %>
+                <% if (!project.scope && !project.purpose && !project.project_status && !project.tags) { %>
+                  <p class="text-muted">No project card details yet. Click Edit to add details.</p>
+                <% } %>
               </div>
             </div>
-            <div class="form-group">
-              <label for="purpose-<%= project.id %>">Purpose</label>
-              <textarea id="purpose-<%= project.id %>" name="purpose" rows="3" placeholder="Describe the project's purpose..."><%= project.purpose || '' %></textarea>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="project_status-<%= project.id %>">Status</label>
-                <input type="text" id="project_status-<%= project.id %>" name="project_status" value="<%= project.project_status || '' %>" placeholder="e.g. Active (v0.9.1-alpha)">
-              </div>
-              <div class="form-group">
-                <label for="tags-<%= project.id %>">Tags</label>
-                <div class="tag-input-wrapper" data-target="tags-hidden-<%= project.id %>">
-                  <div class="tag-input-pills"></div>
-                  <input type="text" class="tag-input-text" placeholder="Type and press Enter">
+            <div class="summary-card-form" id="card-form-<%= project.id %>" style="display:none;">
+              <form action="/projects/summary/<%= project.id %>/card" method="POST">
+                <input type="hidden" name="return_to" value="/projects/summary">
+                <div class="summary-card-header">
+                  <h2><%= project.name %></h2>
                 </div>
-                <input type="hidden" id="tags-hidden-<%= project.id %>" name="tags" value="<%= project.tags || '' %>">
-              </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="nickname-<%= project.id %>">Nickname</label>
+                    <input type="text" id="nickname-<%= project.id %>" name="nickname" value="<%= project.nickname || '' %>" placeholder="e.g. Baby Chorus">
+                  </div>
+                  <div class="form-group">
+                    <label for="scope-<%= project.id %>">Scope</label>
+                    <input type="text" id="scope-<%= project.id %>" name="scope" value="<%= project.scope || '' %>" placeholder="e.g. Programming Language (Core Development)">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="purpose-<%= project.id %>">Purpose</label>
+                  <textarea id="purpose-<%= project.id %>" name="purpose" rows="3" placeholder="Describe the project's purpose..."><%= project.purpose || '' %></textarea>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="project_status-<%= project.id %>">Status</label>
+                    <input type="text" id="project_status-<%= project.id %>" name="project_status" value="<%= project.project_status || '' %>" placeholder="e.g. Active (v0.9.1-alpha)">
+                  </div>
+                  <div class="form-group">
+                    <label for="tags-<%= project.id %>">Tags</label>
+                    <div class="tag-input-wrapper" data-target="tags-hidden-<%= project.id %>">
+                      <div class="tag-input-pills"></div>
+                      <input type="text" class="tag-input-text" placeholder="Type and press Enter">
+                    </div>
+                    <input type="hidden" id="tags-hidden-<%= project.id %>" name="tags" value="<%= project.tags || '' %>">
+                  </div>
+                </div>
+                <div class="form-actions">
+                  <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                  <button type="button" class="btn btn-ghost btn-sm summary-card-cancel-btn" data-project-id="<%= project.id %>">Cancel</button>
+                </div>
+              </form>
             </div>
-            <div class="form-actions">
-              <button type="submit" class="btn btn-primary btn-sm">Save</button>
-              <button type="button" class="btn btn-ghost btn-sm summary-card-cancel-btn" data-project-id="<%= project.id %>">Cancel</button>
+          </div>
+          <div class="summary-card-right">
+            <div class="summary-notes-header">
+              <label>Notes</label>
+              <span class="summary-notes-status" id="notes-status-<%= project.id %>"></span>
             </div>
-          </form>
+            <textarea class="summary-notes-textarea" id="summary-notes-<%= project.id %>" data-project-id="<%= project.id %>" placeholder="Add notes..."><%= project.summary_notes || '' %></textarea>
+          </div>
         </div>
       </div>
     <% }) %>

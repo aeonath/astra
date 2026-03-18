@@ -57,4 +57,15 @@ router.post('/:id/card', (req, res) => {
   res.redirect(returnTo);
 });
 
+// POST /projects/summary/:id/summary-notes — save project card summary notes (JSON)
+router.post('/:id/summary-notes', (req, res) => {
+  const project = db.prepare('SELECT * FROM projects WHERE id = ?').get(req.params.id);
+  if (!project) {
+    return res.status(404).json({ error: 'Project not found.' });
+  }
+  const summaryNotes = (req.body.summary_notes || '').trim();
+  db.prepare("UPDATE projects SET summary_notes = ?, updated_at = datetime('now') WHERE id = ?").run(summaryNotes, project.id);
+  res.json({ success: true });
+});
+
 module.exports = router;

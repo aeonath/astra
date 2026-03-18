@@ -68,6 +68,35 @@ document.addEventListener('DOMContentLoaded', () => {
     renderPills();
   });
 
+  // === Summary notes: auto-save with debounce ===
+  document.querySelectorAll('.summary-notes-textarea').forEach(textarea => {
+    const projectId = textarea.dataset.projectId;
+    const status = document.getElementById('notes-status-' + projectId);
+    let timer = null;
+
+    textarea.addEventListener('input', () => {
+      if (timer) clearTimeout(timer);
+      status.textContent = '';
+      timer = setTimeout(() => {
+        fetch('/projects/summary/' + projectId + '/summary-notes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ summary_notes: textarea.value }),
+        })
+          .then(r => r.json())
+          .then(data => {
+            if (data.success) {
+              status.textContent = 'Saved';
+              setTimeout(() => { status.textContent = ''; }, 2000);
+            }
+          })
+          .catch(() => {
+            status.textContent = 'Save failed';
+          });
+      }, 800);
+    });
+  });
+
   // === Summary page: inline edit toggle ===
   document.querySelectorAll('.summary-card-edit-btn').forEach(btn => {
     btn.addEventListener('click', () => {
