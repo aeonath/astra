@@ -23,4 +23,38 @@ router.get('/', (req, res) => {
   res.render('projects/summary', { title: 'Projects Summary', projects, categories });
 });
 
+// POST /projects/summary/:id/card — save project card details
+router.post('/:id/card', (req, res) => {
+  const project = db.prepare('SELECT * FROM projects WHERE id = ?').get(req.params.id);
+  if (!project) {
+    if (req.headers['accept'] === 'application/json') {
+      return res.status(404).json({ error: 'Project not found.' });
+    }
+    req.session.flash = { type: 'error', message: 'Project not found.' };
+    return res.redirect('/projects/summary');
+  }
+
+  const { nickname, scope, purpose, project_status, keywords } = req.body;
+  db.prepare(`
+    UPDATE projects
+    SET nickname = ?, scope = ?, purpose = ?, project_status = ?, keywords = ?, updated_at = datetime('now')
+    WHERE id = ?
+  `).run(
+    (nickname || '').trim(),
+    (scope || '').trim(),
+    (purpose || '').trim(),
+    (project_status || '').trim(),
+    (keywords || '').trim(),
+    project.id
+  );
+
+  if (req.headers['accept'] === 'application/json') {
+    return res.json({ success: true });
+  }
+
+  const returnTo = req.body.return_to || '/projects/summary';
+  req.session.flash = { type: 'success', message: `Project card for "${project.name}" updated.` };
+  res.redirect(returnTo);
+});
+
 module.exports = router;

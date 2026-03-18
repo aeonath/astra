@@ -10,12 +10,89 @@
   </div>
 <% } else { %>
 
+  <div class="summary-cards">
+    <% projects.forEach(project => { %>
+      <div class="summary-card" id="card-<%= project.id %>">
+        <div class="summary-card-display" id="card-display-<%= project.id %>">
+          <div class="summary-card-header">
+            <h2><a href="/projects/<%= project.slug %>"><%= project.name %></a></h2>
+            <% if (project.nickname) { %>
+              <span class="summary-card-nickname">"<%= project.nickname %>"</span>
+            <% } %>
+            <button type="button" class="btn btn-sm btn-ghost summary-card-edit-btn" data-project-id="<%= project.id %>">Edit</button>
+          </div>
+          <div class="summary-card-body">
+            <% if (project.scope) { %>
+              <div class="summary-card-field"><strong>Scope:</strong> <%= project.scope %></div>
+            <% } %>
+            <% if (project.purpose) { %>
+              <div class="summary-card-field"><strong>Purpose:</strong> <%= project.purpose %></div>
+            <% } %>
+            <% if (project.project_status) { %>
+              <div class="summary-card-field"><strong>Status:</strong> <%= project.project_status %></div>
+            <% } %>
+            <% if (project.keywords) { %>
+              <div class="summary-card-keywords">
+                <% project.keywords.split(/\s*[·,]\s*/).filter(Boolean).forEach(kw => { %>
+                  <span class="summary-card-keyword"><%= kw.trim() %></span>
+                <% }) %>
+              </div>
+            <% } %>
+            <% if (!project.scope && !project.purpose && !project.project_status && !project.keywords) { %>
+              <p class="text-muted">No project card details yet. Click Edit to add details.</p>
+            <% } %>
+          </div>
+        </div>
+        <div class="summary-card-form" id="card-form-<%= project.id %>" style="display:none;">
+          <form action="/projects/summary/<%= project.id %>/card" method="POST">
+            <input type="hidden" name="return_to" value="/projects/summary">
+            <div class="summary-card-header">
+              <h2><%= project.name %></h2>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="nickname-<%= project.id %>">Nickname</label>
+                <input type="text" id="nickname-<%= project.id %>" name="nickname" value="<%= project.nickname || '' %>" placeholder="e.g. Baby Chorus">
+              </div>
+              <div class="form-group">
+                <label for="scope-<%= project.id %>">Scope</label>
+                <input type="text" id="scope-<%= project.id %>" name="scope" value="<%= project.scope || '' %>" placeholder="e.g. Programming Language (Core Development)">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="purpose-<%= project.id %>">Purpose</label>
+              <textarea id="purpose-<%= project.id %>" name="purpose" rows="3" placeholder="Describe the project's purpose..."><%= project.purpose || '' %></textarea>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="project_status-<%= project.id %>">Status</label>
+                <input type="text" id="project_status-<%= project.id %>" name="project_status" value="<%= project.project_status || '' %>" placeholder="e.g. Active (v0.9.1-alpha)">
+              </div>
+              <div class="form-group">
+                <label for="keywords-<%= project.id %>">Keywords</label>
+                <input type="text" id="keywords-<%= project.id %>" name="keywords" value="<%= project.keywords || '' %>" placeholder="e.g. Harmony · Clarity · Creativity">
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary btn-sm">Save</button>
+              <button type="button" class="btn btn-ghost btn-sm summary-card-cancel-btn" data-project-id="<%= project.id %>">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+
+  <h2 class="category-heading" style="margin-top: 2rem;">Project Overview</h2>
+
   <table class="table">
     <thead>
       <tr>
         <th>Project</th>
+        <th>Nickname</th>
         <th>Category</th>
         <th>Assignee</th>
+        <th>Status</th>
         <th>Bugs</th>
         <th>Features</th>
         <th>Todos</th>
@@ -25,8 +102,10 @@
       <% projects.forEach(project => { %>
         <tr>
           <td><a href="/projects/<%= project.slug %>"><%= project.name %></a></td>
+          <td class="text-muted"><%= project.nickname || '—' %></td>
           <td><%= project.category_name || '—' %></td>
           <td><%= project.assignee_name || '—' %></td>
+          <td><%= project.project_status || '—' %></td>
           <td><span class="stat-num <%= project.open_bugs > 0 ? 'stat-bug' : '' %>"><%= project.open_bugs %></span></td>
           <td><span class="stat-num"><%= project.open_features %></span></td>
           <td><span class="stat-num <%= project.open_todos > 0 ? 'stat-todo-warn' : '' %>"><%= project.open_todos %></span></td>
@@ -35,25 +114,8 @@
     </tbody>
   </table>
 
-  <h2 class="category-heading" style="margin-top: 2rem;">Project Details</h2>
-
-  <% projects.forEach(project => { %>
-    <div class="section-block" style="margin-bottom: 1.5rem;">
-      <h3><a href="/projects/<%= project.slug %>"><%= project.name %></a></h3>
-      <% if (project.category_name) { %>
-        <span class="badge badge-status-open"><%= project.category_name %></span>
-      <% } %>
-      <% if (project.description) { %>
-        <p style="margin-top: 0.5rem;"><%= project.description %></p>
-      <% } else { %>
-        <p style="margin-top: 0.5rem; opacity: 0.5;">No description.</p>
-      <% } %>
-      <% if (project.homepage_url) { %>
-        <p><a href="<%= project.homepage_url %>" target="_blank"><%= project.homepage_url %></a></p>
-      <% } %>
-    </div>
-  <% }) %>
-
 <% } %>
+
+<script src="/js/project-card.js"></script>
 
 <%- include('../partials/footer') %>

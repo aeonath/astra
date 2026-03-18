@@ -480,6 +480,36 @@ th.sort-desc::after { content: ' ↓'; font-size: 0.75em; opacity: 0.8; }
 .modal h3 { margin: 0 0 0.75rem; font-size: 1.1rem; }
 .modal p { margin: 0 0 1.25rem; color: var(--text-secondary); line-height: 1.5; }
 .modal-actions { display: flex; gap: 0.5rem; }
+.modal-wide { max-width: 600px; }
+
+/* === Summary Cards === */
+.summary-cards { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem; }
+.summary-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+}
+.summary-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+.summary-card-header h2 { font-size: 1.1rem; margin: 0; }
+.summary-card-nickname { font-size: 0.85rem; color: var(--text-muted); font-style: italic; }
+.summary-card-edit-btn { margin-left: auto; }
+.summary-card-field { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.35rem; line-height: 1.5; }
+.summary-card-field strong { color: var(--text-primary); }
+.summary-card-keywords { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
+.summary-card-keyword {
+  font-size: 0.75rem;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.15rem 0.6rem;
+  color: var(--text-secondary);
+}
 
 /* === Profile === */
 .profile-stack { display: flex; flex-direction: column; gap: 1.5rem; max-width: 480px; margin: 0 auto; }
