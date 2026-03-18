@@ -31,14 +31,14 @@
             <% if (project.project_status) { %>
               <div class="summary-card-field"><strong>Status:</strong> <%= project.project_status %></div>
             <% } %>
-            <% if (project.keywords) { %>
-              <div class="summary-card-keywords">
-                <% project.keywords.split(/\s*[·,]\s*/).filter(Boolean).forEach(kw => { %>
-                  <span class="summary-card-keyword"><%= kw.trim() %></span>
+            <% if (project.tags) { %>
+              <div class="tag-list">
+                <% project.tags.split(',').map(t => t.trim()).filter(Boolean).forEach(tag => { %>
+                  <span class="tag-pill"><%= tag %></span>
                 <% }) %>
               </div>
             <% } %>
-            <% if (!project.scope && !project.purpose && !project.project_status && !project.keywords) { %>
+            <% if (!project.scope && !project.purpose && !project.project_status && !project.tags) { %>
               <p class="text-muted">No project card details yet. Click Edit to add details.</p>
             <% } %>
           </div>
@@ -69,8 +69,12 @@
                 <input type="text" id="project_status-<%= project.id %>" name="project_status" value="<%= project.project_status || '' %>" placeholder="e.g. Active (v0.9.1-alpha)">
               </div>
               <div class="form-group">
-                <label for="keywords-<%= project.id %>">Keywords</label>
-                <input type="text" id="keywords-<%= project.id %>" name="keywords" value="<%= project.keywords || '' %>" placeholder="e.g. Harmony · Clarity · Creativity">
+                <label for="tags-<%= project.id %>">Tags</label>
+                <div class="tag-input-wrapper" data-target="tags-hidden-<%= project.id %>">
+                  <div class="tag-input-pills"></div>
+                  <input type="text" class="tag-input-text" placeholder="Type and press Enter">
+                </div>
+                <input type="hidden" id="tags-hidden-<%= project.id %>" name="tags" value="<%= project.tags || '' %>">
               </div>
             </div>
             <div class="form-actions">

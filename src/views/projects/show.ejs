@@ -195,8 +195,12 @@
           <input type="text" id="modal-project-status" name="project_status" value="<%= project.project_status || '' %>" placeholder="e.g. Active (v0.9.1-alpha)">
         </div>
         <div class="form-group">
-          <label for="modal-keywords">Keywords</label>
-          <input type="text" id="modal-keywords" name="keywords" value="<%= project.keywords || '' %>" placeholder="e.g. Harmony · Clarity · Creativity">
+          <label for="modal-tags">Tags</label>
+          <div class="tag-input-wrapper" data-target="modal-tags-hidden">
+            <div class="tag-input-pills"></div>
+            <input type="text" class="tag-input-text" placeholder="Type and press Enter">
+          </div>
+          <input type="hidden" id="modal-tags-hidden" name="tags" value="<%= project.tags || '' %>">
         </div>
       </div>
       <div class="modal-actions">

@@ -1,6 +1,74 @@
 // Copyright (c) 2026 MiraNova Studios
 document.addEventListener('DOMContentLoaded', () => {
-  // Summary page: inline edit toggle
+  // === Tag Input Component ===
+  document.querySelectorAll('.tag-input-wrapper').forEach(wrapper => {
+    const pillsContainer = wrapper.querySelector('.tag-input-pills');
+    const textInput = wrapper.querySelector('.tag-input-text');
+    const hiddenId = wrapper.dataset.target;
+    const hiddenInput = document.getElementById(hiddenId);
+    let tags = hiddenInput.value ? hiddenInput.value.split(',').map(t => t.trim()).filter(Boolean) : [];
+
+    function syncHidden() {
+      hiddenInput.value = tags.join(', ');
+    }
+
+    function renderPills() {
+      pillsContainer.innerHTML = '';
+      tags.forEach((tag, i) => {
+        const pill = document.createElement('span');
+        pill.className = 'tag-input-pill';
+        pill.textContent = tag;
+        const remove = document.createElement('button');
+        remove.type = 'button';
+        remove.className = 'tag-input-remove';
+        remove.textContent = '\u00d7';
+        remove.addEventListener('click', () => {
+          tags.splice(i, 1);
+          renderPills();
+          syncHidden();
+        });
+        pill.appendChild(remove);
+        pillsContainer.appendChild(pill);
+      });
+    }
+
+    function addTag(value) {
+      const trimmed = value.trim();
+      if (trimmed && !tags.includes(trimmed)) {
+        tags.push(trimmed);
+        renderPills();
+        syncHidden();
+      }
+    }
+
+    textInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ',') {
+        e.preventDefault();
+        addTag(textInput.value);
+        textInput.value = '';
+      }
+      if (e.key === 'Backspace' && !textInput.value && tags.length > 0) {
+        tags.pop();
+        renderPills();
+        syncHidden();
+      }
+    });
+
+    // Also add tag on blur so partially typed tags aren't lost
+    textInput.addEventListener('blur', () => {
+      if (textInput.value.trim()) {
+        addTag(textInput.value);
+        textInput.value = '';
+      }
+    });
+
+    // Click on wrapper focuses the input
+    wrapper.addEventListener('click', () => textInput.focus());
+
+    renderPills();
+  });
+
+  // === Summary page: inline edit toggle ===
   document.querySelectorAll('.summary-card-edit-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const id = btn.dataset.projectId;
@@ -17,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Project show page: modal toggle
+  // === Project show page: modal toggle ===
   const cardBtn = document.getElementById('project-card-btn');
   const cardModal = document.getElementById('project-card-modal');
   const closeBtn = document.getElementById('close-card-modal');

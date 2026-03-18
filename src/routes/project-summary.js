@@ -34,17 +34,17 @@ router.post('/:id/card', (req, res) => {
     return res.redirect('/projects/summary');
   }
 
-  const { nickname, scope, purpose, project_status, keywords } = req.body;
+  const { nickname, scope, purpose, project_status, tags } = req.body;
   db.prepare(`
     UPDATE projects
-    SET nickname = ?, scope = ?, purpose = ?, project_status = ?, keywords = ?, updated_at = datetime('now')
+    SET nickname = ?, scope = ?, purpose = ?, project_status = ?, tags = ?, updated_at = datetime('now')
     WHERE id = ?
   `).run(
     (nickname || '').trim(),
     (scope || '').trim(),
     (purpose || '').trim(),
     (project_status || '').trim(),
-    (keywords || '').trim(),
+    (tags || '').trim(),
     project.id
   );
 

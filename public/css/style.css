@@ -501,14 +501,61 @@ th.sort-desc::after { content: ' ↓'; font-size: 0.75em; opacity: 0.8; }
 .summary-card-edit-btn { margin-left: auto; }
 .summary-card-field { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.35rem; line-height: 1.5; }
 .summary-card-field strong { color: var(--text-primary); }
-.summary-card-keywords { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
-.summary-card-keyword {
+/* === Tags === */
+.tag-list { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
+.tag-pill {
   font-size: 0.75rem;
   background: var(--bg-tertiary);
   border: 1px solid var(--border);
   border-radius: 999px;
   padding: 0.15rem 0.6rem;
   color: var(--text-secondary);
+}
+.tag-input-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.35rem 0.5rem;
+  cursor: text;
+  min-height: 2.25rem;
+}
+.tag-input-wrapper:focus-within { border-color: var(--accent); }
+.tag-input-pills { display: contents; }
+.tag-input-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.15rem 0.4rem;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+.tag-input-remove {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.9rem;
+  line-height: 1;
+  padding: 0 0.1rem;
+}
+.tag-input-remove:hover { color: var(--danger); }
+.tag-input-text {
+  flex: 1;
+  min-width: 80px;
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  outline: none;
+  padding: 0;
 }
 
 /* === Profile === */
