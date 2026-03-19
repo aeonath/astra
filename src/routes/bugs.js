@@ -84,6 +84,7 @@ router.get('/search', (req, res) => {
   const users    = db.prepare('SELECT id, display_name FROM users WHERE active = 1 ORDER BY display_name').all();
 
   let results = [];
+  let projectResults = [];
   if (hasAnyFilter) {
     const conditions = ['1=1'];
     const params = [];
@@ -130,12 +131,29 @@ router.get('/search', (req, res) => {
       ORDER BY b.updated_at DESC
       LIMIT 200
     `).all(...params);
+
+    // Search project card data when there's a text query and no advanced filters
+    if (q && !hasAdvancedFilter) {
+      const pq = '%' + q + '%';
+      projectResults = db.prepare(`
+        SELECT p.*, c.name as category_name
+        FROM projects p
+        LEFT JOIN categories c ON p.category_id = c.id
+        WHERE p.archived = 0 AND (
+          p.name LIKE ? OR p.nickname LIKE ? OR p.scope LIKE ?
+          OR p.purpose LIKE ? OR p.project_status LIKE ? OR p.tags LIKE ?
+          OR p.description LIKE ?
+        )
+        ORDER BY p.name
+        LIMIT 20
+      `).all(pq, pq, pq, pq, pq, pq, pq);
+    }
   }
 
   res.render('bugs/search', {
     title: 'Search',
     q, typeFilter, statusFilter, priorityFilter, projectSlug, assigneeId,
-    hasAnyFilter, hasAdvancedFilter, advOpen, results, projects, users,
+    hasAnyFilter, hasAdvancedFilter, advOpen, results, projectResults, projects, users,
   });
 });
 

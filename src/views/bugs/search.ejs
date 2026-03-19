@@ -71,9 +71,34 @@
   </form>
 </div>
 
-<% if (results.length === 0 && hasAnyFilter) { %>
+<% if (results.length === 0 && projectResults.length === 0 && hasAnyFilter) { %>
   <p class="text-muted">No results for <% if (q) { %>"<strong><%= q %></strong>"<% } %><% if (hasAdvancedFilter) { %> with the selected filters<% } %>.</p>
 <% } else { %>
+
+<% if (projectResults.length > 0) { %>
+  <h2 class="category-heading">Projects</h2>
+  <div class="search-project-results">
+    <% projectResults.forEach(p => { %>
+      <a href="/projects/<%= p.slug %>" class="search-project-card">
+        <div class="search-project-card-top">
+          <strong><%= p.name %></strong>
+          <% if (p.nickname) { %><span class="text-muted"> "<%= p.nickname %>"</span><% } %>
+          <% if (p.category_name) { %><span class="badge badge-status-open" style="margin-left:0.5rem;"><%= p.category_name %></span><% } %>
+        </div>
+        <% if (p.scope) { %><div class="search-project-card-field"><%= p.scope %></div><% } %>
+        <% if (p.purpose) { %><div class="search-project-card-field"><%= p.purpose.length > 150 ? p.purpose.substring(0, 150) + '...' : p.purpose %></div><% } %>
+        <% if (p.tags) { %>
+          <div class="tag-list" style="margin-top:0.35rem;">
+            <% p.tags.split(',').map(t => t.trim()).filter(Boolean).forEach(tag => { %>
+              <span class="tag-pill"><%= tag %></span>
+            <% }) %>
+          </div>
+        <% } %>
+      </a>
+    <% }) %>
+  </div>
+<% } %>
+
   <%
     const filterParts = [];
     if (typeFilter)     filterParts.push(typeFilter === 'feature' ? 'Feature Request' : typeFilter === 'todo' ? 'Todo' : 'Bug');
@@ -82,15 +107,18 @@
     if (projectSlug)    { const p = projects.find(p => p.slug === projectSlug); if (p) filterParts.push(p.name); }
     if (assigneeId === 'unassigned') filterParts.push('Unassigned');
     else if (assigneeId) { const u = users.find(u => String(u.id) === assigneeId); if (u) filterParts.push(u.display_name); }
+    const totalCount = results.length + projectResults.length;
   %>
   <div class="search-summary">
-    <span><strong><%= results.length %></strong> result<%= results.length !== 1 ? 's' : '' %><% if (q) { %> for "<%= q %>"<% } %></span>
+    <span><strong><%= totalCount %></strong> result<%= totalCount !== 1 ? 's' : '' %><% if (q) { %> for "<%= q %>"<% } %></span>
     <% if (filterParts.length) { %>
       <span class="search-filter-tags">
         <% filterParts.forEach(f => { %><span class="search-filter-tag"><%= f %></span><% }) %>
       </span>
     <% } %>
   </div>
+
+<% if (results.length > 0) { %>
 
   <table class="table">
     <thead>
@@ -121,6 +149,7 @@
       <% }) %>
     </tbody>
   </table>
+<% } %>
 <% } %>
 
 <script src="/js/search-toggle.js"></script>
