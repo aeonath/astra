@@ -60,6 +60,17 @@ Copy `.env.example` to `.env` and adjust:
 | `SESSION_DB_DIR` | same dir as `DB_PATH` | Directory for session database |
 | `NODE_ENV` | `development` | Environment mode |
 
+### Timezone
+
+All timestamps use the **server's system timezone**. To set the timezone for your deployment, configure the `TZ` environment variable before starting the server:
+
+```bash
+# In .env or your shell environment
+TZ=America/New_York
+```
+
+If `TZ` is not set, the server's OS timezone is used. All dates and times displayed in Astra will reflect this timezone.
+
 ## Scripts
 
 | Command | Description |
