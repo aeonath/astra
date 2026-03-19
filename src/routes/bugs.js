@@ -8,7 +8,7 @@ const router = express.Router();
 
 // Touch project updated_at when any bug/comment/file changes
 function touchProject(projectId) {
-  db.prepare("UPDATE projects SET updated_at = datetime('now') WHERE id = ?").run(projectId);
+  db.prepare("UPDATE projects SET updated_at = datetime('now', 'localtime') WHERE id = ?").run(projectId);
 }
 
 const upload = multer({ storage: multer.memoryStorage() });
@@ -231,7 +231,7 @@ router.post('/:id', (req, res) => {
   const newProjectId = project_id ? parseInt(project_id, 10) : bug.project_id;
 
   db.prepare(`
-    UPDATE bugs SET title = ?, description = ?, status = ?, priority = ?, assignee_id = ?, project_id = ?, updated_at = datetime('now')
+    UPDATE bugs SET title = ?, description = ?, status = ?, priority = ?, assignee_id = ?, project_id = ?, updated_at = datetime('now', 'localtime')
     WHERE id = ?
   `).run(
     title || bug.title,
@@ -274,7 +274,7 @@ router.post('/:id/comment/:commentId/edit', (req, res) => {
   }
 
   db.prepare('UPDATE comments SET content = ? WHERE id = ?').run(content.trim(), comment.id);
-  db.prepare("UPDATE bugs SET updated_at = datetime('now') WHERE id = ?").run(req.params.id);
+  db.prepare("UPDATE bugs SET updated_at = datetime('now', 'localtime') WHERE id = ?").run(req.params.id);
   const editedBug = db.prepare('SELECT project_id FROM bugs WHERE id = ?').get(req.params.id);
   if (editedBug) touchProject(editedBug.project_id);
 
@@ -323,7 +323,7 @@ router.post('/:id/comment', (req, res) => {
   );
 
   // Also bump the bug's and project's updated_at
-  db.prepare("UPDATE bugs SET updated_at = datetime('now') WHERE id = ?").run(req.params.id);
+  db.prepare("UPDATE bugs SET updated_at = datetime('now', 'localtime') WHERE id = ?").run(req.params.id);
   touchProject(bug.project_id);
 
   req.session.flash = { type: 'success', message: 'Comment added.' };

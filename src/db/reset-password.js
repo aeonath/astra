@@ -44,7 +44,7 @@ async function resetPassword() {
   }
 
   const hash = await bcrypt.hash(newPassword, 12);
-  db.prepare(`UPDATE users SET password_hash = ?, updated_at = datetime('now') WHERE id = ?`).run(hash, user.id);
+  db.prepare(`UPDATE users SET password_hash = ?, updated_at = datetime('now', 'localtime') WHERE id = ?`).run(hash, user.id);
 
   db.close();
   console.log(`Password reset for user "${username}".`);

@@ -52,7 +52,7 @@ router.post('/projects', (req, res) => {
 
     const updatedName = name || project.name;
     const updatedSlug = updatedName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-    db.prepare(`UPDATE projects SET name = ?, slug = ?, description = ?, active = ?, public = ?, show_on_summary = ?, default_assignee_id = ?, category_id = ?, homepage_url = ?, github_url = ?, github_private = ?, updated_at = datetime('now') WHERE id = ?`)
+    db.prepare(`UPDATE projects SET name = ?, slug = ?, description = ?, active = ?, public = ?, show_on_summary = ?, default_assignee_id = ?, category_id = ?, homepage_url = ?, github_url = ?, github_private = ?, updated_at = datetime('now', 'localtime') WHERE id = ?`)
       .run(updatedName, updatedSlug, description || null, projectActive, isPublic, showOnSummary, default_assignee_id || null, category_id || null, homepage_url || null, github_url || null, githubPrivate, project.id);
     req.session.flash = { type: 'success', message: `Project "${project.name}" updated.` };
     return res.redirect('/admin/projects');
@@ -82,7 +82,7 @@ router.post('/projects', (req, res) => {
 router.post('/projects/:id/toggle', (req, res) => {
   const project = db.prepare('SELECT * FROM projects WHERE id = ?').get(req.params.id);
   if (project) {
-    db.prepare(`UPDATE projects SET archived = ?, updated_at = datetime('now') WHERE id = ?`).run(project.archived ? 0 : 1, project.id);
+    db.prepare(`UPDATE projects SET archived = ?, updated_at = datetime('now', 'localtime') WHERE id = ?`).run(project.archived ? 0 : 1, project.id);
     req.session.flash = { type: 'success', message: `Project "${project.name}" ${project.archived ? 'restored' : 'archived'}.` };
   }
   res.redirect('/admin/projects');
@@ -126,12 +126,12 @@ router.post('/users', async (req, res) => {
 
     const canManageSubs = req.body.can_manage_submissions === '1' ? 1 : 0;
     const canManageProjs = req.body.can_manage_projects === '1' ? 1 : 0;
-    db.prepare(`UPDATE users SET display_name = ?, email = ?, role = ?, can_manage_submissions = ?, can_manage_projects = ?, updated_at = datetime('now') WHERE id = ?`)
+    db.prepare(`UPDATE users SET display_name = ?, email = ?, role = ?, can_manage_submissions = ?, can_manage_projects = ?, updated_at = datetime('now', 'localtime') WHERE id = ?`)
       .run(display_name, email, role === 'admin' ? 'admin' : 'user', canManageSubs, canManageProjs, user.id);
 
     if (password) {
       const hash = await bcrypt.hash(password, 12);
-      db.prepare(`UPDATE users SET password_hash = ?, updated_at = datetime('now') WHERE id = ?`).run(hash, user.id);
+      db.prepare(`UPDATE users SET password_hash = ?, updated_at = datetime('now', 'localtime') WHERE id = ?`).run(hash, user.id);
     }
 
     req.session.flash = { type: 'success', message: `User "${user.username}" updated.` };
@@ -208,7 +208,7 @@ router.post('/users/:id/reset-password', async (req, res) => {
   }
 
   const hash = await bcrypt.hash(password, 12);
-  db.prepare(`UPDATE users SET password_hash = ?, updated_at = datetime('now') WHERE id = ?`).run(hash, user.id);
+  db.prepare(`UPDATE users SET password_hash = ?, updated_at = datetime('now', 'localtime') WHERE id = ?`).run(hash, user.id);
 
   // Destroy the user's sessions to force them to log in with the new password
   const sessionDbDir = process.env.SESSION_DB_DIR || path.dirname(process.env.DB_PATH);
@@ -391,7 +391,7 @@ router.post('/submissions/:id/import', (req, res) => {
 
   db.prepare('INSERT INTO comments (bug_id, user_id, content) VALUES (?, ?, ?)').run(bugId, req.session.userId, commentLines.join('\n'));
   db.prepare('UPDATE public_submissions SET imported_bug_id = ?, status = ? WHERE id = ?').run(bugId, 'reviewed', sub.id);
-  db.prepare("UPDATE projects SET updated_at = datetime('now') WHERE id = ?").run(sub.project_id);
+  db.prepare("UPDATE projects SET updated_at = datetime('now', 'localtime') WHERE id = ?").run(sub.project_id);
 
   const prefix = sub.type === 'bug' ? 'BUG' : 'REQ';
   req.session.flash = { type: 'success', message: `${prefix}-${String(displayNumber).padStart(3, '0')} created from submission.` };

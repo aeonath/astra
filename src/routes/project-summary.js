@@ -52,7 +52,7 @@ router.post('/:id/card', (req, res) => {
   const { nickname, scope, purpose, project_status, tags } = req.body;
   db.prepare(`
     UPDATE projects
-    SET nickname = ?, scope = ?, purpose = ?, project_status = ?, tags = ?, updated_at = datetime('now')
+    SET nickname = ?, scope = ?, purpose = ?, project_status = ?, tags = ?, updated_at = datetime('now', 'localtime')
     WHERE id = ?
   `).run(
     (nickname || '').trim(),
@@ -79,7 +79,7 @@ router.post('/:id/summary-notes', (req, res) => {
     return res.status(404).json({ error: 'Project not found.' });
   }
   const summaryNotes = (req.body.summary_notes || '').trim();
-  db.prepare("UPDATE projects SET summary_notes = ?, updated_at = datetime('now') WHERE id = ?").run(summaryNotes, project.id);
+  db.prepare("UPDATE projects SET summary_notes = ?, updated_at = datetime('now', 'localtime') WHERE id = ?").run(summaryNotes, project.id);
   res.json({ success: true });
 });
 

@@ -55,7 +55,7 @@ router.post('/', (req, res) => {
 
     const updatedName = name || project.name;
     const updatedSlug = updatedName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-    db.prepare(`UPDATE projects SET name = ?, slug = ?, description = ?, active = ?, public = ?, show_on_summary = ?, default_assignee_id = ?, category_id = ?, homepage_url = ?, github_url = ?, github_private = ?, updated_at = datetime('now') WHERE id = ?`)
+    db.prepare(`UPDATE projects SET name = ?, slug = ?, description = ?, active = ?, public = ?, show_on_summary = ?, default_assignee_id = ?, category_id = ?, homepage_url = ?, github_url = ?, github_private = ?, updated_at = datetime('now', 'localtime') WHERE id = ?`)
       .run(updatedName, updatedSlug, description || null, projectActive, isPublic, showOnSummary, default_assignee_id || null, category_id || null, homepage_url || null, github_url || null, githubPrivate, project.id);
     req.session.flash = { type: 'success', message: `Project "${project.name}" updated.` };
     return res.redirect('/manage/projects');
@@ -86,7 +86,7 @@ router.post('/', (req, res) => {
 router.post('/:id/toggle', (req, res) => {
   const project = db.prepare('SELECT * FROM projects WHERE id = ?').get(req.params.id);
   if (project) {
-    db.prepare(`UPDATE projects SET archived = ?, updated_at = datetime('now') WHERE id = ?`).run(project.archived ? 0 : 1, project.id);
+    db.prepare(`UPDATE projects SET archived = ?, updated_at = datetime('now', 'localtime') WHERE id = ?`).run(project.archived ? 0 : 1, project.id);
     req.session.flash = { type: 'success', message: `Project "${project.name}" ${project.archived ? 'restored' : 'archived'}.` };
   }
   res.redirect('/manage/projects');
