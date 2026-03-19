@@ -910,7 +910,10 @@ div.project-summary-card { cursor: default; }
   .public-header + main.container { padding-top: 0; }
   .public-header-left { flex-wrap: wrap; gap: 0.5rem; }
   .page-header { flex-direction: column; gap: 0.75rem; }
-  .btn-group { flex-wrap: wrap; }
+  .btn-group { flex-wrap: wrap; width: 100%; }
+  .btn-group .btn { flex: 1 1 auto; text-align: center; }
+  .btn-group .col-toggle-wrapper { flex: 0 0 auto; }
+  .btn-group .col-toggle-wrapper .btn { flex: 0 0 auto; }
 
   /* Mobile card layout for bug/feature/todo tables */
   #bugs-table thead,
