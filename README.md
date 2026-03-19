@@ -71,6 +71,37 @@ Copy `.env.example` to `.env` and adjust:
 | `npm run seed` | Seed default admin user and sample project |
 | `npm run reset-password -- <user> <pass>` | Reset a user's password via CLI |
 
+## Features
+
+### Projects Summary
+
+The Projects Summary page (`/projects/summary`) provides an overview of all non-archived projects with editable project cards. Each card includes:
+
+- **Nickname, Scope, Purpose** — descriptive project metadata
+- **Status** — Planning, In Development, Maintenance, or Concept (color-coded badges)
+- **Tags** — GitHub-style tag input with pill display
+- **Project Notes** — auto-saving notes panel on each card
+
+Cards can be **dragged to reorder** by priority, and the overview table below updates to match.
+
+### Project Visibility
+
+| Flag | Controls |
+|---|---|
+| **Active** | Shown on the Projects Page (logged-in users) |
+| **Publicly Visible** | Shown on the external landing page |
+| **Archived** | Hidden everywhere except Manage Projects |
+
+All non-archived projects appear on the Projects Summary regardless of Active/Public flags.
+
+### Project Cards on Detail Pages
+
+Each project detail page includes a **Project Card** button that opens a modal for editing card metadata. The detail page also has **Developer Notes** (separate from the summary's Project Notes).
+
+### Search
+
+Search covers bugs, features, todos, and project card data (name, nickname, scope, purpose, status, tags).
+
 ## Database
 
 The database must live **outside** the application source tree in production. `DB_PATH` must be set to an absolute path. The app will refuse to start if the database is missing or has pending migrations.
