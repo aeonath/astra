@@ -35,8 +35,8 @@ async function seed() {
   if (!existing) {
     const hash = await bcrypt.hash('admin', 12);
     db.prepare(`
-      INSERT INTO users (username, display_name, email, password_hash, role)
-      VALUES (?, ?, ?, ?, ?)
+      INSERT INTO users (username, display_name, email, password_hash, role, created_at, updated_at)
+      VALUES (?, ?, ?, ?, ?, datetime('now', 'localtime'), datetime('now', 'localtime'))
     `).run('admin', 'Administrator', 'admin@astra.local', hash, 'admin');
     console.log('Created default admin user (username: admin, password: admin)');
   } else {
@@ -47,8 +47,8 @@ async function seed() {
   const existingProject = db.prepare('SELECT id FROM projects WHERE slug = ?').get('astra');
   if (!existingProject) {
     db.prepare(`
-      INSERT INTO projects (name, slug, description, public)
-      VALUES (?, ?, ?, 1)
+      INSERT INTO projects (name, slug, description, public, created_at, updated_at)
+      VALUES (?, ?, ?, 1, datetime('now', 'localtime'), datetime('now', 'localtime'))
     `).run('Astra', 'astra', 'Bug tracker for the Astra project itself');
     console.log('Created sample project: Astra');
   }

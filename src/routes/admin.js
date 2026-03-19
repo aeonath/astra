@@ -67,7 +67,7 @@ router.post('/projects', (req, res) => {
   }
 
   try {
-    db.prepare('INSERT INTO projects (name, slug, description, active, public, show_on_summary, default_assignee_id, category_id, homepage_url, github_url, github_private) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)').run(name, slug, description || null, projectActive, isPublic, showOnSummary, default_assignee_id || null, category_id || null, homepage_url || null, github_url || null, githubPrivate);
+    db.prepare("INSERT INTO projects (name, slug, description, active, public, show_on_summary, default_assignee_id, category_id, homepage_url, github_url, github_private, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now', 'localtime'), datetime('now', 'localtime'))").run(name, slug, description || null, projectActive, isPublic, showOnSummary, default_assignee_id || null, category_id || null, homepage_url || null, github_url || null, githubPrivate);
     req.session.flash = { type: 'success', message: `Project "${name}" created.` };
   } catch (err) {
     if (err.message.includes('UNIQUE')) {
@@ -148,7 +148,7 @@ router.post('/users', async (req, res) => {
     const hash = await bcrypt.hash(password, 12);
     const canManageSubs = req.body.can_manage_submissions === '1' ? 1 : 0;
     const canManageProjs = req.body.can_manage_projects === '1' ? 1 : 0;
-    db.prepare('INSERT INTO users (username, display_name, email, password_hash, role, can_manage_submissions, can_manage_projects) VALUES (?, ?, ?, ?, ?, ?, ?)')
+    db.prepare("INSERT INTO users (username, display_name, email, password_hash, role, can_manage_submissions, can_manage_projects, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now', 'localtime'), datetime('now', 'localtime'))")
       .run(username, display_name, email, hash, role === 'admin' ? 'admin' : 'user', canManageSubs, canManageProjs);
     req.session.flash = { type: 'success', message: `User "${username}" created.` };
   } catch (err) {
@@ -247,7 +247,7 @@ router.post('/categories', (req, res) => {
 
   try {
     const maxOrder = db.prepare('SELECT MAX(sort_order) as max FROM categories').get().max || 0;
-    db.prepare('INSERT INTO categories (name, sort_order) VALUES (?, ?)').run(name.trim(), maxOrder + 1);
+    db.prepare("INSERT INTO categories (name, sort_order, created_at) VALUES (?, ?, datetime('now', 'localtime'))").run(name.trim(), maxOrder + 1);
     req.session.flash = { type: 'success', message: `Category "${name.trim()}" created.` };
   } catch (err) {
     if (err.message.includes('UNIQUE')) {
@@ -374,8 +374,8 @@ router.post('/submissions/:id/import', (req, res) => {
   const displayNumber = (max.max || 0) + 1;
 
   const result = db.prepare(`
-    INSERT INTO bugs (project_id, reporter_id, assignee_id, title, description, priority, type, display_number)
-    VALUES (?, ?, ?, ?, ?, 'medium', ?, ?)
+    INSERT INTO bugs (project_id, reporter_id, assignee_id, title, description, priority, type, display_number, created_at, updated_at)
+    VALUES (?, ?, ?, ?, ?, 'medium', ?, ?, datetime('now', 'localtime'), datetime('now', 'localtime'))
   `).run(sub.project_id, req.session.userId, sub.default_assignee_id || null, sub.title, sub.description || null, sub.type, displayNumber);
 
   const bugId = result.lastInsertRowid;
@@ -389,7 +389,7 @@ router.post('/submissions/:id/import', (req, res) => {
     commentLines.push(sub.description);
   }
 
-  db.prepare('INSERT INTO comments (bug_id, user_id, content) VALUES (?, ?, ?)').run(bugId, req.session.userId, commentLines.join('\n'));
+  db.prepare("INSERT INTO comments (bug_id, user_id, content, created_at) VALUES (?, ?, ?, datetime('now', 'localtime'))").run(bugId, req.session.userId, commentLines.join('\n'));
   db.prepare('UPDATE public_submissions SET imported_bug_id = ?, status = ? WHERE id = ?').run(bugId, 'reviewed', sub.id);
   db.prepare("UPDATE projects SET updated_at = datetime('now', 'localtime') WHERE id = ?").run(sub.project_id);
 

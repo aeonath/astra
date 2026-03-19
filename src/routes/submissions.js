@@ -48,8 +48,8 @@ router.post('/:id/import', (req, res) => {
   const displayNumber = (max.max || 0) + 1;
 
   const result = db.prepare(`
-    INSERT INTO bugs (project_id, reporter_id, assignee_id, title, description, priority, type, display_number)
-    VALUES (?, ?, ?, ?, ?, 'medium', ?, ?)
+    INSERT INTO bugs (project_id, reporter_id, assignee_id, title, description, priority, type, display_number, created_at, updated_at)
+    VALUES (?, ?, ?, ?, ?, 'medium', ?, ?, datetime('now', 'localtime'), datetime('now', 'localtime'))
   `).run(
     sub.project_id,
     req.session.userId,

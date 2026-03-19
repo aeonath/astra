@@ -52,8 +52,8 @@ router.post('/', (req, res) => {
   }
 
   const result = db.prepare(`
-    INSERT INTO bugs (project_id, reporter_id, assignee_id, title, description, priority, type, display_number)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO bugs (project_id, reporter_id, assignee_id, title, description, priority, type, display_number, created_at, updated_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now', 'localtime'), datetime('now', 'localtime'))
   `).run(
     project_id,
     req.session.userId,
@@ -244,7 +244,7 @@ router.post('/:id', (req, res) => {
   );
 
   if (pending_comment && pending_comment.trim()) {
-    db.prepare('INSERT INTO comments (bug_id, user_id, content, created_at) VALUES (?, ?, ?, datetime(\'now\'))').run(bug.id, req.session.userId, pending_comment.trim());
+    db.prepare("INSERT INTO comments (bug_id, user_id, content, created_at) VALUES (?, ?, ?, datetime('now', 'localtime'))").run(bug.id, req.session.userId, pending_comment.trim());
   }
 
   touchProject(newProjectId);
@@ -316,7 +316,7 @@ router.post('/:id/comment', (req, res) => {
     return res.redirect(`/bugs/${req.params.id}`);
   }
 
-  db.prepare('INSERT INTO comments (bug_id, user_id, content) VALUES (?, ?, ?)').run(
+  db.prepare("INSERT INTO comments (bug_id, user_id, content, created_at) VALUES (?, ?, ?, datetime('now', 'localtime'))").run(
     req.params.id,
     req.session.userId,
     content.trim()

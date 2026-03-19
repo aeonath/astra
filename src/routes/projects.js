@@ -83,7 +83,7 @@ router.post('/submit', async (req, res) => {
   }
 
   const projectRow = db.prepare('SELECT name FROM projects WHERE id = ?').get(project_id);
-  db.prepare('INSERT INTO public_submissions (type, project_id, name, email, title, description) VALUES (?, ?, ?, ?, ?, ?)').run(type, project_id, name.trim(), email ? email.trim() : null, title.trim(), description ? description.trim() : null);
+  db.prepare("INSERT INTO public_submissions (type, project_id, name, email, title, description, created_at) VALUES (?, ?, ?, ?, ?, ?, datetime('now', 'localtime'))").run(type, project_id, name.trim(), email ? email.trim() : null, title.trim(), description ? description.trim() : null);
 
   notifications.broadcast('new-submission', {
     type,
