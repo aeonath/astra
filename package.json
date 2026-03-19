@@ -1,6 +1,6 @@
 {
   "name": "astra",
-  "version": "1.4.2",
+  "version": "1.5.1",
   "description": "Astra - Bug tracking database for all projects",
   "main": "src/server.js",
   "scripts": {
