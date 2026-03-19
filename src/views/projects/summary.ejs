@@ -44,6 +44,7 @@
                 <% if (!project.scope && !project.purpose && !project.project_status && !project.tags) { %>
                   <p class="text-muted">No project card details yet. Click Edit to add details.</p>
                 <% } %>
+                <div class="summary-card-updated">Last updated: <%= project.updated_at ? project.updated_at.split('T')[0] : '—' %></div>
               </div>
             </div>
             <div class="summary-card-form" id="card-form-<%= project.id %>" style="display:none;">

@@ -614,6 +614,7 @@ th.sort-desc::after { content: ' ↓'; font-size: 0.75em; opacity: 0.8; }
 .summary-notes-textarea:focus { border-color: var(--accent); outline: none; }
 .summary-card-field { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.35rem; line-height: 1.5; }
 .summary-card-field strong { color: var(--text-primary); }
+.summary-card-updated { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem; }
 /* === Tags === */
 .tag-list { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
 .tag-pill {
