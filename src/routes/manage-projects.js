@@ -70,7 +70,7 @@ router.post('/', (req, res) => {
   }
 
   try {
-    db.prepare('INSERT INTO projects (name, slug, description, active, public, show_on_summary, default_assignee_id, category_id, homepage_url, github_url, github_private, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now', 'localtime'), datetime('now', 'localtime'))').run(name, slug, description || null, projectActive, isPublic, showOnSummary, default_assignee_id || null, category_id || null, homepage_url || null, github_url || null, githubPrivate);
+    db.prepare("INSERT INTO projects (name, slug, description, active, public, show_on_summary, default_assignee_id, category_id, homepage_url, github_url, github_private, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now', 'localtime'), datetime('now', 'localtime'))").run(name, slug, description || null, projectActive, isPublic, showOnSummary, default_assignee_id || null, category_id || null, homepage_url || null, github_url || null, githubPrivate);
     req.session.flash = { type: 'success', message: `Project "${name}" created.` };
   } catch (err) {
     if (err.message.includes('UNIQUE')) {
