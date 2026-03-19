@@ -56,7 +56,6 @@
     <div class="mobile-nav-links">
       <% if (!isAdmin) { %><a href="/projects" class="mobile-nav-item<%= currentPath === '/projects' ? ' active' : '' %>">Projects</a><% } %>
       <% if (isAdmin) { %><a href="/admin" class="mobile-nav-item<%= currentPath.startsWith('/admin') ? ' active' : '' %>">Admin</a><% } %>
-      <a href="/projects/summary" class="mobile-nav-item">Projects Summary</a>
     </div>
     <div id="mobile-project-tabs" class="mobile-nav-tabs"></div>
     <form action="/bugs/search" method="GET" class="mobile-nav-search">
