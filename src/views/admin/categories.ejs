@@ -23,6 +23,7 @@
       <th>Order</th>
       <th>Name</th>
       <th>Projects</th>
+      <th>Summary</th>
       <th>Actions</th>
     </tr>
   </thead>
@@ -32,6 +33,11 @@
         <td><%= cat.sort_order %></td>
         <td><%= cat.name %></td>
         <td><%= cat.project_count %></td>
+        <td>
+          <form action="/admin/categories/<%= cat.id %>/toggle-summary" method="POST" class="inline-form">
+            <button type="submit" class="btn btn-sm <%= cat.show_on_summary ? 'btn-primary' : 'btn-ghost' %>"><%= cat.show_on_summary ? 'Shown' : 'Hidden' %></button>
+          </form>
+        </td>
         <td class="actions">
           <% if (i > 0) { %>
             <form action="/admin/categories/<%= cat.id %>/move-up" method="POST" class="inline-form">

@@ -34,6 +34,7 @@ router.post('/projects', (req, res) => {
   }
   const projectActive = req.body.project_active === 'on' ? 1 : 0;
   const isPublic = req.body.public === 'on' ? 1 : 0;
+  const showOnSummary = req.body.show_on_summary === 'on' ? 1 : 0;
   const githubPrivate = req.body.github_private === 'on' ? 1 : 0;
 
   // Edit existing project
@@ -51,8 +52,8 @@ router.post('/projects', (req, res) => {
 
     const updatedName = name || project.name;
     const updatedSlug = updatedName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-    db.prepare(`UPDATE projects SET name = ?, slug = ?, description = ?, active = ?, public = ?, default_assignee_id = ?, category_id = ?, homepage_url = ?, github_url = ?, github_private = ?, updated_at = datetime('now') WHERE id = ?`)
-      .run(updatedName, updatedSlug, description || null, projectActive, isPublic, default_assignee_id || null, category_id || null, homepage_url || null, github_url || null, githubPrivate, project.id);
+    db.prepare(`UPDATE projects SET name = ?, slug = ?, description = ?, active = ?, public = ?, show_on_summary = ?, default_assignee_id = ?, category_id = ?, homepage_url = ?, github_url = ?, github_private = ?, updated_at = datetime('now') WHERE id = ?`)
+      .run(updatedName, updatedSlug, description || null, projectActive, isPublic, showOnSummary, default_assignee_id || null, category_id || null, homepage_url || null, github_url || null, githubPrivate, project.id);
     req.session.flash = { type: 'success', message: `Project "${project.name}" updated.` };
     return res.redirect('/admin/projects');
   }
@@ -66,7 +67,7 @@ router.post('/projects', (req, res) => {
   }
 
   try {
-    db.prepare('INSERT INTO projects (name, slug, description, active, public, default_assignee_id, category_id, homepage_url, github_url, github_private) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)').run(name, slug, description || null, projectActive, isPublic, default_assignee_id || null, category_id || null, homepage_url || null, github_url || null, githubPrivate);
+    db.prepare('INSERT INTO projects (name, slug, description, active, public, show_on_summary, default_assignee_id, category_id, homepage_url, github_url, github_private) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)').run(name, slug, description || null, projectActive, isPublic, showOnSummary, default_assignee_id || null, category_id || null, homepage_url || null, github_url || null, githubPrivate);
     req.session.flash = { type: 'success', message: `Project "${name}" created.` };
   } catch (err) {
     if (err.message.includes('UNIQUE')) {
@@ -278,6 +279,15 @@ router.post('/categories/:id/move-down', (req, res) => {
       db.prepare('UPDATE categories SET sort_order = ? WHERE id = ?').run(next.sort_order, current.id);
       db.prepare('UPDATE categories SET sort_order = ? WHERE id = ?').run(current.sort_order, next.id);
     }
+  }
+  res.redirect('/admin/categories');
+});
+
+router.post('/categories/:id/toggle-summary', (req, res) => {
+  const category = db.prepare('SELECT * FROM categories WHERE id = ?').get(req.params.id);
+  if (category) {
+    db.prepare('UPDATE categories SET show_on_summary = ? WHERE id = ?').run(category.show_on_summary ? 0 : 1, category.id);
+    req.session.flash = { type: 'success', message: `Category "${category.name}" ${category.show_on_summary ? 'hidden from' : 'shown on'} summary.` };
   }
   res.redirect('/admin/categories');
 });

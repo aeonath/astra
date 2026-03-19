@@ -63,6 +63,11 @@
         <input type="checkbox" id="public" name="public" checked> <span class="checkbox-text">Publicly visible</span>
       </label>
     </div>
+    <div class="form-group">
+      <label class="checkbox-label">
+        <input type="checkbox" id="show_on_summary" name="show_on_summary" checked> <span class="checkbox-text">Show on summary</span>
+      </label>
+    </div>
     <div class="form-actions" id="active-actions">
       <button type="submit" class="btn btn-primary" id="form-submit">Create Project</button>
       <button type="button" class="btn btn-ghost" id="cancel-edit">Cancel</button>
@@ -101,6 +106,7 @@
           data-github-url="<%= project.github_url || '' %>"
           data-public="<%= project.public %>"
           data-active="<%= project.active %>"
+          data-show-on-summary="<%= project.show_on_summary %>"
           data-archived="<%= project.archived %>">
         <td><%= project.name %></td>
         <td><%= project.category_name || '—' %></td>

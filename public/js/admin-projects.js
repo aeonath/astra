@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var addBtn = document.getElementById('add-project-btn');
   var projectActiveCb = document.getElementById('project_active');
   var publicCb = document.getElementById('public');
+  var showOnSummaryCb = document.getElementById('show_on_summary');
   var archiveBtn = document.getElementById('archive-btn');
   var deleteBtn = document.getElementById('delete-project-btn');
   var deleteArchivedBtn = document.getElementById('delete-archived-btn');
@@ -30,6 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     projectActiveCb.disabled = disabled;
     publicCb.disabled = disabled;
+    showOnSummaryCb.disabled = disabled;
   }
 
   function showForm() {
@@ -57,6 +59,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('github_url').value = '';
     projectActiveCb.checked = true;
     publicCb.checked = true;
+    showOnSummaryCb.checked = true;
     setFieldsDisabled(false);
     projectForm.style.display = '';
     activeActions.style.display = '';
@@ -85,6 +88,7 @@ document.addEventListener('DOMContentLoaded', function () {
       var categoryId = row.dataset.categoryId;
       var defaultAssigneeId = row.dataset.defaultAssigneeId;
       var isPublic = row.dataset.public;
+      var isShowOnSummary = row.dataset.showOnSummary;
       var homepageUrl = row.dataset.homepageUrl;
       var githubUrl = row.dataset.githubUrl;
       var isActive = row.dataset.active === '1';
@@ -104,6 +108,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('github_url').value = githubUrl.replace('https://github.com/', '');
         projectActiveCb.checked = isActive;
         publicCb.checked = isPublic === '1';
+        showOnSummaryCb.checked = isShowOnSummary === '1';
         setFieldsDisabled(false);
         projectForm.style.display = '';
         activeActions.style.display = '';
