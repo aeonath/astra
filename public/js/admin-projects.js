@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('form-submit').textContent = 'Save Changes';
         document.getElementById('edit-id').value = editProjectId;
         document.getElementById('name').value = editProjectName;
-        document.getElementById('name').readOnly = true;
+        document.getElementById('name').readOnly = false;
         document.getElementById('description').value = description;
         document.getElementById('category_id').value = categoryId;
         document.getElementById('default_assignee_id').value = defaultAssigneeId;

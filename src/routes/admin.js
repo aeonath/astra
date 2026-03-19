@@ -49,8 +49,10 @@ router.post('/projects', (req, res) => {
       return res.redirect('/admin/projects');
     }
 
-    db.prepare(`UPDATE projects SET description = ?, active = ?, public = ?, default_assignee_id = ?, category_id = ?, homepage_url = ?, github_url = ?, github_private = ?, updated_at = datetime('now') WHERE id = ?`)
-      .run(description || null, projectActive, isPublic, default_assignee_id || null, category_id || null, homepage_url || null, github_url || null, githubPrivate, project.id);
+    const updatedName = name || project.name;
+    const updatedSlug = updatedName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    db.prepare(`UPDATE projects SET name = ?, slug = ?, description = ?, active = ?, public = ?, default_assignee_id = ?, category_id = ?, homepage_url = ?, github_url = ?, github_private = ?, updated_at = datetime('now') WHERE id = ?`)
+      .run(updatedName, updatedSlug, description || null, projectActive, isPublic, default_assignee_id || null, category_id || null, homepage_url || null, github_url || null, githubPrivate, project.id);
     req.session.flash = { type: 'success', message: `Project "${project.name}" updated.` };
     return res.redirect('/admin/projects');
   }
