@@ -97,6 +97,53 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // === Drag-and-drop reorder ===
+  const cardsContainer = document.querySelector('.summary-cards');
+  if (cardsContainer) {
+    let dragCard = null;
+
+    cardsContainer.addEventListener('dragstart', (e) => {
+      const card = e.target.closest('.summary-card');
+      if (!card) return;
+      dragCard = card;
+      card.classList.add('summary-card-dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+
+    cardsContainer.addEventListener('dragend', (e) => {
+      if (dragCard) {
+        dragCard.classList.remove('summary-card-dragging');
+        dragCard = null;
+      }
+    });
+
+    cardsContainer.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      const target = e.target.closest('.summary-card');
+      if (!target || target === dragCard) return;
+
+      const rect = target.getBoundingClientRect();
+      const midY = rect.top + rect.height / 2;
+      if (e.clientY < midY) {
+        cardsContainer.insertBefore(dragCard, target);
+      } else {
+        cardsContainer.insertBefore(dragCard, target.nextSibling);
+      }
+    });
+
+    cardsContainer.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const cards = cardsContainer.querySelectorAll('.summary-card');
+      const order = Array.from(cards).map(c => parseInt(c.dataset.projectId, 10));
+      fetch('/projects/summary/reorder', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order }),
+      });
+    });
+  }
+
   // === Summary page: inline edit toggle ===
   document.querySelectorAll('.summary-card-edit-btn').forEach(btn => {
     btn.addEventListener('click', () => {

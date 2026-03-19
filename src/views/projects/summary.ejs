@@ -12,8 +12,9 @@
 
   <div class="summary-cards">
     <% projects.forEach(project => { %>
-      <div class="summary-card" id="card-<%= project.id %>">
+      <div class="summary-card" id="card-<%= project.id %>" data-project-id="<%= project.id %>" draggable="true">
         <div class="summary-card-layout">
+          <div class="summary-card-drag-handle" title="Drag to reorder">&#9776;</div>
           <div class="summary-card-left">
             <div class="summary-card-display" id="card-display-<%= project.id %>">
               <div class="summary-card-header">

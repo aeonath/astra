@@ -499,6 +499,19 @@ th.sort-desc::after { content: ' ↓'; font-size: 0.75em; opacity: 0.8; }
 .summary-card-header h2 { font-size: 1.1rem; margin: 0; }
 .summary-card-nickname { font-size: 0.85rem; color: var(--text-muted); font-style: italic; }
 .summary-card-edit-btn { margin-left: auto; }
+.summary-card[draggable="true"] { cursor: default; }
+.summary-card-dragging { opacity: 0.4; border-style: dashed; }
+.summary-card-drag-handle {
+  display: flex;
+  align-items: flex-start;
+  padding-top: 0.15rem;
+  cursor: grab;
+  color: var(--text-muted);
+  font-size: 1rem;
+  user-select: none;
+  flex-shrink: 0;
+}
+.summary-card-drag-handle:active { cursor: grabbing; }
 .summary-card-layout { display: flex; gap: 1.25rem; }
 .summary-card-left { flex: 1; min-width: 0; }
 .summary-card-right { flex: 1; min-width: 0; display: flex; flex-direction: column; }

@@ -17,10 +17,24 @@ router.get('/', (req, res) => {
     LEFT JOIN categories c ON p.category_id = c.id
     LEFT JOIN users u ON p.default_assignee_id = u.id
     WHERE p.active = 1 AND p.archived = 0
-    ORDER BY c.sort_order, p.name
+    ORDER BY p.summary_sort_order, p.name
   `).all();
 
   res.render('projects/summary', { title: 'Projects Summary', projects, categories });
+});
+
+// POST /projects/summary/reorder — save new card order (JSON)
+router.post('/reorder', (req, res) => {
+  const { order } = req.body;
+  if (!Array.isArray(order)) {
+    return res.status(400).json({ error: 'Invalid order.' });
+  }
+  const stmt = db.prepare('UPDATE projects SET summary_sort_order = ? WHERE id = ?');
+  const run = db.transaction(() => {
+    order.forEach((id, i) => stmt.run(i, id));
+  });
+  run();
+  res.json({ success: true });
 });
 
 // POST /projects/summary/:id/card — save project card details
