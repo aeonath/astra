@@ -7,8 +7,6 @@ document.addEventListener('DOMContentLoaded', function () {
   var table = document.querySelector('.table');
   var addBtn = document.getElementById('add-project-btn');
   var projectActiveCb = document.getElementById('project_active');
-  var internallyVisibleCb = document.getElementById('internally_visible');
-  var publicGroup = document.getElementById('public-group');
   var publicCb = document.getElementById('public');
   var archiveBtn = document.getElementById('archive-btn');
   var deleteBtn = document.getElementById('delete-project-btn');
@@ -26,28 +24,11 @@ document.addEventListener('DOMContentLoaded', function () {
   // Editable fields that get disabled when archived
   var editableFields = ['description', 'category_id', 'default_assignee_id', 'homepage_url', 'github_url'];
 
-  function updatePublicVisibility() {
-    if (internallyVisibleCb.checked) {
-      publicGroup.style.display = '';
-    } else {
-      publicGroup.style.display = 'none';
-      publicCb.checked = false;
-    }
-  }
-
-  internallyVisibleCb.addEventListener('change', function () {
-    if (internallyVisibleCb.checked) {
-      publicCb.checked = true;
-    }
-    updatePublicVisibility();
-  });
-
   function setFieldsDisabled(disabled) {
     editableFields.forEach(function (id) {
       document.getElementById(id).disabled = disabled;
     });
     projectActiveCb.disabled = disabled;
-    internallyVisibleCb.disabled = disabled;
     publicCb.disabled = disabled;
   }
 
@@ -75,9 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('homepage_url').value = '';
     document.getElementById('github_url').value = '';
     projectActiveCb.checked = true;
-    internallyVisibleCb.checked = true;
     publicCb.checked = true;
-    updatePublicVisibility();
     setFieldsDisabled(false);
     projectForm.style.display = '';
     activeActions.style.display = '';
@@ -105,7 +84,6 @@ document.addEventListener('DOMContentLoaded', function () {
       var description = row.dataset.description;
       var categoryId = row.dataset.categoryId;
       var defaultAssigneeId = row.dataset.defaultAssigneeId;
-      var isInternallyVisible = row.dataset.internallyVisible || '1';
       var isPublic = row.dataset.public;
       var homepageUrl = row.dataset.homepageUrl;
       var githubUrl = row.dataset.githubUrl;
@@ -113,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function () {
       var isArchived = row.dataset.archived === '1';
 
       if (!isArchived) {
-        // Active project — show edit form
+        // Non-archived project — show edit form
         document.getElementById('form-title').textContent = 'Edit Project';
         document.getElementById('form-submit').textContent = 'Save Changes';
         document.getElementById('edit-id').value = editProjectId;
@@ -125,9 +103,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('homepage_url').value = homepageUrl;
         document.getElementById('github_url').value = githubUrl.replace('https://github.com/', '');
         projectActiveCb.checked = isActive;
-        internallyVisibleCb.checked = isInternallyVisible === '1';
         publicCb.checked = isPublic === '1';
-        updatePublicVisibility();
         setFieldsDisabled(false);
         projectForm.style.display = '';
         activeActions.style.display = '';
@@ -144,9 +120,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('default_assignee_id').value = defaultAssigneeId;
         document.getElementById('homepage_url').value = homepageUrl;
         document.getElementById('github_url').value = githubUrl.replace('https://github.com/', '');
-        internallyVisibleCb.checked = isInternallyVisible === '1';
         publicCb.checked = isPublic === '1';
-        updatePublicVisibility();
         setFieldsDisabled(true);
         document.getElementById('name').readOnly = true;
         projectForm.style.display = 'none';

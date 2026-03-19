@@ -16,7 +16,7 @@ router.get('/', (req, res) => {
     FROM projects p
     LEFT JOIN categories c ON p.category_id = c.id
     LEFT JOIN users u ON p.default_assignee_id = u.id
-    WHERE p.active = 1 AND p.archived = 0
+    WHERE p.archived = 0
     ORDER BY p.summary_sort_order, p.name
   `).all();
 
