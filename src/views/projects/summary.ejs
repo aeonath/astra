@@ -120,9 +120,9 @@
         <th>Todos</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody id="overview-tbody">
       <% projects.forEach(project => { %>
-        <tr>
+        <tr data-project-id="<%= project.id %>">
           <td><a href="/projects/<%= project.slug %>"><%= project.name %></a></td>
           <td class="text-muted"><%= project.nickname || '—' %></td>
           <td><%= project.category_name || '—' %></td>

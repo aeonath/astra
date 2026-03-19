@@ -141,6 +141,16 @@ document.addEventListener('DOMContentLoaded', () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ order }),
       });
+
+      // Reorder overview table to match
+      const tbody = document.getElementById('overview-tbody');
+      if (tbody) {
+        const rows = Array.from(tbody.querySelectorAll('tr[data-project-id]'));
+        order.forEach(id => {
+          const row = rows.find(r => parseInt(r.dataset.projectId, 10) === id);
+          if (row) tbody.appendChild(row);
+        });
+      }
     });
   }
 
