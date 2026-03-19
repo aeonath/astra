@@ -1,12 +1,12 @@
 # Astra Production Setup
 
-Deploy Astra to a Debian server on AWS, accessible at `https://astra.miranova.studio`.
+Deploy Astra to a Debian server on AWS
 
 Architecture: `Internet → :443 (Nginx w/ TLS) → :9000 (Node/Astra)`
 
 ## 1. DNS
 
-Point `astra.miranova.studio` to the EC2 instance's public IP with an A record (Route 53 or wherever DNS is managed). This must be done **before** step 7 — Let's Encrypt validates via DNS.
+Point your dns name `e.g. astra.miranova.studio` to the EC2 instance's public IP with an A record (Route 53 or wherever DNS is managed). This must be done **before** step 7 — Let's Encrypt validates via DNS.
 
 ## 2. AWS Security Group
 
@@ -147,6 +147,8 @@ sudo nano /etc/nginx/sites-available/astra
 
 Contents:
 
+Note: use your server name you set in DNS.
+
 ```nginx
 server {
     listen 80;
@@ -189,7 +191,7 @@ Certs auto-renew every 60–90 days via systemd timer.
 
 ## 8. Verify
 
-Visit `https://astra.miranova.studio` — you should see the Astra login page.
+Visit your url, `e.g. https://astra.miranova.studio` — you should see the Astra login page.
 
 ## Updating Astra
 

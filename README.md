@@ -1,6 +1,6 @@
 # Astra
 
-Bug tracking database for all projects at Miranova Studio.
+Bug tracking database for all projects at Miranova Studios.
 
 ## Stack
 
@@ -108,6 +108,3 @@ The database must live **outside** the application source tree in production. `D
 
 See [SETUP.md](SETUP.md) for full production deployment instructions.
 
-## Production
-
-Target: Debian server at `https://astra.miranova.studio` (port 443, HTTPS via reverse proxy).
