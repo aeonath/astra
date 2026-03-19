@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var projectForm = document.getElementById('project-form');
   var table = document.querySelector('.table');
   var addBtn = document.getElementById('add-project-btn');
+  var projectActiveCb = document.getElementById('project_active');
   var internallyVisibleCb = document.getElementById('internally_visible');
   var publicGroup = document.getElementById('public-group');
   var publicCb = document.getElementById('public');
@@ -45,6 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
     editableFields.forEach(function (id) {
       document.getElementById(id).disabled = disabled;
     });
+    projectActiveCb.disabled = disabled;
     internallyVisibleCb.disabled = disabled;
     publicCb.disabled = disabled;
   }
@@ -72,6 +74,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('default_assignee_id').value = '';
     document.getElementById('homepage_url').value = '';
     document.getElementById('github_url').value = '';
+    projectActiveCb.checked = true;
     internallyVisibleCb.checked = true;
     publicCb.checked = true;
     updatePublicVisibility();
@@ -120,6 +123,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('default_assignee_id').value = defaultAssigneeId;
         document.getElementById('homepage_url').value = homepageUrl;
         document.getElementById('github_url').value = githubUrl.replace('https://github.com/', '');
+        projectActiveCb.checked = isActive;
         internallyVisibleCb.checked = isInternallyVisible === '1';
         publicCb.checked = isPublic === '1';
         updatePublicVisibility();
