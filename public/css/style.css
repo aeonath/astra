@@ -405,6 +405,7 @@ th.sort-desc::after { content: ' ↓'; font-size: 0.75em; opacity: 0.8; }
 .badge-project-status-planning { background: rgba(227,150,40,0.15); color: #e3962a; }
 .badge-project-status-in-development { background: rgba(63,185,80,0.15); color: var(--success); }
 .badge-project-status-maintenance { background: rgba(88,166,255,0.15); color: var(--accent); }
+.badge-project-status-concept { background: rgba(188,140,255,0.15); color: var(--purple); }
 
 .badge-type-bug { background: rgba(248,81,73,0.15); color: var(--danger); }
 .badge-type-feature { background: rgba(188,140,255,0.15); color: var(--purple); }
