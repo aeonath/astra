@@ -36,13 +36,28 @@ document.addEventListener('DOMContentLoaded', function () {
         mobileTabs.innerHTML = '';
         desktopTabs.querySelectorAll('.project-tab').forEach(function (tab) {
           var link = tab.querySelector('.project-tab-link');
+          var closeBtn = tab.querySelector('.project-tab-close');
           if (link) {
+            var wrapper = document.createElement('div');
+            wrapper.className = 'project-tab';
+            if (tab.classList.contains('project-tab-active')) wrapper.classList.add('project-tab-active');
             var a = document.createElement('a');
             a.href = link.href;
-            a.className = 'project-tab';
-            a.innerHTML = '<span class="project-tab-link">' + link.textContent + '</span>';
-            if (tab.classList.contains('project-tab-active')) a.classList.add('project-tab-active');
-            mobileTabs.appendChild(a);
+            a.className = 'project-tab-link';
+            a.textContent = link.textContent;
+            wrapper.appendChild(a);
+            if (closeBtn) {
+              var close = document.createElement('button');
+              close.type = 'button';
+              close.className = 'project-tab-close';
+              close.textContent = '\u00d7';
+              close.addEventListener('click', function (e) {
+                e.stopPropagation();
+                closeBtn.click();
+              });
+              wrapper.appendChild(close);
+            }
+            mobileTabs.appendChild(wrapper);
           }
         });
       };
