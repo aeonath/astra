@@ -6,6 +6,11 @@ const multer = require('multer');
 const db = require('../db');
 const router = express.Router();
 
+// Touch project updated_at when any bug/comment/file changes
+function touchProject(projectId) {
+  db.prepare("UPDATE projects SET updated_at = datetime('now') WHERE id = ?").run(projectId);
+}
+
 const upload = multer({ storage: multer.memoryStorage() });
 
 // GET /bugs/new?project=:slug&type=bug|feature|todo — new item form
@@ -59,6 +64,8 @@ router.post('/', (req, res) => {
     issueType,
     displayNumber
   );
+
+  touchProject(project_id);
 
   const prefixes = { bug: 'BUG', feature: 'REQ' };
   const prefix = prefixes[issueType];
@@ -240,6 +247,8 @@ router.post('/:id', (req, res) => {
     db.prepare('INSERT INTO comments (bug_id, user_id, content, created_at) VALUES (?, ?, ?, datetime(\'now\'))').run(bug.id, req.session.userId, pending_comment.trim());
   }
 
+  touchProject(newProjectId);
+
   req.session.flash = { type: 'success', message: 'Updated.' };
   if (newStatus === 'closed' && bug.status !== 'closed') {
     const slug = newProjectId !== bug.project_id
@@ -266,6 +275,8 @@ router.post('/:id/comment/:commentId/edit', (req, res) => {
 
   db.prepare('UPDATE comments SET content = ? WHERE id = ?').run(content.trim(), comment.id);
   db.prepare("UPDATE bugs SET updated_at = datetime('now') WHERE id = ?").run(req.params.id);
+  const editedBug = db.prepare('SELECT project_id FROM bugs WHERE id = ?').get(req.params.id);
+  if (editedBug) touchProject(editedBug.project_id);
 
   req.session.flash = { type: 'success', message: 'Comment updated.' };
   res.redirect(`/bugs/${req.params.id}`);
@@ -292,7 +303,7 @@ router.post('/:id/comment/:commentId/delete', (req, res) => {
 
 // POST /bugs/:id/comment — add comment
 router.post('/:id/comment', (req, res) => {
-  const bug = db.prepare('SELECT status FROM bugs WHERE id = ?').get(req.params.id);
+  const bug = db.prepare('SELECT status, project_id FROM bugs WHERE id = ?').get(req.params.id);
   if (!bug) return res.redirect('/projects');
   if (bug.status === 'closed') {
     req.session.flash = { type: 'error', message: 'Cannot add comments to a closed item.' };
@@ -311,8 +322,9 @@ router.post('/:id/comment', (req, res) => {
     content.trim()
   );
 
-  // Also bump the bug's updated_at
+  // Also bump the bug's and project's updated_at
   db.prepare("UPDATE bugs SET updated_at = datetime('now') WHERE id = ?").run(req.params.id);
+  touchProject(bug.project_id);
 
   req.session.flash = { type: 'success', message: 'Comment added.' };
   res.redirect(`/bugs/${req.params.id}`);
@@ -356,6 +368,7 @@ router.post('/:id/files', upload.single('file'), (req, res) => {
   db.prepare('INSERT INTO bug_files (bug_id, filename, size, uploaded_by) VALUES (?, ?, ?, ?)').run(
     bug.id, filename, req.file.size, req.session.userId
   );
+  touchProject(bug.project_id);
 
   req.session.flash = { type: 'success', message: `"${filename}" attached.` };
   res.redirect(`/bugs/${bug.id}`);

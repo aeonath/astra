@@ -391,6 +391,7 @@ router.post('/submissions/:id/import', (req, res) => {
 
   db.prepare('INSERT INTO comments (bug_id, user_id, content) VALUES (?, ?, ?)').run(bugId, req.session.userId, commentLines.join('\n'));
   db.prepare('UPDATE public_submissions SET imported_bug_id = ?, status = ? WHERE id = ?').run(bugId, 'reviewed', sub.id);
+  db.prepare("UPDATE projects SET updated_at = datetime('now') WHERE id = ?").run(sub.project_id);
 
   const prefix = sub.type === 'bug' ? 'BUG' : 'REQ';
   req.session.flash = { type: 'success', message: `${prefix}-${String(displayNumber).padStart(3, '0')} created from submission.` };

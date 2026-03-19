@@ -63,6 +63,7 @@ router.post('/:id/import', (req, res) => {
   db.prepare('UPDATE public_submissions SET imported_bug_id = ?, status = ? WHERE id = ?').run(
     result.lastInsertRowid, 'reviewed', sub.id
   );
+  db.prepare("UPDATE projects SET updated_at = datetime('now') WHERE id = ?").run(sub.project_id);
 
   const prefix = sub.type === 'bug' ? 'BUG' : 'REQ';
   req.session.flash = { type: 'success', message: `Imported as ${prefix}-${String(displayNumber).padStart(3, '0')}.` };
