@@ -10,7 +10,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 // GET /bugs/new?project=:slug&type=bug|feature|todo — new item form
 router.get('/new', (req, res) => {
-  const project = db.prepare('SELECT * FROM projects WHERE slug = ? AND active = 1').get(req.query.project);
+  const project = db.prepare('SELECT * FROM projects WHERE slug = ? AND archived = 0').get(req.query.project);
   if (!project) {
     req.session.flash = { type: 'error', message: 'Project not found.' };
     return res.redirect('/projects');
@@ -28,7 +28,7 @@ router.post('/', (req, res) => {
   const validTypes = ['bug', 'feature', 'todo'];
   const issueType = validTypes.includes(req.body.type) ? req.body.type : 'bug';
 
-  const project = db.prepare('SELECT * FROM projects WHERE id = ? AND active = 1').get(project_id);
+  const project = db.prepare('SELECT * FROM projects WHERE id = ? AND archived = 0').get(project_id);
   if (!project) {
     req.session.flash = { type: 'error', message: 'Project not found.' };
     return res.redirect('/projects');
@@ -80,7 +80,7 @@ router.get('/search', (req, res) => {
   const hasAdvancedFilter = typeFilter || statusFilter || priorityFilter || projectSlug || assigneeId;
   const hasAnyFilter = q || hasAdvancedFilter;
 
-  const projects = db.prepare('SELECT id, name, slug FROM projects WHERE active = 1 ORDER BY name').all();
+  const projects = db.prepare('SELECT id, name, slug FROM projects WHERE archived = 0 ORDER BY name').all();
   const users    = db.prepare('SELECT id, display_name FROM users WHERE active = 1 ORDER BY display_name').all();
 
   let results = [];
@@ -184,7 +184,7 @@ router.get('/:id', (req, res) => {
   } else {
     displayId = `#${bug.id}`;
   }
-  const projects = db.prepare('SELECT id, name FROM projects WHERE active = 1 ORDER BY name').all();
+  const projects = db.prepare('SELECT id, name FROM projects WHERE archived = 0 ORDER BY name').all();
   res.render('bugs/show', { title: displayId, bug, comments, users, displayId, files, projects });
 });
 

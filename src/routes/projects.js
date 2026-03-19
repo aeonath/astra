@@ -16,7 +16,7 @@ router.get('/', (req, res) => {
       (SELECT COUNT(*) FROM bugs WHERE project_id = p.id AND type = 'todo' AND status != 'closed') as open_todos
     FROM projects p
     LEFT JOIN categories c ON p.category_id = c.id
-    WHERE p.active = 1 ${isLoggedIn ? 'AND p.internally_visible = 1' : 'AND p.public = 1'}
+    WHERE p.archived = 0 ${isLoggedIn ? 'AND p.internally_visible = 1' : 'AND p.public = 1'}
     ORDER BY c.sort_order, p.name
   `).all();
 
@@ -38,9 +38,9 @@ router.get('/submit/projects', (req, res) => {
   const categoryId = req.query.category_id;
   let projects;
   if (categoryId) {
-    projects = db.prepare('SELECT id, name FROM projects WHERE active = 1 AND public = 1 AND category_id = ? ORDER BY name').all(categoryId);
+    projects = db.prepare('SELECT id, name FROM projects WHERE archived = 0 AND public = 1 AND category_id = ? ORDER BY name').all(categoryId);
   } else {
-    projects = db.prepare('SELECT id, name FROM projects WHERE active = 1 AND public = 1 ORDER BY name').all();
+    projects = db.prepare('SELECT id, name FROM projects WHERE archived = 0 AND public = 1 ORDER BY name').all();
   }
   res.json(projects);
 });
@@ -76,7 +76,7 @@ router.post('/submit', async (req, res) => {
     }
   }
 
-  const project = db.prepare('SELECT id FROM projects WHERE id = ? AND active = 1 AND public = 1').get(project_id);
+  const project = db.prepare('SELECT id FROM projects WHERE id = ? AND archived = 0 AND public = 1').get(project_id);
   if (!project) {
     req.session.flash = { type: 'error', message: 'Invalid project selected.' };
     return res.redirect(`/projects/submit?type=${type}`);
@@ -104,7 +104,7 @@ router.get('/:slug', (req, res) => {
     return res.redirect('/login');
   }
   const isLoggedIn = true;
-  const project = db.prepare('SELECT * FROM projects WHERE slug = ? AND active = 1').get(req.params.slug);
+  const project = db.prepare('SELECT * FROM projects WHERE slug = ? AND archived = 0').get(req.params.slug);
   if (!project) {
     req.session.flash = { type: 'error', message: 'Project not found.' };
     return res.redirect('/projects');
@@ -156,7 +156,7 @@ router.post('/:slug/notes', (req, res) => {
   if (!req.session.userId) {
     return res.redirect('/login');
   }
-  const project = db.prepare('SELECT * FROM projects WHERE slug = ? AND active = 1').get(req.params.slug);
+  const project = db.prepare('SELECT * FROM projects WHERE slug = ? AND archived = 0').get(req.params.slug);
   if (!project) {
     req.session.flash = { type: 'error', message: 'Project not found.' };
     return res.redirect('/projects');

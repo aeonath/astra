@@ -12,7 +12,7 @@ module.exports = function landing(req, res) {
       (SELECT COUNT(*) FROM bugs WHERE project_id = p.id AND type = 'todo' AND status != 'closed') as open_todos
     FROM projects p
     LEFT JOIN categories c ON p.category_id = c.id
-    WHERE p.active = 1 ${isLoggedIn ? '' : 'AND p.public = 1'}
+    WHERE p.archived = 0 ${isLoggedIn ? '' : 'AND p.public = 1'}
     ORDER BY c.sort_order, p.name
   `).all();
 

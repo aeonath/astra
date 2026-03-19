@@ -110,8 +110,9 @@ document.addEventListener('DOMContentLoaded', function () {
       var homepageUrl = row.dataset.homepageUrl;
       var githubUrl = row.dataset.githubUrl;
       var isActive = row.dataset.active === '1';
+      var isArchived = row.dataset.archived === '1';
 
-      if (isActive) {
+      if (!isArchived) {
         // Active project — show edit form
         document.getElementById('form-title').textContent = 'Edit Project';
         document.getElementById('form-submit').textContent = 'Save Changes';

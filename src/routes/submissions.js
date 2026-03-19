@@ -38,7 +38,7 @@ router.post('/:id/import', (req, res) => {
     return res.redirect('/submissions');
   }
 
-  const project = db.prepare('SELECT * FROM projects WHERE id = ? AND active = 1').get(sub.project_id);
+  const project = db.prepare('SELECT * FROM projects WHERE id = ? AND archived = 0').get(sub.project_id);
   if (!project) {
     req.session.flash = { type: 'error', message: 'Project not found or inactive.' };
     return res.redirect('/submissions');

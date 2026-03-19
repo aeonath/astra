@@ -84,8 +84,8 @@ router.post('/', (req, res) => {
 router.post('/:id/toggle', (req, res) => {
   const project = db.prepare('SELECT * FROM projects WHERE id = ?').get(req.params.id);
   if (project) {
-    db.prepare(`UPDATE projects SET active = ?, updated_at = datetime('now') WHERE id = ?`).run(project.active ? 0 : 1, project.id);
-    req.session.flash = { type: 'success', message: `Project "${project.name}" ${project.active ? 'archived' : 'restored'}.` };
+    db.prepare(`UPDATE projects SET archived = ?, updated_at = datetime('now') WHERE id = ?`).run(project.archived ? 0 : 1, project.id);
+    req.session.flash = { type: 'success', message: `Project "${project.name}" ${project.archived ? 'restored' : 'archived'}.` };
   }
   res.redirect('/manage/projects');
 });

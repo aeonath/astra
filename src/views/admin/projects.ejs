@@ -96,7 +96,7 @@
   </thead>
   <tbody>
     <% projects.forEach(project => { %>
-      <tr class="<%= project.active ? '' : 'row-muted' %>" style="cursor:pointer;"
+      <tr class="<%= project.archived ? 'row-muted' : '' %>" style="cursor:pointer;"
           data-project-id="<%= project.id %>"
           data-name="<%= project.name %>"
           data-description="<%= project.description || '' %>"
@@ -106,7 +106,8 @@
           data-github-url="<%= project.github_url || '' %>"
           data-internally-visible="<%= project.internally_visible %>"
           data-public="<%= project.public %>"
-          data-active="<%= project.active %>">
+          data-active="<%= project.active %>"
+          data-archived="<%= project.archived %>">
         <td><%= project.name %></td>
         <td><%= project.category_name || '—' %></td>
         <td><%= project.assignee_name || '—' %></td>
@@ -114,7 +115,7 @@
           <span class="badge badge-status-<%= project.internally_visible ? 'open' : 'closed' %>"><%= project.internally_visible ? 'Internal' : 'Hidden' %></span>
           <% if (project.internally_visible && project.public) { %><span class="badge badge-status-open">Public</span><% } %>
         </td>
-        <td><span class="badge badge-status-<%= project.active ? 'open' : 'closed' %>"><%= project.active ? 'Active' : 'Archived' %></span></td>
+        <td><span class="badge badge-status-<%= project.archived ? 'closed' : 'open' %>"><%= project.archived ? 'Archived' : 'Active' %></span></td>
       </tr>
     <% }) %>
   </tbody>
