@@ -32,7 +32,7 @@
                   <div class="summary-card-field"><strong>Purpose:</strong> <%= project.purpose %></div>
                 <% } %>
                 <% if (project.project_status) { %>
-                  <div class="summary-card-field"><strong>Status:</strong> <%= project.project_status %></div>
+                  <div class="summary-card-field"><strong>Status:</strong> <span class="badge badge-project-status-<%= project.project_status.toLowerCase().replace(/\s+/g, '-') %>"><%= project.project_status %></span></div>
                 <% } %>
                 <% if (project.tags) { %>
                   <div class="tag-list">
@@ -69,7 +69,12 @@
                 <div class="form-row">
                   <div class="form-group">
                     <label for="project_status-<%= project.id %>">Status</label>
-                    <input type="text" id="project_status-<%= project.id %>" name="project_status" value="<%= project.project_status || '' %>" placeholder="e.g. Active (v0.9.1-alpha)">
+                    <select id="project_status-<%= project.id %>" name="project_status">
+                      <option value="">— Select —</option>
+                      <option value="Planning" <%= project.project_status === 'Planning' ? 'selected' : '' %>>Planning</option>
+                      <option value="In Development" <%= project.project_status === 'In Development' ? 'selected' : '' %>>In Development</option>
+                      <option value="Maintenance" <%= project.project_status === 'Maintenance' ? 'selected' : '' %>>Maintenance</option>
+                    </select>
                   </div>
                   <div class="form-group">
                     <label for="tags-<%= project.id %>">Tags</label>
@@ -121,7 +126,7 @@
           <td class="text-muted"><%= project.nickname || '—' %></td>
           <td><%= project.category_name || '—' %></td>
           <td><%= project.assignee_name || '—' %></td>
-          <td><%= project.project_status || '—' %></td>
+          <td><% if (project.project_status) { %><span class="badge badge-project-status-<%= project.project_status.toLowerCase().replace(/\s+/g, '-') %>"><%= project.project_status %></span><% } else { %>—<% } %></td>
           <td><span class="stat-num <%= project.open_bugs > 0 ? 'stat-bug' : '' %>"><%= project.open_bugs %></span></td>
           <td><span class="stat-num"><%= project.open_features %></span></td>
           <td><span class="stat-num <%= project.open_todos > 0 ? 'stat-todo-warn' : '' %>"><%= project.open_todos %></span></td>
