@@ -77,5 +77,6 @@
     initTable('bugs-table', 'astra_sort_bug');
     initTable('features-table', 'astra_sort_feature');
     initTable('todos-table', 'astra_sort_todo');
+    initTable('manage-projects-table', 'astra_sort_manage_projects');
   });
 })();

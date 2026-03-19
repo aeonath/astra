@@ -84,11 +84,11 @@
   </div>
 </div>
 
-<table class="table">
+<table class="table" id="manage-projects-table">
   <thead>
     <tr>
-      <th>Name</th>
-      <th>Category</th>
+      <th data-sort="name" style="cursor:pointer;">Name</th>
+      <th data-sort="category" style="cursor:pointer;">Category</th>
       <th>Default Assignee</th>
       <th>Visibility</th>
       <th>Status</th>
@@ -108,8 +108,8 @@
           data-active="<%= project.active %>"
           data-show-on-summary="<%= project.show_on_summary %>"
           data-archived="<%= project.archived %>">
-        <td><%= project.name %></td>
-        <td><%= project.category_name || '—' %></td>
+        <td data-col="name" data-sort="<%= project.name.toLowerCase() %>"><%= project.name %></td>
+        <td data-col="category" data-sort="<%= (project.category_name || 'zzz').toLowerCase() %>"><%= project.category_name || '—' %></td>
         <td><%= project.assignee_name || '—' %></td>
         <td>
           <% if (project.active) { %><span class="badge badge-status-open">Active</span><% } %>
@@ -152,6 +152,7 @@
   </div>
 </div>
 
+<script src="/js/table-sort.js"></script>
 <script src="/js/admin-projects.js" data-base-path="<%= basePath %>"></script>
 
 <%- include('../partials/footer') %>
