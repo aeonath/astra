@@ -136,6 +136,33 @@ a:hover { color: var(--accent-hover); }
 .mobile-nav-search { display: flex; gap: 0.5rem; }
 .mobile-nav-search .nav-search-input { flex: 1; }
 
+/* === Column Toggle === */
+.col-toggle-wrapper { position: relative; }
+.col-toggle-menu {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.4rem);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.5rem;
+  z-index: 100;
+  min-width: 140px;
+}
+.col-toggle-menu.open { display: flex; flex-direction: column; gap: 0.35rem; }
+.col-toggle-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0.2rem 0.25rem;
+  border-radius: var(--radius);
+}
+.col-toggle-item:hover { color: var(--text-primary); background: var(--bg-tertiary); }
+
 .nav-user {
   margin-left: auto;
   display: flex;

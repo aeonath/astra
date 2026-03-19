@@ -19,6 +19,15 @@
   </div>
   <% if (currentUser) { %>
     <div class="btn-group">
+      <div class="col-toggle-wrapper">
+        <button type="button" class="btn btn-ghost" id="col-toggle-btn">Columns &#9662;</button>
+        <div class="col-toggle-menu" id="col-toggle-menu">
+          <label class="col-toggle-item"><input type="checkbox" data-col="priority" checked> Priority</label>
+          <label class="col-toggle-item"><input type="checkbox" data-col="status" checked> Status</label>
+          <label class="col-toggle-item"><input type="checkbox" data-col="assignee" checked> Assignee</label>
+          <label class="col-toggle-item"><input type="checkbox" data-col="date" checked> Created</label>
+        </div>
+      </div>
       <button type="button" class="btn btn-ghost" id="project-card-btn">Project Card</button>
       <a href="/bugs/new?project=<%= project.slug %>&type=todo" class="btn btn-todo">Add Todo</a>
       <a href="/bugs/new?project=<%= project.slug %>&type=feature" class="btn btn-feature">Request Feature</a>
@@ -219,6 +228,7 @@
 
 <div id="current-project" data-slug="<%= project.slug %>" data-name="<%= project.name %>" hidden></div>
 <script src="/js/clickable-rows.js"></script>
+<script src="/js/col-toggle.js"></script>
 <script src="/js/project-notes.js"></script>
 <script src="/js/table-sort.js"></script>
 <script src="/js/project-card.js"></script>
