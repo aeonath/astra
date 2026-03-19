@@ -13,6 +13,7 @@
 <body>
   <% if (currentUser) { %>
   <nav class="navbar">
+    <button type="button" class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Menu">&#9776;</button>
     <div class="nav-brand">
       <span>&#9733; Astra</span>
     </div>
@@ -51,6 +52,21 @@
       </div>
     </div>
   </nav>
+  <div class="mobile-nav" id="mobile-nav">
+    <div class="mobile-nav-links">
+      <% if (!isAdmin) { %><a href="/projects" class="mobile-nav-item<%= currentPath === '/projects' ? ' active' : '' %>">Projects</a><% } %>
+      <% if (isAdmin) { %><a href="/admin" class="mobile-nav-item<%= currentPath.startsWith('/admin') ? ' active' : '' %>">Admin</a><% } %>
+      <a href="/projects/summary" class="mobile-nav-item">Projects Summary</a>
+    </div>
+    <div id="mobile-project-tabs" class="mobile-nav-tabs"></div>
+    <form action="/bugs/search" method="GET" class="mobile-nav-search">
+      <input type="text" name="q" placeholder="Search..." class="nav-search-input">
+      <% if (typeof project !== 'undefined' && project && project.slug) { %>
+        <input type="hidden" name="project" value="<%= project.slug %>">
+      <% } %>
+      <button type="submit" class="btn btn-sm btn-ghost">Search</button>
+    </form>
+  </div>
   <% } else { %>
   <div class="public-header">
     <div class="public-header-left">

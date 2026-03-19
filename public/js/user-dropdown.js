@@ -12,4 +12,43 @@ document.addEventListener('DOMContentLoaded', function () {
   document.addEventListener('click', function () {
     dropdown.classList.remove('open');
   });
+
+  // Mobile menu toggle
+  var menuToggle = document.getElementById('mobile-menu-toggle');
+  var mobileNav = document.getElementById('mobile-nav');
+  if (menuToggle && mobileNav) {
+    menuToggle.addEventListener('click', function (e) {
+      e.stopPropagation();
+      mobileNav.classList.toggle('open');
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!mobileNav.contains(e.target) && e.target !== menuToggle) {
+        mobileNav.classList.remove('open');
+      }
+    });
+
+    // Sync project tabs into mobile drawer
+    var desktopTabs = document.getElementById('project-tabs');
+    var mobileTabs = document.getElementById('mobile-project-tabs');
+    if (desktopTabs && mobileTabs) {
+      var sync = function () {
+        mobileTabs.innerHTML = '';
+        desktopTabs.querySelectorAll('.project-tab').forEach(function (tab) {
+          var link = tab.querySelector('.project-tab-link');
+          if (link) {
+            var a = document.createElement('a');
+            a.href = link.href;
+            a.className = 'project-tab';
+            a.innerHTML = '<span class="project-tab-link">' + link.textContent + '</span>';
+            if (tab.classList.contains('project-tab-active')) a.classList.add('project-tab-active');
+            mobileTabs.appendChild(a);
+          }
+        });
+      };
+      sync();
+      var observer = new MutationObserver(sync);
+      observer.observe(desktopTabs, { childList: true, subtree: true });
+    }
+  }
 });
